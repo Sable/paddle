@@ -48,6 +48,14 @@ public abstract class AbsPropagator implements DepItem
         this.pag = pag;
     }
     public abstract boolean update();
+    public abstract boolean fieldUpdate();
+    public DepItem fieldPropagator() {
+        return new DepItem() {
+            public boolean update() {
+                return fieldUpdate();
+            }
+        };
+    }
 }
 
 

@@ -77,8 +77,11 @@ public final class PropAlias extends AbsPropagator {
             G.v().out.println( "Now handling field references" );
         }
 
+        return ret;
+    }
+    public final boolean fieldUpdate() {
+        boolean ret = false;
         for( Iterator srcIt = aliasWorkList.iterator(); srcIt.hasNext(); ) {
-
             final ContextVarNode src = (ContextVarNode) srcIt.next();
             for( Iterator srcFrIt = src.fields(); srcFrIt.hasNext(); ) {
                 final ContextFieldRefNode srcFr = (ContextFieldRefNode) srcFrIt.next();

@@ -99,6 +99,15 @@ public class PropBDD extends AbsPropagator {
                                              <> fpt {basec,base,fld};
     }
 
+    public boolean fieldUpdate() {
+        <varc, var, objc, obj> veryOldPt = pt;
+
+        fieldPt |= propStore( pt, pag.allStore().get(), pt );
+        pt |= propLoad( fieldPt, pag.allLoad().get(), pt ) & typeFilter();
+
+        outputPt( pt );
+        return pt != veryOldPt;
+    }
 
     public boolean update() {
         <varc, var, objc, obj> veryOldPt = pt;
@@ -107,10 +116,6 @@ public class PropBDD extends AbsPropagator {
         pt |= propSimple( pt, pag.allSimple().get() ) & typeFilter();
         outputPt( pt );
 
-        fieldPt |= propStore( pt, pag.allStore().get(), pt );
-        pt |= propLoad( fieldPt, pag.allLoad().get(), pt ) & typeFilter();
-
-        outputPt( pt );
 
         if( PaddleScene.v().options().verbose() ) {
                 G.v().out.println( "Major iteration: " );

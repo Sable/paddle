@@ -39,13 +39,22 @@ public final class PropIter extends AbsPropagator {
     }
     private AbsP2Sets p2sets;
     int iteration = 1;
+    public final boolean fieldUpdate() {
+	boolean change = false;
+        for( Iterator it = pag.loadSources(); it.hasNext(); ) {
+            change = handleLoads( (ContextFieldRefNode) it.next() ) | change;
+        }
+        for( Iterator it = pag.storeSources(); it.hasNext(); ) {
+            change = handleStores( (ContextVarNode) it.next() ) | change;
+        }
+        return change;
+    }
     /** Actually does the propagation. */
     public final boolean update() {
         p2sets = PaddleScene.v().p2sets;
-	boolean change;
+	boolean change = false;
         if( newEdges() ) change = true;
         new TopoSorter( pag, false ).sort();
-        change = false;
         TreeSet simpleSources = new TreeSet();
         for( Iterator sourceIt = pag.simpleSources(); sourceIt.hasNext(); ) {
             simpleSources.add(sourceIt.next());
@@ -65,12 +74,6 @@ public final class PropIter extends AbsPropagator {
                     ContextAllocNode can = (ContextAllocNode) n;
                 ptout.add( src.ctxt(), src.var(), can.ctxt(), can.obj() );
             }} );
-        }
-        for( Iterator it = pag.loadSources(); it.hasNext(); ) {
-            change = handleLoads( (ContextFieldRefNode) it.next() ) | change;
-        }
-        for( Iterator it = pag.storeSources(); it.hasNext(); ) {
-            change = handleStores( (ContextVarNode) it.next() ) | change;
         }
         return change;
     }

@@ -25,7 +25,7 @@
         <exec executable="${basedir}/src/make_singletons" dir="${basedir}/src" output="${basedir}/generated/singletons/soot/PaddleSingletons.java"/>
     </target>
     <target name="singletons-dep">
-        <uptodate property="singletons-uptodate" targetfile="generated/singletons/soot/Singletons.java">
+        <uptodate property="singletons-uptodate" targetfile="generated/singletons/soot/PaddleSingletons.java">
             <srcfiles dir="src" includes="singletons.list"/>
         </uptodate>
     </target>

@@ -56,6 +56,7 @@ public class PaddleScene
 
     public AbsPAG pag;
     public AbsPropagator prop;
+    public DepItem fprop;
     public AbsP2Sets p2sets;
 
     public AbsVirtualCalls vcr;
@@ -227,6 +228,17 @@ public class PaddleScene
         depMan.addDep(prop, prop);
         depMan.addDep(cg, rc);
 
+        depMan.addDep(fprop, fprop);
+        depMan.addDep(prop, fprop);
+        depMan.addDep(fprop, prop);
+        depMan.addDep(pag, fprop);
+        depMan.addDep(tm, fprop);
+
+        depMan.addDep(csimple, fprop);
+        depMan.addDep(cload, fprop);
+        depMan.addDep(cstore, fprop);
+        depMan.addDep(calloc, fprop);
+
         depMan.addPrec(cec, globalallocs);
         depMan.addPrec(cec, globals);
         depMan.addPrec(cec, locals);
@@ -256,6 +268,12 @@ public class PaddleScene
         depMan.addPrec(mpc, csout);
         depMan.addPrec(mpc, rm);
 
+        depMan.addPrec(fprop, cstore);
+        depMan.addPrec(fprop, csimple);
+        depMan.addPrec(fprop, calloc);
+        depMan.addPrec(fprop, cload);
+        depMan.addPrec(fprop, pag);
+
         depMan.addPrec(prop, cstore);
         depMan.addPrec(prop, csimple);
         depMan.addPrec(prop, calloc);
@@ -266,6 +284,9 @@ public class PaddleScene
         depMan.addPrec(vcr, specials);
         depMan.addPrec(vcr, scgb);
         depMan.addPrec(vcr, rmout);
+
+        // for speed only
+        depMan.addPrec(fprop, prop);
 
     }
     private void makeSetFactories() {
@@ -758,6 +779,7 @@ public class PaddleScene
             default:
                 throw new RuntimeException( "Unimplemented propagator specified" );
         }
+        fprop = prop.fieldPropagator();
     }
 
     private void updateFrontEnd() {
@@ -787,7 +809,7 @@ public class PaddleScene
     }
 
     void updateCallGraph() {
-        updateFrontEnd();
+        //updateFrontEnd();
     }
 }
 

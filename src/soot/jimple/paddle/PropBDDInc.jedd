@@ -38,6 +38,16 @@ public final class PropBDDInc extends PropBDD {
 
     private <varc, var, objc, obj> ptFromLoad = 0B;
 
+    public final boolean fieldUpdate() {
+        <varc, var, objc, obj> veryOldPt = pt;
+
+        fieldPt |= propStore( pt, pag.allStore().get(), pt );
+        ptFromLoad = propLoad( fieldPt, pag.allLoad().get(), pt ) & typeFilter();
+        pt |= ptFromLoad;
+        outputPt( ptFromLoad );
+
+        return pt != veryOldPt;
+    }
     public final boolean update() {
 
         <varc, var, objc, obj> veryOldPt = pt;
@@ -56,10 +66,6 @@ public final class PropBDDInc extends PropBDD {
         pt |= ptFromAllocAndSimple;
         outputPt( ptFromAllocAndSimple );
 
-        fieldPt |= propStore( pt, pag.allStore().get(), pt );
-        ptFromLoad = propLoad( fieldPt, pag.allLoad().get(), pt ) & typeFilter();
-        pt |= ptFromLoad;
-        outputPt( ptFromLoad );
 
         if( PaddleScene.v().options().verbose() ) {
             G.v().out.println( "Major iteration: " );
