@@ -25,8 +25,8 @@ import java.util.*;
  * @author Ondrej Lhotak
  */
 public class EmptyPointsToSet extends PointsToSetReadOnly {
-    public EmptyPointsToSet( Singletons.Global g ) { super(null); }
-    public static EmptyPointsToSet v() { return G.v().soot_jimple_paddle_EmptyPointsToSet(); }
+    public EmptyPointsToSet( PaddleSingletons.Global g ) { super(null); }
+    public static EmptyPointsToSet v() { return PaddleG.v().soot_jimple_paddle_EmptyPointsToSet(); }
 
     /** Returns true if this set contains no run-time objects. */
     public boolean isEmpty() { return true; }

@@ -32,8 +32,8 @@ import jedd.*;
  */
 public class Results implements PointsToAnalysis
 { 
-    public Results( Singletons.Global g ) {}
-    public static Results v() { return G.v().soot_jimple_paddle_Results(); }
+    public Results( PaddleSingletons.Global g ) {}
+    public static Results v() { return PaddleG.v().soot_jimple_paddle_Results(); }
 
     public AbsCallGraph callGraph() { return PaddleScene.v().cg; }
     public AbsP2Sets p2sets() { return PaddleScene.v().p2sets; }

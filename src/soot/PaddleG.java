@@ -17,34 +17,18 @@
  * Boston, MA 02111-1307, USA.
  */
 
-package soot.jimple.paddle.queue;
-import soot.*;
-import soot.util.*;
-import java.util.*;
-
-/** Singleton to keep track of all readers.
- * @author Ondrej Lhotak
+/*
+ * Modified by the Sable Research Group and others 1997-1999.  
+ * See the 'credits' file distributed with Soot for the complete list of
+ * contributors.  (Soot is distributed at http://www.sable.mcgill.ca/soot)
  */
 
-public class Readers {
-    public Readers( PaddleSingletons.Global g ) {}
-    public static Readers v() { return PaddleG.v().soot_jimple_paddle_queue_Readers(); }
+package soot;
+import soot.jimple.paddle.PaddleHook;
 
-    private List readers = new ArrayList();
-
-    public interface Reader {
-        public boolean hasNext();
-    }
-    public void add( Reader r ) {
-        readers.add(r);
-    }
-    public void checkEmptiness() {
-        for( Iterator rIt = readers.iterator(); rIt.hasNext(); ) {
-            final Reader r = (Reader) rIt.next();
-            if( r.hasNext() ) {
-                G.v().out.println( "Reader "+r+" is not empty." );
-            }
-        }
-    }
+/** A class to group together all the global variables in Soot. */
+public class PaddleG extends PaddleSingletons 
+{
+    public static PaddleG v() { return (PaddleG) PaddleHook.v().paddleG(); }
 }
 

@@ -26,6 +26,6 @@ import soot.*;
  */
 public class ShadowNumberer extends MapNumberer
 { 
-    public ShadowNumberer( Singletons.Global g ) {}
-    public static ShadowNumberer v() { return G.v().soot_jimple_paddle_ShadowNumberer(); }
+    public ShadowNumberer( PaddleSingletons.Global g ) {}
+    public static ShadowNumberer v() { return PaddleG.v().soot_jimple_paddle_ShadowNumberer(); }
 }

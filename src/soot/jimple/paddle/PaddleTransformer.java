@@ -36,8 +36,7 @@ import java.io.*;
  */
 public class PaddleTransformer extends SceneTransformer
 { 
-    public PaddleTransformer( Singletons.Global g ) {}
-    public static PaddleTransformer v() { return G.v().soot_jimple_paddle_PaddleTransformer(); }
+    public static PaddleTransformer v() { return (PaddleTransformer) G.v().soot_jimple_paddle_PaddleHook().paddleTransformer(); }
 
     protected void internalTransform( String phaseName, Map options )
     {

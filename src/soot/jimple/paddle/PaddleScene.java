@@ -35,8 +35,8 @@ public class PaddleScene
 { 
     private static final boolean USE_DEP_MAN = true;
 
-    public PaddleScene( Singletons.Global g ) {}
-    public static PaddleScene v() { return G.v().soot_jimple_paddle_PaddleScene(); }
+    public PaddleScene( PaddleSingletons.Global g ) {}
+    public static PaddleScene v() { return PaddleG.v().soot_jimple_paddle_PaddleScene(); }
 
     public AbsReachableMethods rm;
     public AbsStaticCallBuilder scgb;

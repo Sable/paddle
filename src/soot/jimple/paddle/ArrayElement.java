@@ -24,10 +24,10 @@ import soot.*;
  * @author Ondrej Lhotak
  */
 public class ArrayElement implements PaddleField {
-    public ArrayElement( Singletons.Global g ) {
+    public ArrayElement( PaddleSingletons.Global g ) {
         Scene.v().getFieldNumberer().add(this);
     }
-    public static ArrayElement v() { return G.v().soot_jimple_paddle_ArrayElement(); }
+    public static ArrayElement v() { return PaddleG.v().soot_jimple_paddle_ArrayElement(); }
 
     private int number;
 

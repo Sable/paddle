@@ -26,8 +26,8 @@ import soot.util.*;
  */
 
 public class PaddleNumberers {
-    public PaddleNumberers( Singletons.Global g ) {}
-    public static PaddleNumberers v() { return G.v().soot_jimple_paddle_PaddleNumberers(); }
+    public PaddleNumberers( PaddleSingletons.Global g ) {}
+    public static PaddleNumberers v() { return PaddleG.v().soot_jimple_paddle_PaddleNumberers(); }
 
     private ArrayNumberer allocNodeNumberer = new ArrayNumberer();
     public ArrayNumberer allocNodeNumberer() { return allocNodeNumberer; }

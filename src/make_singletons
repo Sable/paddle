@@ -1,7 +1,7 @@
 #!/bin/sh
 cat <<EOF
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2003 Ondrej Lhotak
+ * Copyright (C) 2004 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -26,7 +26,7 @@ EOF
 
 echo
 echo '/** A class to group together all the global variables in Soot. */'
-echo 'public class Singletons {'
+echo 'public class PaddleSingletons {'
 echo '    public final class Global {'
 echo '        private Global() {}'
 echo '    }'

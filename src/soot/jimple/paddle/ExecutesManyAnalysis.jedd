@@ -30,8 +30,8 @@ import soot.toolkits.graph.*;
  */
 public class ExecutesManyAnalysis extends SceneTransformer
 { 
-    public ExecutesManyAnalysis( Singletons.Global g ) {}
-    public static ExecutesManyAnalysis v() { return G.v().soot_jimple_paddle_ExecutesManyAnalysis(); }
+    public ExecutesManyAnalysis( PaddleSingletons.Global g ) {}
+    public static ExecutesManyAnalysis v() { return PaddleG.v().soot_jimple_paddle_ExecutesManyAnalysis(); }
 
     public class IntraProc extends ForwardFlowAnalysis {
         public IntraProc(UnitGraph g) {
