@@ -1,0 +1,133 @@
+/* Soot - a J*va Optimization Framework
+ * Copyright (C) 2004 Ondrej Lhotak
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+
+package soot.jimple.paddle;
+import soot.*;
+import soot.jimple.*;
+import soot.jimple.paddle.bdddomains.*;
+import soot.util.*;
+import java.util.*;
+
+/** Generates escape information from points-to sets. */
+public class BDDEscapeAnalysis extends SceneTransformer {
+    public BDDEscapeAnalysis( PaddleSingletons.Global g ) {}
+    public static BDDEscapeAnalysis v() { return PaddleG.v().soot_jimple_paddle_BDDEscapeAnalysis(); }
+
+    <objc, obj> escapesThread = 0B;
+    <objc, obj> escapesMethod = 0B;
+
+    private <var> staticVars = 0B;
+    private <var> threadThis = 0B;
+
+    private <method, var> methodRoots = 0B;
+
+    private <varc, var, objc, obj> pt = 0B;
+    private <basec, base, objc, obj> fieldPt = 0B;
+    
+    private void setupRoots() {
+        PropBDD prop = (PropBDD) PaddleScene.v().prop;
+        pt = prop.pt;
+        fieldPt = (fld=>)prop.fieldPt;
+
+        NodeFactory gnf = PaddleScene.v().nodeFactory();
+        <method> methods = (ctxt=>) Results.v().reachableMethods().methods().get();
+        for( Iterator mIt = methods.iterator(); mIt.hasNext(); ) {
+            final SootMethod m = (SootMethod) mIt.next();
+            MethodNodeFactory mnf = new MethodNodeFactory(m);
+            if( !m.isStatic() ) {
+                methodRoots |= new {m=>method, mnf.caseThis()=>var};
+            }
+            for( int i = 0; i < m.getParameterCount(); i++ ) {
+                if( !( m.getParameterType(i) instanceof RefLikeType ) ) continue;
+                methodRoots |= new {m=>method, mnf.caseParm(i)=>var};
+            }
+            if( m.getReturnType() instanceof RefLikeType ) {
+                methodRoots |= new {m=>method, mnf.caseRet()=>var};
+            }
+        }
+        methodRoots |= methods{} >< new {gnf.caseThrow()=>var}{};
+
+        for( Iterator vnIt = PaddleNumberers.v().varNodeNumberer().iterator(); vnIt.hasNext(); ) {
+
+            final VarNode vn = (VarNode) vnIt.next();
+            Object o = vn.getVariable();
+            if( o instanceof SootField ) {
+                SootField sf = (SootField) o;
+                if( sf.isStatic() ) staticVars |= new{vn=>var};
+            }
+        }
+        FastHierarchy fh = Scene.v().getOrMakeFastHierarchy();
+        LinkedList queue = new LinkedList();
+        queue.add(Scene.v().getSootClass("java.lang.Thread"));
+        while( !queue.isEmpty() ) {
+            SootClass cl = (SootClass) queue.removeFirst();
+            queue.addAll( fh.getSubclassesOf(cl) );
+            if( cl.declaresMethod(sigRun) ) {
+                SootMethod run = cl.getMethod(sigRun);
+                threadThis |= new {new MethodNodeFactory(run).caseThis()=>var};
+            }
+        }
+    }
+
+    private NumberedString sigRun = Scene.v().getSubSigNumberer().
+        findOrAdd("void run()");
+
+    private void propagate() {
+        escapesThread |= (varc=>) pt{var} <> (staticVars|threadThis){var};
+        while(true) {
+            if( escapesThread !=
+            (escapesThread |= escapesThread{objc,obj} <> fieldPt{basec,base}))
+                break;
+        }
+        <ctxt, method, objc, obj> methodReachable = 0B;
+        methodReachable |= (varc=>ctxt) pt{var} <> methodRoots{var};
+        while(true) {
+            if( methodReachable !=
+            (methodReachable |= methodReachable{objc,obj} <> fieldPt{basec,base}))
+                break;
+        }
+
+        <obj, method> localallocs = 
+            ((BDDNodeInfo) PaddleScene.v().ni).localallocMap();
+        escapesMethod |= escapesThread;
+        <ctxt, method, objc, obj> methodMatches = 
+            methodReachable{method,obj} >< localallocs{method,obj};
+        <objc, method, obj> contextMatches =
+            (ctxt=>)methodMatches{objc,method,obj} ><
+            (objc=>)methodMatches{ctxt,method,obj};
+        escapesMethod |= (method=>) contextMatches;
+    }
+
+    public void analyze() {
+        setupRoots();
+        propagate();
+    }
+
+    protected void internalTransform( String phaseName, Map options ) {
+        analyze();
+    }
+
+    public Iterator escapesThread() {
+        return ((objc=>) escapesThread).iterator();
+    }
+    public Iterator escapesMethod() {
+        return ((objc=>) escapesMethod).iterator();
+    }
+}
+

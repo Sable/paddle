@@ -7,3 +7,4 @@ soot.jimple.paddle.ShadowNumberer
 soot.jimple.paddle.Results
 soot.jimple.paddle.ExecutesManyAnalysis
 soot.jimple.paddle.SideEffectAnalysis
+soot.jimple.paddle.BDDEscapeAnalysis
