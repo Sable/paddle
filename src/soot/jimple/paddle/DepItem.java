@@ -24,8 +24,4 @@ package soot.jimple.paddle;
  */
 public interface DepItem 
 { 
-    /** Process whatever input is available to be processed.
-     * @return true if something was done (dependencies need to be invalidated)
-     */
-    boolean update();
 }

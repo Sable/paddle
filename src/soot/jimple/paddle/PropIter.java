@@ -37,7 +37,8 @@ public final class PropIter extends AbsPropagator {
  ) {
         super( simple, load, store, alloc, propout, pag );
     }
-    private AbsP2Sets p2sets;
+    private AbsP2Sets p2sets = new TradP2Sets();
+    public AbsP2Sets p2sets() { return p2sets; }
     int iteration = 1;
     public final boolean fieldUpdate() {
 	boolean change = false;
@@ -51,7 +52,6 @@ public final class PropIter extends AbsPropagator {
     }
     /** Actually does the propagation. */
     public final boolean update() {
-        p2sets = PaddleScene.v().p2sets;
 	boolean change = false;
         if( newEdges() ) change = true;
         new TopoSorter( pag, false ).sort();

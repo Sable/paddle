@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2003, 2004 Ondrej Lhotak
+ * Copyright (C) 2003, 2004, 2005 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -30,7 +30,7 @@ import java.util.*;
 public class RobjDebug extends Robj{
     protected RobjBDD bdd;
     protected RobjSet trad;
-    public RobjDebug( RobjBDD bdd, RobjSet trad, String name ) { super(name); this.bdd = bdd; this.trad = trad;}
+    public RobjDebug( RobjBDD bdd, RobjSet trad, String name, PaddleQueue q ) { super(name, q); this.bdd = bdd; this.trad = trad;}
     public Iterator iterator() {
         return new Iterator() {
             Iterator tradIt = trad.iterator();

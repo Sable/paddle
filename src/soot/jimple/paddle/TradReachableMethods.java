@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2003 Ondrej Lhotak
+ * Copyright (C) 2003, 2004, 2005 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -27,16 +27,17 @@ import java.util.*;
  */
 public class TradReachableMethods extends AbsReachableMethods
 { 
-    private Set reachables = new HashSet();
+    private Set reachableCM = new HashSet();
+    private Set reachableM = new HashSet();
     private AbsCallGraph cg;
     private Rctxt_method newMethods;
-    TradReachableMethods( Rsrcc_srcm_stmt_kind_tgtc_tgtm edgesIn, Rctxt_method methodsIn, Qctxt_method out, AbsCallGraph cg ) {
-        super( edgesIn, methodsIn, out );
+    TradReachableMethods( Rsrcc_srcm_stmt_kind_tgtc_tgtm edgesIn, Rctxt_method methodsIn, Qmethod mout, Qctxt_method cmout, AbsCallGraph cg ) {
+        super( edgesIn, methodsIn, mout, cmout );
         this.cg = cg;
-        newMethods = out.reader("tradrm");
+        newMethods = cmout.reader("tradrm");
     }
     private boolean processEdge( Rsrcc_srcm_stmt_kind_tgtc_tgtm.Tuple t ) {
-        if( !reachables.contains( MethodContext.v( t.srcm(), t.srcc() ) ) ) return false;
+        if( !reachableCM.contains( MethodContext.v( t.srcm(), t.srcc() ) ) ) return false;
         return add( t.tgtc(), t.tgtm() );
     }
     public boolean update() {
@@ -63,24 +64,55 @@ public class TradReachableMethods extends AbsReachableMethods
         return change;
     }
     boolean add( Context c, SootMethod m ) {
-        if( reachables.add( MethodContext.v(m, c) ) ) {
-            out.add( c, m );
-            return true;
+        boolean ret = false;
+        if( reachableCM.add( MethodContext.v(m, c) ) ) {
+            if(cmout != null) cmout.add( c, m );
+            ret = true;
         }
-        return false;
+        if( reachableM.add(m) ) {
+            if(mout != null) mout.add(m);
+            ret = true;
+        }
+        return ret;
     }
-    int size() {
-        return reachables.size();
+    int sizeCM() {
+        return reachableCM.size();
+    }
+    int sizeM() {
+        return reachableM.size();
     }
     boolean contains( Context c, SootMethod m ) {
-        return reachables.contains(MethodContext.v(m, c));
+        return reachableCM.contains(MethodContext.v(m, c));
     }
-    Rctxt_method methods() {
+    boolean contains( SootMethod m ) {
+        return reachableM.contains(m);
+    }
+    public Rctxt_method contextMethods() {
         Qctxt_methodTrad qret = new Qctxt_methodTrad("methods");
         Rctxt_method ret = qret.reader("methods");
-        for( Iterator momcIt = reachables.iterator(); momcIt.hasNext(); ) {
+        for( Iterator momcIt = reachableCM.iterator(); momcIt.hasNext(); ) {
             final MethodOrMethodContext momc = (MethodOrMethodContext) momcIt.next();
             qret.add( momc.context(), momc.method() );
+        }
+        return ret;
+    }
+    public Rmethod methods() {
+        QmethodTrad qret = new QmethodTrad("methods");
+        Rmethod ret = qret.reader("methods");
+        for( Iterator momcIt = reachableM.iterator(); momcIt.hasNext(); ) {
+            final SootMethod momc = (SootMethod) momcIt.next();
+            qret.add(momc.method());
+        }
+        return ret;
+    }
+    public Iterator methodIterator() {
+        return reachableM.iterator();
+    }
+    public long countContexts(SootMethod m) {
+        int ret = 0;
+        for( Iterator momcIt = reachableCM.iterator(); momcIt.hasNext(); ) {
+            final MethodOrMethodContext momc = (MethodOrMethodContext) momcIt.next();
+            if(momc.method() == m) ret++;
         }
         return ret;
     }

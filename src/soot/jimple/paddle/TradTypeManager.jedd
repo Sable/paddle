@@ -29,9 +29,9 @@ import java.util.*;
  */
 public class TradTypeManager extends AbsTypeManager
 { 
-    TradTypeManager( Rvar_method_type locals, Rvar_type globals, Robj_method_type localallocs, Robj_type globalallocs, FastHierarchy fh ) {
+    TradTypeManager( Rvar_method_type locals, Rvar_type globals, Robj_method_type localallocs, Robj_type globalallocs) {
         super( locals, globals, localallocs, globalallocs );
-        this.fh = fh;
+        this.fh = PaddleScene.v().fh;
         newContextAllocNodes = PaddleNumberers.v().contextAllocNodeNumberer().iterator();
     }
     private Iterator newContextAllocNodes;

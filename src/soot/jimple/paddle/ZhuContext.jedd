@@ -1,0 +1,171 @@
+/* Soot - a J*va Optimization Framework
+ * Copyright (C) 2005 Ondrej Lhotak
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+
+package soot.jimple.paddle;
+import soot.jimple.paddle.bdddomains.*;
+import soot.jimple.paddle.queue.*;
+import soot.*;
+import soot.util.*;
+import soot.options.*;
+import soot.jimple.toolkits.callgraph.CallGraph;
+import soot.jimple.toolkits.callgraph.ReachableMethods;
+import java.util.*;
+import soot.toolkits.graph.*;
+
+
+/** Implements Calman-Zhu-Whaley-style ahead-of-time call graph
+ * context-sensitive analysis.
+ * @author Ondrej Lhotak
+ */
+public class ZhuContext
+{ 
+    private static final boolean VERBOSE = false;
+
+    Numberer numb = Scene.v().getMethodNumberer();
+    StronglyConnectedComponents scc;
+    AbsCallGraph cicg;
+    Qsrcc_srcm_stmt_kind_tgtc_tgtm out;
+
+    public ZhuContext(AbsCallGraph cicg, Qsrcc_srcm_stmt_kind_tgtc_tgtm out) {
+        this.cicg = cicg;
+        this.out = out;
+    }
+    public void solve() {
+
+        for( int i = 1; i < 5000; i++ ) {
+            Scene.v().getContextNumberer().add(new Integer(i));
+        }
+
+        if(VERBOSE) System.out.println( "Running AOTCG" );
+        <ctxt:C1, method:MS> methodContexts = 0B;
+        <srcc:C1, srcm:MS, stmt:ST, kind:KD, tgtc:C2, tgtm:MT> edges = 0B;
+        <srcc, tgtc> allContextEdges = 0B;
+
+        <srcm, stmt, kind, tgtm> cicgEdges = cicg.ciEdges().get();
+
+        <method> methods = (srcm=>method, stmt=>, kind=>, tgtm=>) cicgEdges 
+                         | (srcm=>, stmt=>, kind=>, tgtm=>method) cicgEdges;
+
+        for( Iterator mIt = Scene.v().getEntryPoints().iterator(); mIt.hasNext(); ) {
+
+            final SootMethod m = (SootMethod) mIt.next();
+            methods |= new{m=>method};
+        }
+
+        MutableDirectedGraph el = new HashMutableDirectedGraph();
+        for( Iterator mIt = methods.iterator(); mIt.hasNext(); ) {
+            final SootMethod m = (SootMethod) mIt.next();
+            el.addNode(m);
+        }
+
+        for( Iterator eIt = new Rsrcm_stmt_kind_tgtmBDD(cicgEdges).iterator(); eIt.hasNext(); ) {
+
+            final Rsrcm_stmt_kind_tgtm.Tuple e = (Rsrcm_stmt_kind_tgtm.Tuple) eIt.next();
+            if(!el.containsEdge(e.srcm(), e.tgtm())) 
+                el.addEdge(e.srcm(), e.tgtm());
+        }
+        if(VERBOSE) System.out.println( "Computing SCC" );
+        scc = new StronglyConnectedComponents(el);
+        if(VERBOSE) System.out.println( "Done computing SCC" );
+
+        for( Iterator mIt = Scene.v().getEntryPoints().iterator(); mIt.hasNext(); ) {
+
+            final SootMethod m = (SootMethod) mIt.next();
+            methodContexts |= new{getKey(m)=>method, null=>ctxt};
+        }
+
+        DirectedGraph sccel = scc.getSuperGraph();
+        if(VERBOSE) System.out.println( "Doing topological sort" );
+        PseudoTopologicalOrderer topo = new PseudoTopologicalOrderer();
+        List orderedComponents = topo.newList(sccel);
+        if(VERBOSE) System.out.println( "Constructing CS call graph" );
+        System.out.println("There are "+scc.getComponents().size()+" scc's.");
+        for( Iterator componentIt = orderedComponents.iterator(); componentIt.hasNext(); ) {
+            final List component = (List) componentIt.next();
+            long c = 0;
+            System.out.println("Processing connected component: "+component );
+            for( Iterator dstIt = component.iterator(); dstIt.hasNext(); ) {
+                final SootMethod dst = (SootMethod) dstIt.next();
+                System.out.println("Processing destination method "+dst);
+                <srcm, stmt, kind, tgtm> callers = 
+                    cicgEdges{tgtm} >< new {dst=>tgtm}{tgtm};
+                for( Iterator eIt = new Rsrcm_stmt_kind_tgtmBDD(callers).iterator(); eIt.hasNext(); ) {
+                    final Rsrcm_stmt_kind_tgtm.Tuple e = (Rsrcm_stmt_kind_tgtm.Tuple) eIt.next();
+                    SootMethod src = e.srcm();
+                    if( getKey(src) == getKey(dst) ) continue;
+                    <srcc:C1> contexts = (ctxt=>srcc) methodContexts{method} <>
+                                            new{getKey(src)=>method}{method};
+                    long k = contexts.size();
+                    if(k == 0) continue;
+                    if(VERBOSE) System.out.println("k is "+k+"; c is "+c);
+                    <srcc:C1, tgtc:C2> contextEdge = (<srcc:C1, tgtc:C2>)
+                        contexts.add(srcc.v(), C1.v(), tgtc.v(), C2.v(), c);
+                    allContextEdges |= contextEdge;
+                    if(VERBOSE) System.out.println("contextEdge.size is "+contextEdge.size());
+                    if(VERBOSE) System.out.println("allContextEdges.size is "+allContextEdges.size());
+                    <srcc, srcm, stmt, kind, tgtc, tgtm> newEdges =
+                        contextEdge{} ><
+                        new{src=>srcm, dst=>tgtm, e.stmt()=>stmt, e.kind()=>kind}{};
+                    if( (edges & newEdges) != 0B ) {
+                        System.out.println( "ALREADY THERE: "+(edges&newEdges).toString() );
+                    }
+                    edges |= newEdges;
+                    if(VERBOSE) System.out.println("edges: "+edges.size());
+                    methodContexts |= new{getKey(dst)=>method}{} ><
+                            (tgtc=>ctxt)(srcc=>) contextEdge{};
+                    if(VERBOSE) System.out.println( methodContexts.size() );
+                    //System.out.println(methodContexts.toString());
+                    c += k;
+                }
+            }
+        }
+        //System.out.println(edges.toString());
+        if(VERBOSE) System.out.println( "Adding intra-SCC edges" );
+        for( Iterator eIt = new Rsrcm_stmt_kind_tgtmBDD(cicgEdges).iterator(); eIt.hasNext(); ) {
+            final Rsrcm_stmt_kind_tgtm.Tuple e = (Rsrcm_stmt_kind_tgtm.Tuple) eIt.next();
+            SootMethod src = e.srcm();
+            SootMethod dst = e.tgtm();
+            if( getKey(src) != getKey(dst) ) continue;
+            System.out.println(""+src+" -> "+dst);
+            <ctxt> context = methodContexts{method} <>
+                new{getKey(src)=>method}{method};
+            edges |= (ctxt=>srcc, ctxt=>tgtc) context{} ><
+                new{src=>srcm, dst=>tgtm, e.stmt()=>stmt, e.kind()=>kind}{};
+        }
+        for( Iterator mIt = methods.iterator(); mIt.hasNext(); ) {
+            final SootMethod m = (SootMethod) mIt.next();
+            methodContexts |= new{m=>method}{} >< (
+                new{getKey(m)=>method}{method} <> methodContexts{method} ){};
+        }
+
+        //System.out.println(edges.toString());
+        System.out.println("Number of edges: "+edges.fsize());
+        System.out.println("Number of contexts: "+methodContexts.fsize());
+        if(VERBOSE) System.out.println( "Done AOTCG" );
+        out.add(edges);
+
+        cicg = null;
+
+    }
+    protected SootMethod getKey( SootMethod m ) {
+        return (SootMethod) scc.getComponentOf(m).get(0);
+    }
+}
+
+

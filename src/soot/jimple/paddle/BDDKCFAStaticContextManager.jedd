@@ -18,6 +18,7 @@
  */
 
 package soot.jimple.paddle;
+import soot.*;
 import soot.jimple.paddle.queue.*;
 import soot.jimple.paddle.bdddomains.*;
 import jedd.*;
@@ -35,13 +36,17 @@ public class BDDKCFAStaticContextManager extends AbsStaticContextManager
     }
     private Jedd.Shifter shifter;
     private int k;
+    private int shiftWidth() {
+        return ((ContextStringNumberer) Scene.v().getContextNumberer())
+            .shiftWidth;
+    }
     public boolean update() {
         if( shifter == null ) {
-            int[] from = new int[(k-1)*ContextStringNumberer.SHIFT_WIDTH];
-            int[] to = new int[(k-1)*ContextStringNumberer.SHIFT_WIDTH];
+            int[] from = new int[(k-1)*shiftWidth()];
+            int[] to = new int[(k-1)*shiftWidth()];
             for( int i = 0; i < from.length; i++ ) {
                 from[i] = i + C1.v().firstBit();
-                to[i] = i + C2.v().firstBit() + ContextStringNumberer.SHIFT_WIDTH;
+                to[i] = i + C2.v().firstBit() + shiftWidth();
             }
             shifter = Jedd.v().makeShifter( from, to );
         }

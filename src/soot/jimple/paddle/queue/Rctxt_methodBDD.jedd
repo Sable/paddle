@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2003, 2004 Ondrej Lhotak
+ * Copyright (C) 2003, 2004, 2005 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -30,8 +30,9 @@ import java.util.*;
 public final class Rctxt_methodBDD extends Rctxt_method {
     private <ctxt:C1, method:MS> bdd;
     void add( <ctxt:C1, method:MS> tuple ) { bdd |= tuple; }
-    public Rctxt_methodBDD( <ctxt:C1, method:MS> bdd, String name ) { this(name); add(bdd); }
-    Rctxt_methodBDD(String name) { super(name); bdd = 0B; }
+    public Rctxt_methodBDD( <ctxt:C1, method:MS> bdd, String name, PaddleQueue q ) { this(name, q); add(bdd); }
+    public Rctxt_methodBDD( <ctxt:C1, method:MS> bdd ) { this("", null); add(bdd); }
+    Rctxt_methodBDD(String name, PaddleQueue q) { super(name, q); bdd = 0B; }
     public Iterator iterator() {;
         return new Iterator() {
             private Iterator it;

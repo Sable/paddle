@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2003, 2004 Ondrej Lhotak
+ * Copyright (C) 2003, 2004, 2005 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,8 +28,8 @@ import jedd.*;
 import java.util.*;
 
 public final class Rvar_srcm_stmt_dtp_signature_kindTrad extends Rvar_srcm_stmt_dtp_signature_kindIter {
-    Rvar_srcm_stmt_dtp_signature_kindTrad( QueueReader r, String name ) { super(r, name); }
+    Rvar_srcm_stmt_dtp_signature_kindTrad( QueueReader r, String name, PaddleQueue q ) { super(r, name, q); }
     public Rvar_srcm_stmt_dtp_signature_kindTrad copy() {
-        return new Rvar_srcm_stmt_dtp_signature_kindTrad( (QueueReader) ((QueueReader)r).clone(), name );
+        return new Rvar_srcm_stmt_dtp_signature_kindTrad( (QueueReader) ((QueueReader)r).clone(), name, queue() );
     }
 }

@@ -24,8 +24,12 @@ import soot.toolkits.scalar.Pair;
 import soot.*;
 
 public class PaddleNativeHelper extends NativeHelper {
+    public PaddleNativeHelper( NodeFactory gnf ) {
+        this.gnf = gnf;
+    }
+    private NodeFactory gnf;
     protected void assignImpl(ReferenceVariable lhs, ReferenceVariable rhs) {
-        PaddleScene.v().nodeFactory().addEdge( (Node) rhs, (Node) lhs );
+        gnf.addEdge( (Node) rhs, (Node) lhs );
     }
     protected void assignObjectToImpl(ReferenceVariable lhs, AbstractObject obj) {
 	AllocNode objNode = PaddleScene.v().nodeManager().makeGlobalAllocNode( 
@@ -35,18 +39,18 @@ public class PaddleNativeHelper extends NativeHelper {
         VarNode var;
         if( lhs instanceof FieldRefNode ) {
 	    var = PaddleScene.v().nodeManager().makeGlobalVarNode( objNode, objNode.getType() );
-            PaddleScene.v().nodeFactory().addEdge( (Node) lhs, var );
+            gnf.addEdge( (Node) lhs, var );
         } else {
             var = (VarNode) lhs;
         }
-        PaddleScene.v().nodeFactory().addEdge( objNode, var );
+        gnf.addEdge( objNode, var );
     }
     protected void throwExceptionImpl(AbstractObject obj) {
 	AllocNode objNode = PaddleScene.v().nodeManager().makeGlobalAllocNode( 
 		new Pair( "AbstractObject", obj.getType() ),
 		 obj.getType(), null );
 
-        PaddleScene.v().nodeFactory().addEdge( objNode, PaddleScene.v().nodeFactory().caseThrow() );
+        gnf.addEdge( objNode, gnf.caseThrow() );
     }
     protected ReferenceVariable arrayElementOfImpl(ReferenceVariable base) {
         Node n = (Node) base;
@@ -56,7 +60,7 @@ public class PaddleNativeHelper extends NativeHelper {
 	} else {
 	    FieldRefNode b = (FieldRefNode) base;
 	    l = PaddleScene.v().nodeManager().makeGlobalVarNode( b, b.getType() );
-	    PaddleScene.v().nodeFactory().addEdge( b, l );
+	    gnf.addEdge( b, l );
 	}
         return FieldRefNode.make( l, ArrayElement.v() );
     }
@@ -64,7 +68,7 @@ public class PaddleNativeHelper extends NativeHelper {
 	return source;
     }
     protected ReferenceVariable newInstanceOfImpl(ReferenceVariable cls) {
-        return PaddleScene.v().nodeFactory().caseNewInstance( (VarNode) cls );
+        return gnf.caseNewInstance( (VarNode) cls );
     }
     protected ReferenceVariable staticFieldImpl(String className, String fieldName ) {
 	SootClass c = RefType.v( className ).getSootClass();

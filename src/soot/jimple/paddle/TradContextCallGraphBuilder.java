@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2003 Ondrej Lhotak
+ * Copyright (C) 2003, 2004, 2005 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -21,6 +21,8 @@ package soot.jimple.paddle;
 import soot.*;
 import soot.jimple.paddle.queue.*;
 import java.util.*;
+import soot.jimple.toolkits.callgraph.CallGraph;
+import soot.jimple.toolkits.callgraph.Edge;
 
 /** Converts context-insensitive call edges into context-sensitive ones
  * for each reachable method context.
@@ -29,32 +31,31 @@ import java.util.*;
 public class TradContextCallGraphBuilder extends AbsContextCallGraphBuilder 
 { 
     TradContextCallGraphBuilder( Rctxt_method methodsIn,
-            Rsrcc_srcm_stmt_kind_tgtc_tgtm edgesIn,
-            Qsrcc_srcm_stmt_kind_tgtc_tgtm out,
-            AbsCallGraph cicg ) {
-        super( methodsIn, edgesIn, out, cicg );
+            Rsrcm_stmt_kind_tgtm edgesIn,
+            Qsrcc_srcm_stmt_kind_tgtc_tgtm out
+            ) {
+        super( methodsIn, edgesIn, out );
     }
+    private CallGraph cicg;
     private MethodToContexts m2c = new MethodToContexts();
     public boolean update() {
         boolean change = false;
         for( Iterator eIt = edgesIn.iterator(); eIt.hasNext(); ) {
-            final Rsrcc_srcm_stmt_kind_tgtc_tgtm.Tuple e = (Rsrcc_srcm_stmt_kind_tgtc_tgtm.Tuple) eIt.next();
-            for( Iterator mcIt = m2c.get(e.srcm()).iterator(); mcIt.hasNext(); ) {
-                final MethodOrMethodContext mc = (MethodOrMethodContext) mcIt.next();
-                out.add( mc.context(), mc.method(), e.stmt(), e.kind(),
-                        e.tgtc(), e.tgtm() );
-                change = true;
+            final Rsrcm_stmt_kind_tgtm.Tuple e = (Rsrcm_stmt_kind_tgtm.Tuple) eIt.next();
+            if( cicg.addEdge(new Edge(e.srcm(), e.stmt(), e.tgtm(), e.kind())) ) {
+                for( Iterator mcIt = m2c.get(e.srcm()).iterator(); mcIt.hasNext(); ) {
+                    final MethodOrMethodContext mc = (MethodOrMethodContext) mcIt.next();
+                    out.add( mc.context(), mc.method(), e.stmt(), e.kind(),
+                            null, e.tgtm() );
+                    change = true;
+                }
             }
         }
         for( Iterator tIt = methodsIn.iterator(); tIt.hasNext(); ) {
             final Rctxt_method.Tuple t = (Rctxt_method.Tuple) tIt.next();
-            Rsrcc_srcm_stmt_kind_tgtc_tgtm edges = cicg.edgesOutOf(t.method());
-            Iterator it = edges.iterator();
-            while( it.hasNext() ) {
-                Rsrcc_srcm_stmt_kind_tgtc_tgtm.Tuple e =
-                    (Rsrcc_srcm_stmt_kind_tgtc_tgtm.Tuple) it.next();
-                out.add( t.ctxt(), t.method(), e.stmt(), e.kind(),
-                    e.tgtc(), e.tgtm() );
+            for( Iterator eIt = cicg.edgesOutOf(t.method()); eIt.hasNext(); ) {
+                final Edge e = (Edge) eIt.next();
+                out.add(t.ctxt(), t.method(), e.srcStmt(), e.kind(), null, e.tgt());
                 change = true;
             }
             m2c.add( MethodContext.v( t.method(), t.ctxt() ) );

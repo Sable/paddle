@@ -44,7 +44,6 @@ public class TradCallEdgeContextifier extends AbsCallEdgeContextifier
 
     public boolean update() {
     	boolean change = false;
-        if( !PaddleScene.v().depMan.checkPrec(this) ) throw new RuntimeException();
         for( Iterator tIt = parms.iterator(); tIt.hasNext(); ) {
             final Rsrcm_stmt_kind_tgtm_src_dst.Tuple t = (Rsrcm_stmt_kind_tgtm_src_dst.Tuple) tIt.next();
             Cons edge = new Cons(new Cons(t.srcm(), t.stmt()),

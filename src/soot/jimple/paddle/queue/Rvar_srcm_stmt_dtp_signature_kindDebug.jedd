@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2003, 2004 Ondrej Lhotak
+ * Copyright (C) 2003, 2004, 2005 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -30,7 +30,7 @@ import java.util.*;
 public class Rvar_srcm_stmt_dtp_signature_kindDebug extends Rvar_srcm_stmt_dtp_signature_kind{
     protected Rvar_srcm_stmt_dtp_signature_kindBDD bdd;
     protected Rvar_srcm_stmt_dtp_signature_kindSet trad;
-    public Rvar_srcm_stmt_dtp_signature_kindDebug( Rvar_srcm_stmt_dtp_signature_kindBDD bdd, Rvar_srcm_stmt_dtp_signature_kindSet trad, String name ) { super(name); this.bdd = bdd; this.trad = trad;}
+    public Rvar_srcm_stmt_dtp_signature_kindDebug( Rvar_srcm_stmt_dtp_signature_kindBDD bdd, Rvar_srcm_stmt_dtp_signature_kindSet trad, String name, PaddleQueue q ) { super(name, q); this.bdd = bdd; this.trad = trad;}
     public Iterator iterator() {
         return new Iterator() {
             Iterator tradIt = trad.iterator();

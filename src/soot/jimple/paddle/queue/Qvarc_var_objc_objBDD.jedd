@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2003, 2004 Ondrej Lhotak
+ * Copyright (C) 2003, 2004, 2005 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -33,7 +33,7 @@ public final class Qvarc_var_objc_objBDD extends Qvarc_var_objc_obj {
     public void add( Context _varc, VarNode _var, Context _objc, AllocNode _obj ) {
         add( new { _varc=>varc, _var=>var, _objc=>objc, _obj=>obj } );
     }
-    public void add( <varc:C1, var:V1, objc:C2, obj:H1> in ) {
+    public void add( <varc:C1, var:V1, objc:C3, obj:H1> in ) {
         if( in != 0B ) invalidate();
         for( Iterator it = readers.iterator(); it.hasNext(); ) {
             Rvarc_var_objc_objBDD reader = (Rvarc_var_objc_objBDD) it.next();
@@ -41,7 +41,7 @@ public final class Qvarc_var_objc_objBDD extends Qvarc_var_objc_obj {
         }
     }
     public Rvarc_var_objc_obj reader( String rname ) {
-        Rvarc_var_objc_obj ret = new Rvarc_var_objc_objBDD( name+":"+rname );
+        Rvarc_var_objc_obj ret = new Rvarc_var_objc_objBDD( name+":"+rname, this );
         readers.add( ret );
         return ret;
     }

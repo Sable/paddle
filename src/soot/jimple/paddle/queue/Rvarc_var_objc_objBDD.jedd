@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2003, 2004 Ondrej Lhotak
+ * Copyright (C) 2003, 2004, 2005 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,10 +28,11 @@ import jedd.*;
 import java.util.*;
 
 public final class Rvarc_var_objc_objBDD extends Rvarc_var_objc_obj {
-    private <varc:C1, var:V1, objc:C2, obj:H1> bdd;
-    void add( <varc:C1, var:V1, objc:C2, obj:H1> tuple ) { bdd |= tuple; }
-    public Rvarc_var_objc_objBDD( <varc:C1, var:V1, objc:C2, obj:H1> bdd, String name ) { this(name); add(bdd); }
-    Rvarc_var_objc_objBDD(String name) { super(name); bdd = 0B; }
+    private <varc:C1, var:V1, objc:C3, obj:H1> bdd;
+    void add( <varc:C1, var:V1, objc:C3, obj:H1> tuple ) { bdd |= tuple; }
+    public Rvarc_var_objc_objBDD( <varc:C1, var:V1, objc:C3, obj:H1> bdd, String name, PaddleQueue q ) { this(name, q); add(bdd); }
+    public Rvarc_var_objc_objBDD( <varc:C1, var:V1, objc:C3, obj:H1> bdd ) { this("", null); add(bdd); }
+    Rvarc_var_objc_objBDD(String name, PaddleQueue q) { super(name, q); bdd = 0B; }
     public Iterator iterator() {;
         return new Iterator() {
             private Iterator it;
@@ -51,8 +52,8 @@ public final class Rvarc_var_objc_objBDD extends Rvarc_var_objc_obj {
             public void remove() { throw new UnsupportedOperationException(); }
         };
     }
-    public <varc:C1, var:V1, objc:C2, obj:H1> get() {
-        <varc:C1, var:V1, objc:C2, obj:H1> ret = bdd;
+    public <varc:C1, var:V1, objc:C3, obj:H1> get() {
+        <varc:C1, var:V1, objc:C3, obj:H1> ret = bdd;
         bdd = 0B;
         return ret;
     }

@@ -30,9 +30,9 @@ import jedd.*;
  */
 public class BDDTypeManager extends AbsTypeManager
 { 
-    BDDTypeManager( Rvar_method_type locals, Rvar_type globals, Robj_method_type localallocs, Robj_type globalallocs, BDDHierarchy fh ) {
+    BDDTypeManager( Rvar_method_type locals, Rvar_type globals, Robj_method_type localallocs, Robj_type globalallocs) {
         super( locals, globals, localallocs, globalallocs );
-        this.fh = fh;
+        this.fh = PaddleScene.v().BDDHierarchy();
     }
     <var, obj> result = 0B;
     <var, type> allVars = 0B;

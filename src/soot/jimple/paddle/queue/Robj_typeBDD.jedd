@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2003, 2004 Ondrej Lhotak
+ * Copyright (C) 2003, 2004, 2005 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -30,8 +30,9 @@ import java.util.*;
 public final class Robj_typeBDD extends Robj_type {
     private <obj:H1, type:T1> bdd;
     void add( <obj:H1, type:T1> tuple ) { bdd |= tuple; }
-    public Robj_typeBDD( <obj:H1, type:T1> bdd, String name ) { this(name); add(bdd); }
-    Robj_typeBDD(String name) { super(name); bdd = 0B; }
+    public Robj_typeBDD( <obj:H1, type:T1> bdd, String name, PaddleQueue q ) { this(name, q); add(bdd); }
+    public Robj_typeBDD( <obj:H1, type:T1> bdd ) { this("", null); add(bdd); }
+    Robj_typeBDD(String name, PaddleQueue q) { super(name, q); bdd = 0B; }
     public Iterator iterator() {;
         return new Iterator() {
             private Iterator it;

@@ -28,20 +28,25 @@ import java.util.*;
 /** Keeps track of which methods are reachable.
  * @author Ondrej Lhotak
  */
-public abstract class AbsStaticCallBuilder implements DepItem
+public abstract class AbsStaticCallBuilder implements PaddleComponent
 { 
-    protected Rctxt_method in;
-    protected Qsrcc_srcm_stmt_kind_tgtc_tgtm out;
+    protected Rmethod in;
+    protected Qsrcm_stmt_kind_tgtm out;
     protected Qvar_srcm_stmt_dtp_signature_kind receivers;
     protected Qvar_srcm_stmt_tgtm specials;
     protected CGOptions options;
-    AbsStaticCallBuilder( Rctxt_method in, Qsrcc_srcm_stmt_kind_tgtc_tgtm out, Qvar_srcm_stmt_dtp_signature_kind receivers, Qvar_srcm_stmt_tgtm specials ) {
+    protected NodeFactory gnf;
+    AbsStaticCallBuilder( Rmethod in, Qsrcm_stmt_kind_tgtm out, Qvar_srcm_stmt_dtp_signature_kind receivers, Qvar_srcm_stmt_tgtm specials, NodeFactory gnf ) {
         this.in = in;
         this.out = out;
         this.receivers = receivers;
         this.specials = specials;
+        this.gnf = gnf;
         this.options = new CGOptions( PhaseOptions.v().getPhaseOptions( "cg" ) );
     }
     public abstract boolean update();
+    public void queueDeps(DependencyManager depMan) {
+        depMan.addQueueDep(in, this);
+    }
 }
 

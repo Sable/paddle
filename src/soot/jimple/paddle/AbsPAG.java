@@ -25,7 +25,7 @@ import java.util.*;
 /** Stores the pointer assignment graph.
  * @author Ondrej Lhotak
  */
-public abstract class AbsPAG implements DepItem
+public abstract class AbsPAG implements PaddleComponent
 { 
     protected Rsrcc_src_dstc_dst simple;
     protected Rsrcc_src_fld_dstc_dst load;
@@ -88,5 +88,11 @@ public abstract class AbsPAG implements DepItem
     public abstract Rsrcc_src_fld_dstc_dst allLoad();
     public abstract Rsrcc_src_dstc_dst_fld allStore();
     public abstract Robjc_obj_varc_var allAlloc();
+    public void queueDeps(DependencyManager depMan) {
+        depMan.addQueueDep(simple, this);
+        depMan.addQueueDep(load, this);
+        depMan.addQueueDep(store, this);
+        depMan.addQueueDep(alloc, this);
+    }
 }
 

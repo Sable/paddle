@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2004 Ondrej Lhotak
+ * Copyright (C) 2004, 2005 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,23 +28,26 @@ import soot.*;
  */
 public class TradKObjSensVirtualContextManager extends AbsVirtualContextManager
 { 
-    TradKObjSensVirtualContextManager( Rctxt_var_obj_srcm_stmt_kind_tgtm in, Qsrcc_srcm_stmt_kind_tgtc_tgtm out, int k ) {
-        super( in, out );
+    TradKObjSensVirtualContextManager( Rvarc_var_objc_obj_srcm_stmt_kind_tgtm in, Qsrcc_srcm_stmt_kind_tgtc_tgtm out, Qobjc_obj_varc_var thisOut, NodeFactory gnf, int k ) {
+        super( in, out, thisOut, gnf );
         this.k = k;
     }
     private int k;
     public boolean update() {
         boolean change = false;
         for( Iterator tIt = in.iterator(); tIt.hasNext(); ) {
-            final Rctxt_var_obj_srcm_stmt_kind_tgtm.Tuple t = (Rctxt_var_obj_srcm_stmt_kind_tgtm.Tuple) tIt.next();
-            ContextString cs = (ContextString) t.ctxt();
+            final Rvarc_var_objc_obj_srcm_stmt_kind_tgtm.Tuple t = (Rvarc_var_objc_obj_srcm_stmt_kind_tgtm.Tuple) tIt.next();
+            ContextString cs = (ContextString) t.varc();
             if( cs == null ) cs = new ContextString(k);
-            out.add( t.ctxt(),
+            ContextString newCs = cs.push(t.obj());
+            out.add( t.varc(),
                     t.srcm(),
                     t.stmt(),
                     t.kind(),
-                    cs.push(t.obj()),
+                    newCs,
                     t.tgtm() );
+            thisOut.add( t.objc(), t.obj(), newCs,
+                    (VarNode) new MethodNodeFactory(t.tgtm(), gnf).caseThis() );
             change = true;
         }
         return change;

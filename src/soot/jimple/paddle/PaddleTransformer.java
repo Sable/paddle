@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2002, 2003, 2004 Ondrej Lhotak
+ * Copyright (C) 2002, 2003, 2004, 2005 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,12 +20,14 @@
 package soot.jimple.paddle;
 import soot.*;
 import soot.jimple.paddle.queue.*;
+import soot.jimple.paddle.bdddomains.*;
 import soot.jimple.*;
 import java.util.*;
 import soot.util.*;
 import soot.options.PaddleOptions;
 import soot.options.CGOptions;
 import soot.tagkit.*;
+import soot.jimple.toolkits.callgraph.ReachableMethods;
 import soot.jimple.toolkits.callgraph.CallGraph;
 import soot.jimple.toolkits.callgraph.Edge;
 import soot.jimple.toolkits.pointer.util.*;
@@ -50,35 +52,38 @@ public class PaddleTransformer extends SceneTransformer
         switch( cgoptions.context() ) {
             case CGOptions.context_insens:
                 Scene.v().setContextNumberer( new MapNumberer() );
+                PaddleNumberers.v().contextDomain = KindDomain.v();
                 break;
             case CGOptions.context_1cfa:
                 Scene.v().setContextNumberer( Scene.v().getUnitNumberer() );
+                PaddleNumberers.v().contextDomain = StmtDomain.v();
                 break;
             case CGOptions.context_objsens:
                 Scene.v().setContextNumberer( PaddleNumberers.v().allocNodeNumberer() );
+                PaddleNumberers.v().contextDomain = ObjDomain.v();
                 break;
             case CGOptions.context_kcfa:
-                Scene.v().setContextNumberer( new ContextStringNumberer(Scene.v().getUnitNumberer(), cgoptions.k()) );
+                Scene.v().setContextNumberer( new ContextStringNumberer(StmtDomain.v(), Scene.v().getUnitNumberer(), cgoptions.k()) );
+                PaddleNumberers.v().contextDomain = null;
                 break;
             case CGOptions.context_kobjsens:
-                Scene.v().setContextNumberer( new ContextStringNumberer(PaddleNumberers.v().allocNodeNumberer(), cgoptions.k()) );
+                Scene.v().setContextNumberer( new ContextStringNumberer(ObjDomain.v(), PaddleNumberers.v().allocNodeNumberer(), cgoptions.k()) );
+                PaddleNumberers.v().contextDomain = null;
                 break;
             default:
                 throw new RuntimeException( "Unhandled kind of context" );
-        }
-
-        if( opts.simulate_natives() ) {
-            NativeHelper.register( PaddleScene.v().nativeHelper() );
         }
 
         PaddleScene.v().setup( opts );
     }
 
     public void solve(PaddleOptions opts) {
+        /*
         Iterator rcoutIt = null;
         if( opts.add_tags() ) {
             rcoutIt = PaddleScene.v().rcout.reader("tags").iterator();
         }
+        */
 
         if( opts.pre_jimplify() ) preJimplify();
 
@@ -92,148 +97,14 @@ public class PaddleTransformer extends SceneTransformer
             reportTime( "Propagation", startSolve, endSolve );
         }
 
+        Results.v().makeStandardSootResults();
+
         if( opts.set_mass() ) findSetMass();
 
-        CallGraph cg = new CallGraph();
-        for( Iterator tIt = PaddleScene.v().cg.edges().iterator(); tIt.hasNext(); ) {
-            final Rsrcc_srcm_stmt_kind_tgtc_tgtm.Tuple t = (Rsrcc_srcm_stmt_kind_tgtc_tgtm.Tuple) tIt.next();
-            Edge e = new Edge( t.srcm(),
-                                  t.stmt(),
-                                  t.tgtm(),
-                                  t.kind() );
-            cg.addEdge(e);
-        }
-        Scene.v().setCallGraph( cg );
-        if( opts.verbose() ) {
-            G.v().out.println( "[Paddle] Number of reachable methods: "
-                    +Scene.v().getReachableMethods().size() );
-            G.v().out.println( "[Paddle] Number of reachable method contexts: "
-                    +PaddleScene.v().rc.size() );
-            G.v().out.println( "[Paddle] Number of call edges: "
-                    +Scene.v().getCallGraph().size() );
-            G.v().out.println( "[Paddle] Number of context call edges: "
-                    +PaddleScene.v().cg.size() );
-        }
-
-        //Readers.v().checkEmptiness();
-
-        /*
-        PaddleOptions opts = new PaddleOptions( options );
-        final String output_dir = SourceLocator.v().getOutputDir();
-
-        // Build pointer assignment graph
-        ContextInsensitiveBuilder b = new ContextInsensitiveBuilder();
-        if( opts.pre_jimplify() ) b.preJimplify();
-        if( opts.force_gc() ) doGC();
-        Date startBuild = new Date();
-        final PAG pag = (PAG) b.setup( opts );
-        b.build();
-        Date endBuild = new Date();
-        reportTime( "Pointer Assignment Graph", startBuild, endBuild );
-        if( opts.force_gc() ) doGC();
-
-        // Build type masks
-        Date startTM = new Date();
-        PaddleScene.v().tm.makeTypeMask();
-        Date endTM = new Date();
-        reportTime( "Type masks", startTM, endTM );
-        if( opts.force_gc() ) doGC();
-
-        if( opts.verbose() ) {
-            G.v().out.println( "VarNodes: "+pag.getVarNodeNumberer().size() );
-            G.v().out.println( "FieldRefNodes: "+pag.getFieldRefNodeNumberer().size() );
-            G.v().out.println( "AllocNodes: "+pag.getAllocNodeNumberer().size() );
-        }
-
-        // Simplify pag
-        Date startSimplify = new Date();
-
-        // We only simplify if on_fly_cg is false. But, if vta is true, it
-        // overrides on_fly_cg, so we can still simplify. Something to handle
-        // these option interdependencies more cleanly would be nice...
-        if( ( opts.simplify_sccs() && !opts.on_fly_cg() ) || opts.vta() ) {
-                new SCCCollapser( pag, opts.ignore_types_for_sccs() ).collapse();
-        }
-        if( opts.simplify_offline() && !opts.on_fly_cg() ) {
-            new EBBCollapser( pag ).collapse();
-        }
-        if( true || opts.simplify_sccs() || opts.vta() || opts.simplify_offline() ) {
-            pag.cleanUpMerges();
-        }
-        Date endSimplify = new Date();
-        reportTime( "Pointer Graph simplified", startSimplify, endSimplify );
-        if( opts.force_gc() ) doGC();
-
-        // Dump pag
-        PAGDumper dumper = null;
-        if( opts.dump_pag() || opts.dump_solution() ) {
-            dumper = new PAGDumper( pag, output_dir );
-        }
-        if( opts.dump_pag() ) dumper.dump();
-
-        // Propagate
-        Date startProp = new Date();
-        final Propagator[] propagator = new Propagator[1];
-        switch( opts.propagator() ) {
-            case PaddleOptions.propagator_iter:
-                propagator[0] = new PropIter( pag );
-                break;
-            case PaddleOptions.propagator_worklist:
-                propagator[0] = new PropWorklist( pag );
-                break;
-            case PaddleOptions.propagator_cycle:
-                propagator[0] = new PropCycle( pag );
-                break;
-            case PaddleOptions.propagator_merge:
-                propagator[0] = new PropMerge( pag );
-                break;
-            case PaddleOptions.propagator_alias:
-                propagator[0] = new PropAlias( pag );
-                break;
-            case PaddleOptions.propagator_none:
-                break;
-            default:
-                throw new RuntimeException();
-        }
-        if( propagator[0] != null ) propagator[0].propagate();
-        Date endProp = new Date();
-        reportTime( "Propagation", startProp, endProp );
-        reportTime( "Solution found", startSimplify, endProp );
-        if( opts.force_gc() ) doGC();
-        
-        if( !opts.on_fly_cg() || opts.vta() ) {
-            CallGraphBuilder cgb = new CallGraphBuilder( pag );
-            cgb.build();
-        }
-
-        if( opts.verbose() ) {
-            G.v().out.println( "[Paddle] Number of reachable methods: "
-                    +Scene.v().getReachableMethods().size() );
-        }
-
-        if( opts.set_mass() ) findSetMass( pag );
-
-        /*
-        if( propagator[0] instanceof PropMerge ) {
-            new MergeChecker( pag ).check();
-        } else if( propagator[0] != null ) {
-            new Checker( pag ).check();
-        }
-        * /
-
-        if( opts.dump_answer() ) new ReachingTypeDumper( pag, output_dir ).dump();
-        if( opts.dump_solution() ) dumper.dumpPointsToSets();
-        if( opts.dump_html() ) new PAG2HTML( pag, output_dir ).dump();
-        Scene.v().setPointsToAnalysis( pag );
-        */
-        if( opts.add_tags() ) {
-            addTags(rcoutIt);
-        }
-
-        //BDDCflow bddcflow = new BDDCflow( PaddleScene.v().cg );
-        //bddcflow.addEntryPoints( Scene.v().getEntryPoints() );
-        //bddcflow.update();
+        if( opts.context_counts() ) ContextCountPrinter.printContextCounts();
     }
+
+    /*
     private void addContext( Host h, Context c, Map contextToTag ) {
         Tag t = (Tag) contextToTag.get(c);
         if( t == null ) {
@@ -316,6 +187,7 @@ public class PaddleTransformer extends SceneTransformer
             }
         }
     }
+    */
     private void preJimplify() {
         boolean change = true;
         while( change ) {
@@ -349,7 +221,7 @@ public class PaddleTransformer extends SceneTransformer
 
             final ContextVarNode v = (ContextVarNode) vIt.next();
             scalars++;
-            PointsToSetReadOnly set = PaddleScene.v().p2sets.get(v);
+            PointsToSetReadOnly set = Results.v().p2sets().get(v);
             if( set != null ) mass += set.size();
             if( set != null ) varMass += set.size();
         }
@@ -358,7 +230,7 @@ public class PaddleTransformer extends SceneTransformer
             Iterator it = an.fields();
             while( it.hasNext() ) {
                 ContextAllocDotField adf = (ContextAllocDotField) it.next();
-                PointsToSetReadOnly set = PaddleScene.v().p2sets.get(adf);
+                PointsToSetReadOnly set = Results.v().p2sets().get(adf);
                 if( set != null ) mass += set.size();
                 if( set != null && set.size() > 0 ) {
                     adfs++;

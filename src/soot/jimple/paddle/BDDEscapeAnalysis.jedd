@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2004 Ondrej Lhotak
+ * Copyright (C) 2004, 2005 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -21,14 +21,12 @@ package soot.jimple.paddle;
 import soot.*;
 import soot.jimple.*;
 import soot.jimple.paddle.bdddomains.*;
+import soot.jimple.paddle.queue.*;
 import soot.util.*;
 import java.util.*;
 
 /** Generates escape information from points-to sets. */
-public class BDDEscapeAnalysis extends SceneTransformer {
-    public BDDEscapeAnalysis( PaddleSingletons.Global g ) {}
-    public static BDDEscapeAnalysis v() { return PaddleG.v().soot_jimple_paddle_BDDEscapeAnalysis(); }
-
+public class BDDEscapeAnalysis {
     <objc, obj> escapesThread = 0B;
     <objc, obj> escapesMethod = 0B;
 
@@ -40,16 +38,16 @@ public class BDDEscapeAnalysis extends SceneTransformer {
     private <varc, var, objc, obj> pt = 0B;
     private <basec, base, objc, obj> fieldPt = 0B;
     
-    private void setupRoots() {
-        PropBDD prop = (PropBDD) PaddleScene.v().prop;
+    private void setupRoots(PropBDD prop) {
         pt = prop.pt;
         fieldPt = (fld=>)prop.fieldPt;
 
-        NodeFactory gnf = PaddleScene.v().nodeFactory();
-        <method> methods = (ctxt=>) Results.v().reachableMethods().methods().get();
+        NodeFactory gnf = Results.v().nodeFactory();
+        Rmethod rmethods = Results.v().reachableMethods().methods();
+        <method> methods = rmethods.get();
         for( Iterator mIt = methods.iterator(); mIt.hasNext(); ) {
             final SootMethod m = (SootMethod) mIt.next();
-            MethodNodeFactory mnf = new MethodNodeFactory(m);
+            MethodNodeFactory mnf = new MethodNodeFactory(m, gnf);
             if( !m.isStatic() ) {
                 methodRoots |= new {m=>method, mnf.caseThis()=>var};
             }
@@ -80,7 +78,7 @@ public class BDDEscapeAnalysis extends SceneTransformer {
             queue.addAll( fh.getSubclassesOf(cl) );
             if( cl.declaresMethod(sigRun) ) {
                 SootMethod run = cl.getMethod(sigRun);
-                threadThis |= new {new MethodNodeFactory(run).caseThis()=>var};
+                threadThis |= new {new MethodNodeFactory(run, gnf).caseThis()=>var};
             }
         }
     }
@@ -114,13 +112,9 @@ public class BDDEscapeAnalysis extends SceneTransformer {
         escapesMethod |= (method=>) contextMatches;
     }
 
-    public void analyze() {
-        setupRoots();
+    public void analyze(PropBDD prop) {
+        setupRoots(prop);
         propagate();
-    }
-
-    protected void internalTransform( String phaseName, Map options ) {
-        analyze();
     }
 
     public Iterator escapesThread() {

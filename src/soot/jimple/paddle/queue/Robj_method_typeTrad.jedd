@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2003, 2004 Ondrej Lhotak
+ * Copyright (C) 2003, 2004, 2005 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,8 +28,8 @@ import jedd.*;
 import java.util.*;
 
 public final class Robj_method_typeTrad extends Robj_method_typeIter {
-    Robj_method_typeTrad( QueueReader r, String name ) { super(r, name); }
+    Robj_method_typeTrad( QueueReader r, String name, PaddleQueue q ) { super(r, name, q); }
     public Robj_method_typeTrad copy() {
-        return new Robj_method_typeTrad( (QueueReader) ((QueueReader)r).clone(), name );
+        return new Robj_method_typeTrad( (QueueReader) ((QueueReader)r).clone(), name, queue() );
     }
 }

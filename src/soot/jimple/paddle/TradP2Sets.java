@@ -55,5 +55,22 @@ public class TradP2Sets extends AbsP2Sets
         }
         return ret;
     }
+    public Rvarc_var_objc_obj getReader() {
+        final Qvarc_var_objc_obj retq = new Qvarc_var_objc_objTrad("getReader");
+        Rvarc_var_objc_obj ret = retq.reader("getReader");
+        for( Iterator varIt = PaddleNumberers.v().varNodeNumberer().iterator(); varIt.hasNext(); ) {
+            final VarNode var = (VarNode) varIt.next();
+            for( Iterator cvnIt = var.contexts(); cvnIt.hasNext(); ) {
+                final ContextVarNode cvn = (ContextVarNode) cvnIt.next();
+                PointsToSetReadOnly ptset = get(cvn);
+                ptset.forall( new P2SetVisitor() {
+                public final void visit( ContextAllocNode n ) {
+                    ContextAllocNode can = (ContextAllocNode) n;
+                    retq.add( cvn.ctxt(), var, can.ctxt(), can.obj() );
+                }} );
+            }
+        }
+        return ret;
+    }
 }
 

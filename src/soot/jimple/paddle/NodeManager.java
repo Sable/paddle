@@ -55,7 +55,7 @@ public class NodeManager {
         }
     }
     public AllocNode makeLocalAllocNode( Object newExpr, Type type, SootMethod m ) {
-        if( PaddleScene.v().options().types_for_sites() || PaddleScene.v().options().vta() ) return makeGlobalAllocNode( type, type, m );
+        if( PaddleScene.v().options().types_for_sites() ) return makeGlobalAllocNode( type, type, m );
 	AllocNode ret = (AllocNode) valToLocalAllocNode.get( newExpr );
 	if( ret == null ) {
 	    valToLocalAllocNode.put( newExpr, ret = new LocalAllocNode( newExpr, type, m ) );
@@ -71,7 +71,7 @@ public class NodeManager {
         return makeGlobalAllocNode(newExpr, type, null);
     }
     public AllocNode makeGlobalAllocNode( Object newExpr, Type type, SootMethod m ) {
-        if( PaddleScene.v().options().types_for_sites() || PaddleScene.v().options().vta() ) newExpr = type;
+        if( PaddleScene.v().options().types_for_sites() ) newExpr = type;
 	AllocNode ret = (AllocNode) valToGlobalAllocNode.get( newExpr );
 	if( ret == null ) {
 	    valToGlobalAllocNode.put( newExpr, ret = new GlobalAllocNode( newExpr, type, m ) );
@@ -88,7 +88,7 @@ public class NodeManager {
     }
     public AllocNode makeStringConstantNode( String s ) {
         Type type = RefType.v( "java.lang.String" );
-        if( PaddleScene.v().options().types_for_sites() || PaddleScene.v().options().vta() )
+        if( PaddleScene.v().options().types_for_sites() )
             return makeGlobalAllocNode( type, type, null );
         StringConstantNode ret = (StringConstantNode) valToGlobalAllocNode.get( s );
 	if( ret == null ) {

@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2003 Ondrej Lhotak
+ * Copyright (C) 2003, 2004, 2005 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,25 +20,39 @@
 package soot.jimple.paddle;
 import soot.jimple.paddle.queue.*;
 import soot.*;
+import java.util.*;
 
 /** Keeps track of which methods are reachable.
  * @author Ondrej Lhotak
  */
-public abstract class AbsReachableMethods implements DepItem
+public abstract class AbsReachableMethods implements PaddleComponent
 { 
     protected Rsrcc_srcm_stmt_kind_tgtc_tgtm edgesIn;
     protected Rctxt_method methodsIn;
-    protected Qctxt_method out;
-    AbsReachableMethods( Rsrcc_srcm_stmt_kind_tgtc_tgtm edgesIn, Rctxt_method methodsIn, Qctxt_method out ) {
+    protected Qmethod mout;
+    protected Qctxt_method cmout;
+    AbsReachableMethods( Rsrcc_srcm_stmt_kind_tgtc_tgtm edgesIn, Rctxt_method methodsIn, Qmethod mout, Qctxt_method cmout ) {
         this.edgesIn = edgesIn;
         this.methodsIn = methodsIn;
-        this.out = out;
+        this.mout = mout;
+        this.cmout = cmout;
     }
     public abstract boolean update();
     abstract boolean add( Context c, SootMethod m );
-    abstract int size();
+    abstract int sizeM();
+    abstract int sizeCM();
     abstract boolean contains( Context c, SootMethod m );
-    abstract Rctxt_method methods();
+    abstract boolean contains( SootMethod m );
+    public abstract Rctxt_method contextMethods();
+    public abstract Rmethod methods();
+    public abstract Iterator methodIterator();
+    public abstract long countContexts(SootMethod m);
+    
+    public void queueDeps(DependencyManager depMan) {
+        depMan.addQueueDep(edgesIn, this);
+        if(methodsIn != null)
+            depMan.addQueueDep(methodsIn, this);
+    }
 }
 
 

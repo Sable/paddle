@@ -52,7 +52,6 @@ public class TradMethodPAGContextifier extends AbsMethodPAGContextifier
 
     public boolean update() {
         boolean change = false;
-        if( !PaddleScene.v().depMan.checkPrec(this) ) throw new RuntimeException();
         for( Iterator tIt = simple.iterator(); tIt.hasNext(); ) {
             final Rsrc_dst.Tuple t = (Rsrc_dst.Tuple) tIt.next();
             if( ni.global(t.src()) ) {

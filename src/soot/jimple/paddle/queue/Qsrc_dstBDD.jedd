@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2003, 2004 Ondrej Lhotak
+ * Copyright (C) 2003, 2004, 2005 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -41,7 +41,7 @@ public final class Qsrc_dstBDD extends Qsrc_dst {
         }
     }
     public Rsrc_dst reader( String rname ) {
-        Rsrc_dst ret = new Rsrc_dstBDD( name+":"+rname );
+        Rsrc_dst ret = new Rsrc_dstBDD( name+":"+rname, this );
         readers.add( ret );
         return ret;
     }

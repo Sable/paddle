@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2003, 2004 Ondrej Lhotak
+ * Copyright (C) 2003, 2004, 2005 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -37,7 +37,7 @@ public class Qobjc_obj_varc_varTrad extends Qobjc_obj_varc_var {
         q.add( _var );
         invalidate();
     }
-    public void add( <objc:C2, obj:H1, varc:C1, var:V1> in ) {
+    public void add( <objc:C3, obj:H1, varc:C1, var:V1> in ) {
         Iterator it = in.iterator( new Attribute[] { objc.v(), obj.v(), varc.v(), var.v() } );
         while( it.hasNext() ) {
             Object[] tuple = (Object[]) it.next();
@@ -47,6 +47,6 @@ public class Qobjc_obj_varc_varTrad extends Qobjc_obj_varc_var {
         }
     }
     public Robjc_obj_varc_var reader( String rname ) {
-        return new Robjc_obj_varc_varTrad( q.reader(), name+":"+rname );
+        return new Robjc_obj_varc_varTrad( q.reader(), name+":"+rname, this );
     }
 }

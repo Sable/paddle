@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2003, 2004 Ondrej Lhotak
+ * Copyright (C) 2003, 2004, 2005 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -30,8 +30,9 @@ import java.util.*;
 public final class Rsrcc_src_dstc_dst_fldBDD extends Rsrcc_src_dstc_dst_fld {
     private <srcc:C1, src:V1, dstc:C2, dst:V2, fld:FD> bdd;
     void add( <srcc:C1, src:V1, dstc:C2, dst:V2, fld:FD> tuple ) { bdd |= tuple; }
-    public Rsrcc_src_dstc_dst_fldBDD( <srcc:C1, src:V1, dstc:C2, dst:V2, fld:FD> bdd, String name ) { this(name); add(bdd); }
-    Rsrcc_src_dstc_dst_fldBDD(String name) { super(name); bdd = 0B; }
+    public Rsrcc_src_dstc_dst_fldBDD( <srcc:C1, src:V1, dstc:C2, dst:V2, fld:FD> bdd, String name, PaddleQueue q ) { this(name, q); add(bdd); }
+    public Rsrcc_src_dstc_dst_fldBDD( <srcc:C1, src:V1, dstc:C2, dst:V2, fld:FD> bdd ) { this("", null); add(bdd); }
+    Rsrcc_src_dstc_dst_fldBDD(String name, PaddleQueue q) { super(name, q); bdd = 0B; }
     public Iterator iterator() {;
         return new Iterator() {
             private Iterator it;

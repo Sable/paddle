@@ -24,7 +24,7 @@ import soot.jimple.paddle.queue.*;
 /** Instantiates the pointer flow edges of methods in specific contexts.
  * @author Ondrej Lhotak
  */
-public abstract class AbsMethodPAGContextifier implements DepItem
+public abstract class AbsMethodPAGContextifier implements PaddleComponent
 { 
     protected Rsrc_dst simple;
     protected Rsrc_fld_dst load;
@@ -64,5 +64,12 @@ public abstract class AbsMethodPAGContextifier implements DepItem
         this.calloc = calloc;
     }
     public abstract boolean update();
+    public void queueDeps(DependencyManager depMan) {
+        depMan.addQueueDep(simple, this);
+        depMan.addQueueDep(load, this);
+        depMan.addQueueDep(store, this);
+        depMan.addQueueDep(alloc, this);
+        depMan.addQueueDep(rcout, this);
+    }
 }
 

@@ -27,38 +27,49 @@ import soot.util.*;
  */
 public class ContextStringNumberer implements Numberer
 { 
-    public final static int SHIFT_WIDTH = 14;
-    private final static long MAX_ITEM = 1L<<SHIFT_WIDTH;
+    public final int shiftWidth;
+    private final long maxItem;
     private Numberer contextNumberer;
     private final int k;
-    private final long nullNum;
-    public ContextStringNumberer( Numberer contextNumberer, int k ) {
+    public ContextStringNumberer( jedd.Domain domain, Numberer contextNumberer, int k ) {
         this.contextNumberer = contextNumberer;
         this.k = k;
-        nullNum = 1L<<(k*SHIFT_WIDTH);
+        shiftWidth = domain.maxUsefulBit();
+        maxItem = 1L<<shiftWidth;
+
+        if(k*shiftWidth > 64) throw new RuntimeException("Domain cannot be "+k*shiftWidth+" > 64 bits.");
+        usefulBits = new boolean[k*shiftWidth];
+        for(int i = 0; i < usefulBits.length; i++) {
+            usefulBits[i] = true;
+        }
     }
     public void add( Object o ) {
     }
     public long get( Object o ) {
-        if( o == null ) return nullNum;
         ContextString cs = (ContextString) o;
+        if( cs == null ) {
+            cs = new ContextString(k);
+            for( int i = 0; i < k; i++) cs.push(null);
+        }
         int ret = 0;
         for( int i = k-1; i >= 0; i-- ) {
             long num = contextNumberer.get(cs.get(i));
-            if( num >= MAX_ITEM ) throw new RuntimeException( "Need to increase SHIFT_WIDTH" );
-            ret <<= SHIFT_WIDTH;
+            if( num >= maxItem ) throw new RuntimeException( "Need to increase shiftWidth" );
+            ret <<= shiftWidth;
             ret += num;
         }
         return ret;
     }
     public Object get( long num ) {
-        if( num == nullNum ) return null;
         Context[] ret = new Context[k];
         for( int i = 0; i < k; i++ ) {
-            ret[i] = (Context) contextNumberer.get(num & MAX_ITEM-1);
-            num >>>= SHIFT_WIDTH;
+            ret[i] = (Context) contextNumberer.get(num & maxItem-1);
+            num >>>= shiftWidth;
         }
-        return new ContextString(ret);
+        for( int i = 0; i < k; i++) {
+            if(ret[i] != null) return new ContextString(ret);
+        }
+        return null;
     }
     public int size() {
         int ret = 1;
@@ -66,6 +77,10 @@ public class ContextStringNumberer implements Numberer
             ret *= contextNumberer.size();
         }
         return ret;
+    }
+    private boolean[] usefulBits;
+    public boolean[] usefulBits() {
+        return usefulBits;
     }
 }
 

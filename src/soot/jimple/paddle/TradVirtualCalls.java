@@ -32,10 +32,11 @@ public class TradVirtualCalls extends AbsVirtualCalls
     TradVirtualCalls( Rvarc_var_objc_obj pt,
             Rvar_srcm_stmt_dtp_signature_kind receivers,
             Rvar_srcm_stmt_tgtm specials,
-            Qctxt_var_obj_srcm_stmt_kind_tgtm out,
-            Qsrcc_srcm_stmt_kind_tgtc_tgtm statics
+            Qvarc_var_objc_obj_srcm_stmt_kind_tgtm out,
+            Qsrcc_srcm_stmt_kind_tgtc_tgtm statics,
+			AbsP2Sets p2sets
         ) {
-        super( pt, receivers, specials, out, statics );
+        super( pt, receivers, specials, out, statics, p2sets );
     }
 
     private Map receiverMap = new HashMap();
@@ -52,7 +53,6 @@ public class TradVirtualCalls extends AbsVirtualCalls
     private LinkedList specialMapGet( VarNode receiver ) {
         return (LinkedList) specialMap.get(receiver);
     }
-    private AbsP2Sets p2sets() { return PaddleScene.v().p2sets; }
 
     private boolean change;
     private ChunkedQueue targetsQueue;
@@ -75,7 +75,7 @@ public class TradVirtualCalls extends AbsVirtualCalls
                 receiverMapPut( receiver.var(), l );
             }
             l.addFirst( receiver );
-            for( Iterator ptpairIt = p2sets().getReader(receiver.var()).iterator(); ptpairIt.hasNext(); ) {
+            for( Iterator ptpairIt = p2sets.getReader(receiver.var()).iterator(); ptpairIt.hasNext(); ) {
                 final Rvarc_var_objc_obj.Tuple ptpair = (Rvarc_var_objc_obj.Tuple) ptpairIt.next();
                 resolve( ptpair, receiver );
             }
@@ -90,7 +90,7 @@ public class TradVirtualCalls extends AbsVirtualCalls
                 specialMapPut( special.var(), l );
             }
             l.addFirst( special );
-            for( Iterator ptpairIt = p2sets().getReader(special.var()).iterator(); ptpairIt.hasNext(); ) {
+            for( Iterator ptpairIt = p2sets.getReader(special.var()).iterator(); ptpairIt.hasNext(); ) {
                 final Rvarc_var_objc_obj.Tuple ptpair = (Rvarc_var_objc_obj.Tuple) ptpairIt.next();
                 resolveSpecial( ptpair, special );
             }
@@ -119,16 +119,12 @@ public class TradVirtualCalls extends AbsVirtualCalls
     }
     private void resolve( Rvarc_var_objc_obj.Tuple ptpair,
         Rvar_srcm_stmt_dtp_signature_kind.Tuple site ) {
-        resolve( ptpair.varc(), ptpair.obj(), site );
-    }
-    private void resolve( Context varc, AllocNode obj,
-        Rvar_srcm_stmt_dtp_signature_kind.Tuple site ) {
         if( site.kind() == Kind.CLINIT ) {
-            handleStringConstants( varc, obj, site );
+            handleStringConstants( ptpair, site );
             return;
         }
 
-        Type type = obj.getType();
+        Type type = ptpair.obj().getType();
         if( site.kind() == Kind.THREAD 
         && !fh.canStoreType( type, clRunnable ) ) return;
 
@@ -136,9 +132,10 @@ public class TradVirtualCalls extends AbsVirtualCalls
         while( targets.hasNext() ) {
             SootMethod target = (SootMethod) targets.next();
             change = true;
-            out.add( varc,
+            out.add( ptpair.varc(),
                     site.var(),
-                    obj,
+                    ptpair.objc(),
+                    ptpair.obj(),
                     site.srcm(),
                     site.stmt(),
                     site.kind(),
@@ -147,28 +144,25 @@ public class TradVirtualCalls extends AbsVirtualCalls
     }
     private void resolveSpecial( Rvarc_var_objc_obj.Tuple ptpair,
         Rvar_srcm_stmt_tgtm.Tuple site ) {
-        resolveSpecial(ptpair.varc(), ptpair.obj(), site);
-    }
-    private void resolveSpecial( Context varc, AllocNode obj,
-        Rvar_srcm_stmt_tgtm.Tuple site ) {
-        out.add( varc,
+        out.add( ptpair.varc(),
                 site.var(),
-                obj,
+                ptpair.objc(),
+                ptpair.obj(),
                 site.srcm(),
                 site.stmt(),
                 Kind.SPECIAL,
                 site.tgtm() );
     }
 
-    private void handleStringConstants( Context varc, AllocNode obj,
+    private void handleStringConstants( Rvarc_var_objc_obj.Tuple ptpair,
             Rvar_srcm_stmt_dtp_signature_kind.Tuple site ) {
-        if( !( obj instanceof StringConstantNode ) ) {
+        if( !( ptpair.obj() instanceof StringConstantNode ) ) {
             for( Iterator clsIt = Scene.v().dynamicClasses().iterator(); clsIt.hasNext(); ) {
                 final SootClass cls = (SootClass) clsIt.next();
                 for( Iterator clinitIt = EntryPoints.v().clinitsOf(cls).iterator(); clinitIt.hasNext(); ) {
                     final SootMethod clinit = (SootMethod) clinitIt.next();
                     change = true;
-                    statics.add(varc,
+                    statics.add(ptpair.varc(),
                                 site.srcm(),
                                 site.stmt(),
                                 Kind.CLINIT,
@@ -186,7 +180,7 @@ public class TradVirtualCalls extends AbsVirtualCalls
                 }
             }
         } else {
-            StringConstantNode scn = (StringConstantNode) obj;
+            StringConstantNode scn = (StringConstantNode) ptpair.obj();
             String constant = scn.getString();
             if( constant.charAt(0) == '[' ) {
                 if( constant.length() > 1 && constant.charAt(1) == 'L' 
@@ -208,7 +202,7 @@ public class TradVirtualCalls extends AbsVirtualCalls
                 for( Iterator clinitIt = EntryPoints.v().clinitsOf(sootcls).iterator(); clinitIt.hasNext(); ) {
                     final SootMethod clinit = (SootMethod) clinitIt.next();
                     change = true;
-                    statics.add(varc,
+                    statics.add(ptpair.varc(),
                                 site.srcm(),
                                 site.stmt(),
                                 Kind.CLINIT,

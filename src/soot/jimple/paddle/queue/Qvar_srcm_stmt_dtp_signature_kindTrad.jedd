@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2003, 2004 Ondrej Lhotak
+ * Copyright (C) 2003, 2004, 2005 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -49,6 +49,6 @@ public class Qvar_srcm_stmt_dtp_signature_kindTrad extends Qvar_srcm_stmt_dtp_si
         }
     }
     public Rvar_srcm_stmt_dtp_signature_kind reader( String rname ) {
-        return new Rvar_srcm_stmt_dtp_signature_kindTrad( q.reader(), name+":"+rname );
+        return new Rvar_srcm_stmt_dtp_signature_kindTrad( q.reader(), name+":"+rname, this );
     }
 }

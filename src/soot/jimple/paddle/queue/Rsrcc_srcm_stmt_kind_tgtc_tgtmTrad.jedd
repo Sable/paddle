@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2003, 2004 Ondrej Lhotak
+ * Copyright (C) 2003, 2004, 2005 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,8 +28,8 @@ import jedd.*;
 import java.util.*;
 
 public final class Rsrcc_srcm_stmt_kind_tgtc_tgtmTrad extends Rsrcc_srcm_stmt_kind_tgtc_tgtmIter {
-    Rsrcc_srcm_stmt_kind_tgtc_tgtmTrad( QueueReader r, String name ) { super(r, name); }
+    Rsrcc_srcm_stmt_kind_tgtc_tgtmTrad( QueueReader r, String name, PaddleQueue q ) { super(r, name, q); }
     public Rsrcc_srcm_stmt_kind_tgtc_tgtmTrad copy() {
-        return new Rsrcc_srcm_stmt_kind_tgtc_tgtmTrad( (QueueReader) ((QueueReader)r).clone(), name );
+        return new Rsrcc_srcm_stmt_kind_tgtc_tgtmTrad( (QueueReader) ((QueueReader)r).clone(), name, queue() );
     }
 }

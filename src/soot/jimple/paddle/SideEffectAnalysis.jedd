@@ -24,10 +24,7 @@ import soot.jimple.paddle.bdddomains.*;
 import java.util.*;
 
 /** Generates side-effect information from points-to sets and call graph. */
-public class SideEffectAnalysis extends SceneTransformer {
-    public SideEffectAnalysis( PaddleSingletons.Global g ) {}
-    public static SideEffectAnalysis v() { return PaddleG.v().soot_jimple_paddle_SideEffectAnalysis(); }
-
+public class SideEffectAnalysis {
     // non-transitive read/write sets: stmt in method reads/writes field fld of
     // object obj
     <method, stmt, fld:FD, obj> ntread = 0B;
@@ -45,20 +42,21 @@ public class SideEffectAnalysis extends SceneTransformer {
             System.out.println( "***"+m+s+v );
             Scene.v().getUnitNumberer().add( s );
 	    InstanceFieldRef ifr = (InstanceFieldRef) v;
-            return new {
-                    m=>method,
-                    s=>stmt,
-                    ifr.getField()=>fld
-                } {} >< (varc=>, var=>, objc=>)
+            SootField f = ifr.getField();
+            Scene.v().getFieldNumberer().add(f);
+            return new { m=>method, s=>stmt, f=>fld } {} ><
+                (varc=>, var=>, objc=>)
                     p2sets().getReader(varNode(m, (Local)ifr.getBase())).get() {};
 	} else if( v instanceof StaticFieldRef ) {
             System.out.println( "***"+m+s+v );
             Scene.v().getUnitNumberer().add( s );
 	    StaticFieldRef sfr = (StaticFieldRef) v;
+            SootField f = sfr.getField();
+            Scene.v().getFieldNumberer().add(f);
             return new {
                 m=>method,
                 s=>stmt,
-                sfr.getField()=>fld,
+                f=>fld,
                 null=>obj };
 	} else if( v instanceof ArrayRef ) {
             System.out.println( "***"+m+s+v );
@@ -74,8 +72,10 @@ public class SideEffectAnalysis extends SceneTransformer {
 	return 0B;
     }
 
+    private NodeFactory gnf;
+
     private VarNode varNode(SootMethod m, Local l) {
-        return (VarNode) new MethodNodeFactory(m).getNode(l);
+        return (VarNode) new MethodNodeFactory(m, gnf).getNode(l);
     }
 
     private AbsP2Sets p2sets() {
@@ -127,7 +127,7 @@ public class SideEffectAnalysis extends SceneTransformer {
         write |= ntwrite;
 
         // find the transitive closure of call graph edges
-        <srcm, stmt, tgtm> closecg = (srcc=>, kind=>, tgtc=>) cg().edges().get();
+        <srcm, stmt, tgtm> closecg = (kind=>) cg().ciEdges().get();
         while( closecg != ( closecg |=
             closecg {tgtm} <> (srcm=>M3)(stmt=>) closecg {srcm} ) );
 
@@ -137,8 +137,10 @@ public class SideEffectAnalysis extends SceneTransformer {
     }
 
     public void analyze() {
+        gnf = Results.v().nodeFactory();
+
         System.out.println( "side effect analysis analyzing methods" );
-        for( Iterator mIt = ((srcm=>, srcc=>, stmt=>, kind=>, tgtc=>) cg().edges().get()).iterator(); mIt.hasNext(); ) {
+        for( Iterator mIt = ((srcm=>, stmt=>, kind=>) cg().ciEdges().get()).iterator(); mIt.hasNext(); ) {
             final SootMethod m = (SootMethod) mIt.next();
             if( m.isAbstract() ) continue;
             if( m.isNative() ) continue;
@@ -165,9 +167,6 @@ public class SideEffectAnalysis extends SceneTransformer {
         System.out.println( "Write sets:\n"+(write {method} >< methods {method}).toString() );
         System.out.println( "NTRead:\n"+ntread.toString() );
         System.out.println( "NTWrite:\n"+ntwrite.toString() );
-    }
-    protected void internalTransform( String phaseName, Map options ) {
-        analyze();
     }
 
     public Iterator readSet( SootMethod m, Stmt s ) {

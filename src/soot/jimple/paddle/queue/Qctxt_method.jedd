@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2003, 2004 Ondrej Lhotak
+ * Copyright (C) 2003, 2004, 2005 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -27,7 +27,7 @@ import soot.util.queue.*;
 import jedd.*;
 import java.util.*;
 
-public abstract class Qctxt_method implements soot.jimple.paddle.DepItem {
+public abstract class Qctxt_method implements soot.jimple.paddle.PaddleQueue {
     public Qctxt_method( String name ) { this.name = name; }
     protected String name;
     public final String toString() { return name; }
@@ -41,15 +41,18 @@ public abstract class Qctxt_method implements soot.jimple.paddle.DepItem {
             in.method() 
         );
     }
-    private boolean valid = true;
-    public boolean update() {
-        boolean ret = !valid;
-        valid = true;
-        return true;
-    }
     public void invalidate() {
-        if(!valid) return;
-        valid = false;
-        PaddleScene.v().depMan.invalidate(this);
+        for(int i = 0; i < depMans.length; i++)
+            depMans[i].invalidate(this);
+    }
+    private DependencyManager[] depMans = new DependencyManager[0];
+    public void addDepMan(DependencyManager depMan) {
+        for(int i = 0; i < depMans.length; i++)
+            if(depMan == depMans[i]) return;
+        DependencyManager[] oldDepMans = depMans;
+        depMans = new DependencyManager[depMans.length+1];
+        for(int i = 0; i < oldDepMans.length; i++)
+            depMans[i] = oldDepMans[i];
+        depMans[oldDepMans.length] = depMan;
     }
 }

@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2003 Ondrej Lhotak
+ * Copyright (C) 2003, 2004, 2005 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -24,22 +24,24 @@ import soot.jimple.paddle.queue.*;
  * for each reachable method context.
  * @author Ondrej Lhotak
  */
-public abstract class AbsContextCallGraphBuilder implements DepItem
+public abstract class AbsContextCallGraphBuilder implements PaddleComponent
 { 
     protected Rctxt_method methodsIn;
-    protected Rsrcc_srcm_stmt_kind_tgtc_tgtm edgesIn;
+    protected Rsrcm_stmt_kind_tgtm edgesIn;
     protected Qsrcc_srcm_stmt_kind_tgtc_tgtm out;
-    protected AbsCallGraph cicg;
     AbsContextCallGraphBuilder( Rctxt_method methodsIn,
-            Rsrcc_srcm_stmt_kind_tgtc_tgtm edgesIn,
-            Qsrcc_srcm_stmt_kind_tgtc_tgtm out,
-            AbsCallGraph cicg ) {
+            Rsrcm_stmt_kind_tgtm edgesIn,
+            Qsrcc_srcm_stmt_kind_tgtc_tgtm out
+            ) {
         this.edgesIn = edgesIn;
         this.methodsIn = methodsIn;
         this.out = out;
-        this.cicg = cicg;
     }
     public abstract boolean update();
+    public void queueDeps(DependencyManager depMan) {
+        depMan.addQueueDep(methodsIn, this);
+        depMan.addQueueDep(edgesIn, this);
+    }
 }
 
 

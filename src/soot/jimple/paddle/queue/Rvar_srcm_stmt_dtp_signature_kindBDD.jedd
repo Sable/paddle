@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2003, 2004 Ondrej Lhotak
+ * Copyright (C) 2003, 2004, 2005 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -30,8 +30,9 @@ import java.util.*;
 public final class Rvar_srcm_stmt_dtp_signature_kindBDD extends Rvar_srcm_stmt_dtp_signature_kind {
     private <var:V1, srcm:MS, stmt:ST, dtp:T1, signature:SG, kind:KD> bdd;
     void add( <var:V1, srcm:MS, stmt:ST, dtp:T1, signature:SG, kind:KD> tuple ) { bdd |= tuple; }
-    public Rvar_srcm_stmt_dtp_signature_kindBDD( <var:V1, srcm:MS, stmt:ST, dtp:T1, signature:SG, kind:KD> bdd, String name ) { this(name); add(bdd); }
-    Rvar_srcm_stmt_dtp_signature_kindBDD(String name) { super(name); bdd = 0B; }
+    public Rvar_srcm_stmt_dtp_signature_kindBDD( <var:V1, srcm:MS, stmt:ST, dtp:T1, signature:SG, kind:KD> bdd, String name, PaddleQueue q ) { this(name, q); add(bdd); }
+    public Rvar_srcm_stmt_dtp_signature_kindBDD( <var:V1, srcm:MS, stmt:ST, dtp:T1, signature:SG, kind:KD> bdd ) { this("", null); add(bdd); }
+    Rvar_srcm_stmt_dtp_signature_kindBDD(String name, PaddleQueue q) { super(name, q); bdd = 0B; }
     public Iterator iterator() {;
         return new Iterator() {
             private Iterator it;

@@ -45,7 +45,8 @@ public final class PropWorklist extends AbsPropagator {
             AbsPAG pag ) {
         super( simple, load, store, alloc, propout, pag );
     }
-    private AbsP2Sets p2sets;
+    private AbsP2Sets p2sets = new TradP2Sets();
+    public AbsP2Sets p2sets() { return p2sets; }
     private boolean newEdges() {
         boolean ret = false;
         for( Iterator tIt = newSimple.iterator(); tIt.hasNext(); ) {
@@ -135,8 +136,6 @@ public final class PropWorklist extends AbsPropagator {
     /** Actually does the propagation. */
     public final boolean update() {
         boolean ret = false;
-        //if( !PaddleScene.v().depMan.worklistEmpty() ) return true;
-        p2sets = PaddleScene.v().p2sets;
 
         if( newEdges() ) ret = true;
 

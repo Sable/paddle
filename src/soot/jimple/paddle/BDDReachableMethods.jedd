@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2003 Ondrej Lhotak
+ * Copyright (C) 2003, 2004, 2005 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -21,66 +21,82 @@ package soot.jimple.paddle;
 import soot.jimple.paddle.queue.*;
 import soot.jimple.paddle.bdddomains.*;
 import soot.*;
+import java.util.*;
 
 /** Keeps track of which methods are reachable.
  * @author Ondrej Lhotak
  */
 public class BDDReachableMethods extends AbsReachableMethods 
 { 
-    private <ctxt, method> reachables;
+    private <ctxt, method> reachableCM;
+    private <method> reachableM;
     private AbsCallGraph cg;
     private Rctxt_method newMethods;
-    BDDReachableMethods( Rsrcc_srcm_stmt_kind_tgtc_tgtm edgesIn, Rctxt_method methodsIn, Qctxt_method out, AbsCallGraph cg ) {
-        super( edgesIn, methodsIn, out );
+    BDDReachableMethods( Rsrcc_srcm_stmt_kind_tgtc_tgtm edgesIn, Rctxt_method methodsIn, Qmethod mout, Qctxt_method cmout, AbsCallGraph cg ) {
+        super( edgesIn, methodsIn, mout, cmout == null ? new Qctxt_methodBDD("cmout") : cmout );
         this.cg = cg;
-        newMethods = out.reader("bddrm");
+        newMethods = this.cmout.reader("bddrm");
     }
     public boolean update() {
         boolean change = false;
 
         if( methodsIn != null ) {
             <ctxt, method> newMethodsIn = methodsIn.get();
-            newMethodsIn -= reachables;
-            if( newMethodsIn != 0B ) change = true;
-            reachables |= newMethodsIn;
-            out.add( newMethodsIn );
+            if(add(newMethodsIn)) change = true;
         }
 
         <srcc, srcm, stmt, kind, tgtc, tgtm> newEdges =
-            edgesIn.get() {srcc, srcm} >< reachables {ctxt, method};
+            edgesIn.get() {srcc, srcm} >< reachableCM {ctxt, method};
 
         newEdges |= cg.edgesOutOf( newMethods ).get();
 
         while( newEdges != 0B ) {
             <ctxt, method> newTargets =
                 (srcc=>, srcm=>, stmt=>, kind=>, tgtc=>ctxt, tgtm=>method) newEdges;
-            newTargets -= reachables;
-            out.add( newTargets );
-            if( newTargets != 0B ) change = true;
-            reachables |= newTargets;
+            if(add( newTargets )) change = true;
             newEdges = cg.edgesOutOf( newMethods ).get();
         }
         return change;
     }
     boolean add( Context c, SootMethod m ) {
-        <ctxt, method> newM = new{ c=>ctxt, m=>method };
-        <ctxt, method> newReachables = reachables | newM;
-        if( newReachables != reachables ) {
-            reachables = newReachables;
-            out.add( newM );
-            return true;
-        }
-        return false;
+        return add( new{ c=>ctxt, m=>method } );
     }
-    int size() {
-        return (int) reachables.size();
+    private boolean add(<ctxt, method> methodContexts) {
+        boolean ret = false;
+        <ctxt, method> newCM = methodContexts - reachableCM;
+        reachableCM |= newCM;
+        if(cmout != null) cmout.add(newCM);
+        <method> newM = (ctxt=>)methodContexts - reachableM;
+        reachableM |= newM;
+        if(mout != null) mout.add(newM);
+        return (newCM != 0B) || (newM != 0B);
+    }
+    int sizeM() {
+        return (int) reachableM.size();
+    }
+    int sizeCM() {
+        return (int) reachableCM.size();
+    }
+    boolean contains( SootMethod m ) {
+        <method> newM = new{ m=>method };
+        return (reachableM & newM) != 0B;
     }
     boolean contains( Context c, SootMethod m ) {
         <ctxt, method> newM = new{ c=>ctxt, m=>method };
-        return (reachables & newM) != 0B;
+        return (reachableCM & newM) != 0B;
     }
-    Rctxt_method methods() {
-        return new Rctxt_methodBDD(reachables, "methods");
+    public Rmethod methods() {
+        return new RmethodBDD(reachableM, "methods", null);
+    }
+    public Rctxt_method contextMethods() {
+        return new Rctxt_methodBDD(reachableCM, "methods", null);
+    }
+    public Iterator methodIterator() {
+        return reachableM.iterator();
+    }
+    public long countContexts(SootMethod m) {
+        <ctxt> contexts = reachableCM{method} <> new{m=>method}{method};
+        return contexts.size();
     }
 }
 

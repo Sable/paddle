@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2003, 2004 Ondrej Lhotak
+ * Copyright (C) 2003, 2004, 2005 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -46,6 +46,6 @@ public class Qctxt_methodDebug extends Qctxt_method {
         }
     }
     public Rctxt_method reader( String rname ) {
-        return new Rctxt_methodDebug( (Rctxt_methodBDD) bdd.reader(rname), (Rctxt_methodSet) trad.reader(rname), name+":"+rname );
+        return new Rctxt_methodDebug( (Rctxt_methodBDD) bdd.reader(rname), (Rctxt_methodSet) trad.reader(rname), name+":"+rname, this );
     }
 }

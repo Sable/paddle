@@ -1,9 +1,32 @@
 package soot.jimple.paddle.bdddomains;
+import soot.jimple.paddle.*;
 import jedd.*;
 import soot.*;
 
-public class ContextDomain(61) extends Domain {
+public class ContextDomain(60) extends Domain {
     public Numberer numberer() {
         return new soot.util.JeddNumberer( Scene.v().getContextNumberer() );
+    }
+
+    private boolean isCallString() {
+        return Scene.v().getContextNumberer() instanceof ContextStringNumberer;
+    }
+    private ContextStringNumberer csn() {
+        return (ContextStringNumberer) Scene.v().getContextNumberer();
+    }
+    public ContextDomain() {
+        if(isCallString()) {
+            usefulBits = csn().usefulBits();
+        } else {
+            usefulBits = PaddleNumberers.v().contextDomain.usefulBits();
+        }
+        numUsefulBits = 0;
+        for(int i = 0; i < usefulBits.length; i++) {
+            if(usefulBits[i]) numUsefulBits++;
+        }
+    }
+    private int numUsefulBits = 0;
+    public int numUsefulBits() {
+        return numUsefulBits;
     }
 }

@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2003, 2004 Ondrej Lhotak
+ * Copyright (C) 2003, 2004, 2005 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -42,7 +42,7 @@ public final class Qobj_varNumTrace extends Qobj_var {
         throw new RuntimeException();
     }
     public Robj_var reader( String rname ) {
-        Robj_var ret = new Robj_varNumTrace(name+":"+rname);
+        Robj_var ret = new Robj_varNumTrace(name+":"+rname, this);
         readers.add( ret );
         return ret;
     }

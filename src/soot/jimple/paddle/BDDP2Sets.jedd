@@ -54,8 +54,11 @@ public class BDDP2Sets extends AbsP2Sets
     public Rvarc_var_objc_obj getReader( VarNode vn ) {
         Rvarc_var_objc_objBDD ret = new Rvarc_var_objc_objBDD(
             prop.pt{var} >< new{vn=>var}{var},
-            "getReader");
+            "getReader", null);
         return ret;
+    }
+    public Rvarc_var_objc_obj getReader() {
+        return new Rvarc_var_objc_objBDD(prop.pt);
     }
 }
 

@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2003, 2004 Ondrej Lhotak
+ * Copyright (C) 2003, 2004, 2005 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -46,6 +46,6 @@ public class Qsrcc_srcm_stmt_kind_tgtc_tgtmDebug extends Qsrcc_srcm_stmt_kind_tg
         }
     }
     public Rsrcc_srcm_stmt_kind_tgtc_tgtm reader( String rname ) {
-        return new Rsrcc_srcm_stmt_kind_tgtc_tgtmDebug( (Rsrcc_srcm_stmt_kind_tgtc_tgtmBDD) bdd.reader(rname), (Rsrcc_srcm_stmt_kind_tgtc_tgtmSet) trad.reader(rname), name+":"+rname );
+        return new Rsrcc_srcm_stmt_kind_tgtc_tgtmDebug( (Rsrcc_srcm_stmt_kind_tgtc_tgtmBDD) bdd.reader(rname), (Rsrcc_srcm_stmt_kind_tgtc_tgtmSet) trad.reader(rname), name+":"+rname, this );
     }
 }

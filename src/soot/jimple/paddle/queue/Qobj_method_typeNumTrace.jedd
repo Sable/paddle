@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2003, 2004 Ondrej Lhotak
+ * Copyright (C) 2003, 2004, 2005 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -42,7 +42,7 @@ public final class Qobj_method_typeNumTrace extends Qobj_method_type {
         throw new RuntimeException();
     }
     public Robj_method_type reader( String rname ) {
-        Robj_method_type ret = new Robj_method_typeNumTrace(name+":"+rname);
+        Robj_method_type ret = new Robj_method_typeNumTrace(name+":"+rname, this);
         readers.add( ret );
         return ret;
     }

@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2003 Ondrej Lhotak
+ * Copyright (C) 2003, 2004, 2005 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -24,15 +24,26 @@ import soot.jimple.paddle.queue.*;
  * context.
  * @author Ondrej Lhotak
  */
-public abstract class AbsVirtualContextManager implements DepItem
+public abstract class AbsVirtualContextManager implements PaddleComponent
 { 
-    protected Rctxt_var_obj_srcm_stmt_kind_tgtm in;
+    protected Rvarc_var_objc_obj_srcm_stmt_kind_tgtm in;
     protected Qsrcc_srcm_stmt_kind_tgtc_tgtm out;
-    AbsVirtualContextManager( Rctxt_var_obj_srcm_stmt_kind_tgtm in, Qsrcc_srcm_stmt_kind_tgtc_tgtm out ) {
+    protected Qobjc_obj_varc_var thisOut;
+    protected NodeFactory gnf;
+    AbsVirtualContextManager( Rvarc_var_objc_obj_srcm_stmt_kind_tgtm in,
+            Qsrcc_srcm_stmt_kind_tgtc_tgtm out,
+            Qobjc_obj_varc_var thisOut,
+            NodeFactory gnf
+            ) {
         this.in = in;
         this.out = out;
+        this.thisOut = thisOut;
+        this.gnf = gnf;
     }
     public abstract boolean update();
+    public void queueDeps(DependencyManager depMan) {
+        depMan.addQueueDep(in, this);
+    }
 }
 
 

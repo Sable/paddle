@@ -105,10 +105,10 @@ public class BDDPAG extends AbsPAG
                         <> new{ctxt=>varc, key=>var}{varc, var});
     }
 
-    public Rsrcc_src_dstc_dst allSimple() { return new Rsrcc_src_dstc_dstBDD(simpleBDD, "allsimple"); }
-    public Rsrcc_src_fld_dstc_dst allLoad() { return new Rsrcc_src_fld_dstc_dstBDD(loadBDD, "allload"); }
-    public Rsrcc_src_dstc_dst_fld allStore() { return new Rsrcc_src_dstc_dst_fldBDD(storeBDD, "allstore"); }
-    public Robjc_obj_varc_var allAlloc() { return new Robjc_obj_varc_varBDD(allocBDD, "allalloc"); }
+    public Rsrcc_src_dstc_dst allSimple() { return new Rsrcc_src_dstc_dstBDD(simpleBDD, "allsimple", null); }
+    public Rsrcc_src_fld_dstc_dst allLoad() { return new Rsrcc_src_fld_dstc_dstBDD(loadBDD, "allload", null); }
+    public Rsrcc_src_dstc_dst_fld allStore() { return new Rsrcc_src_dstc_dst_fldBDD(storeBDD, "allstore", null); }
+    public Robjc_obj_varc_var allAlloc() { return new Robjc_obj_varc_varBDD(allocBDD, "allalloc", null); }
 
     private static class FieldRefIterator implements Iterator {
         FieldRefIterator( <varc, var, fld> bdd ) {

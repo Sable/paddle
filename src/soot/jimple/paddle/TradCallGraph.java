@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2003, 2004 Ondrej Lhotak
+ * Copyright (C) 2003, 2004, 2005 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -30,22 +30,36 @@ import java.util.*;
  */
 public class TradCallGraph extends AbsCallGraph
 { 
-    private CallGraph cg;
-    TradCallGraph( Rsrcc_srcm_stmt_kind_tgtc_tgtm in, Qsrcc_srcm_stmt_kind_tgtc_tgtm out ) {
-        super(in, out);
-        cg = new CallGraph();
+    private CallGraph cscg;
+    private CallGraph cicg;
+    TradCallGraph( Rsrcc_srcm_stmt_kind_tgtc_tgtm in, Qsrcm_stmt_kind_tgtm ciout, Qsrcc_srcm_stmt_kind_tgtc_tgtm csout ) {
+        super(in, ciout, csout);
+        cscg = new CallGraph();
+        cicg = new CallGraph();
     }
     public boolean update() {
         boolean ret = false;
-        for( Iterator tIt = in.iterator(); tIt.hasNext(); ) {
-            final Rsrcc_srcm_stmt_kind_tgtc_tgtm.Tuple t = (Rsrcc_srcm_stmt_kind_tgtc_tgtm.Tuple) tIt.next();
-            if( cg.addEdge( new Edge(
-                        MethodContext.v( t.srcm(), t.srcc() ),
-                        t.stmt(),
-                        MethodContext.v( t.tgtm(), t.tgtc() ),
-                        t.kind() ) ) ) {
-                out.add( t.srcc(), t.srcm(), t.stmt(), t.kind(), t.tgtc(), t.tgtm() );
-                ret = true;
+        if( in != null ) {
+            for( Iterator tIt = in.iterator(); tIt.hasNext(); ) {
+                final Rsrcc_srcm_stmt_kind_tgtc_tgtm.Tuple t = (Rsrcc_srcm_stmt_kind_tgtc_tgtm.Tuple) tIt.next();
+                if( cscg.addEdge( new Edge(
+                            MethodContext.v( t.srcm(), t.srcc() ),
+                            t.stmt(),
+                            MethodContext.v( t.tgtm(), t.tgtc() ),
+                            t.kind() ) ) ) {
+                    if(csout != null) 
+                        csout.add( t.srcc(), t.srcm(), t.stmt(), t.kind(), t.tgtc(), t.tgtm() );
+                    ret = true;
+                }
+                if( cicg.addEdge( new Edge(
+                            t.srcm(), 
+                            t.stmt(),
+                            t.tgtm(),
+                            t.kind() ) ) ) {
+                    if(ciout != null)
+                        ciout.add( t.srcm(), t.stmt(), t.kind(), t.tgtm() );
+                    ret = true;
+                }
             }
         }
         return ret;
@@ -61,15 +75,36 @@ public class TradCallGraph extends AbsCallGraph
         return ret;
     }
 
-    public Rsrcc_srcm_stmt_kind_tgtc_tgtm edgesOutOf( MethodOrMethodContext method ) {
+    public Rsrcm_stmt_kind_tgtm edgesOutOf( Rmethod methods ) {
+        Qsrcm_stmt_kind_tgtm queue =
+            new Qsrcm_stmt_kind_tgtmTrad("edgesOutOf");
+        Rsrcm_stmt_kind_tgtm ret = queue.reader("edgesOutOf");
+        for( Iterator tIt = methods.iterator(); tIt.hasNext(); ) {
+            final Rctxt_method.Tuple t = (Rctxt_method.Tuple) tIt.next();
+            edgesOutOfHelper( MethodContext.v( t.method(), t.ctxt() ), queue );
+        }
+        return ret;
+    }
+
+    public Rsrcc_srcm_stmt_kind_tgtc_tgtm edgesOutOf( Context c, SootMethod method ) {
         Qsrcc_srcm_stmt_kind_tgtc_tgtm queue =
             new Qsrcc_srcm_stmt_kind_tgtc_tgtmTrad("edgesOutOf");
         Rsrcc_srcm_stmt_kind_tgtc_tgtm ret = queue.reader("edgesOutOf");
+        edgesOutOfHelper( MethodContext.v(method, c), queue );
+        return ret;
+    }
+    public Rsrcm_stmt_kind_tgtm edgesOutOf( SootMethod method ) {
+        Qsrcm_stmt_kind_tgtm queue =
+            new Qsrcm_stmt_kind_tgtmTrad("edgesOutOf");
+        Rsrcm_stmt_kind_tgtm ret = queue.reader("edgesOutOf");
         edgesOutOfHelper( method, queue );
         return ret;
     }
     private void edgesOutOfHelper( MethodOrMethodContext method, Qsrcc_srcm_stmt_kind_tgtc_tgtm queue ) {
-            edgesHelper( cg.edgesOutOf( method ), queue );
+            edgesHelper( cscg.edgesOutOf( method ), queue );
+    }
+    private void edgesOutOfHelper( SootMethod method, Qsrcm_stmt_kind_tgtm queue ) {
+            edgesHelper( cicg.edgesOutOf( method ), queue );
     }
     private void edgesHelper( Iterator it, Qsrcc_srcm_stmt_kind_tgtc_tgtm queue ) {
             while( it.hasNext() ) {
@@ -79,15 +114,35 @@ public class TradCallGraph extends AbsCallGraph
                         e.tgtCtxt(), e.tgt() );
             }
     }
-    public Rsrcc_srcm_stmt_kind_tgtc_tgtm edges() {
+    private void edgesOutOfHelper( MethodOrMethodContext method, Qsrcm_stmt_kind_tgtm queue ) {
+            edgesHelper( cicg.edgesOutOf( method ), queue );
+    }
+    private void edgesHelper( Iterator it, Qsrcm_stmt_kind_tgtm queue ) {
+            while( it.hasNext() ) {
+                Edge e = (Edge) it.next();
+
+                queue.add( e.src(), e.srcUnit(), e.kind(), e.tgt() );
+            }
+    }
+    public Rsrcc_srcm_stmt_kind_tgtc_tgtm csEdges() {
         Qsrcc_srcm_stmt_kind_tgtc_tgtm queue =
             new Qsrcc_srcm_stmt_kind_tgtc_tgtmTrad("edges");
         Rsrcc_srcm_stmt_kind_tgtc_tgtm ret = queue.reader("edges");
-        edgesHelper( cg.listener(), queue );
+        edgesHelper( cscg.listener(), queue );
         return ret;
     }
-    public int size() {
-        return cg.size();
+    public Rsrcm_stmt_kind_tgtm ciEdges() {
+        Qsrcm_stmt_kind_tgtm queue =
+            new Qsrcm_stmt_kind_tgtmTrad("edges");
+        Rsrcm_stmt_kind_tgtm ret = queue.reader("edges");
+        edgesHelper( cicg.listener(), queue );
+        return ret;
+    }
+    public int csSize() {
+        return cscg.size();
+    }
+    public int ciSize() {
+        return cicg.size();
     }
 }
 

@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2003, 2004 Ondrej Lhotak
+ * Copyright (C) 2003, 2004, 2005 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,8 +28,8 @@ import jedd.*;
 import java.util.*;
 
 public final class Rvarc_var_objc_objTrad extends Rvarc_var_objc_objIter {
-    Rvarc_var_objc_objTrad( QueueReader r, String name ) { super(r, name); }
+    Rvarc_var_objc_objTrad( QueueReader r, String name, PaddleQueue q ) { super(r, name, q); }
     public Rvarc_var_objc_objTrad copy() {
-        return new Rvarc_var_objc_objTrad( (QueueReader) ((QueueReader)r).clone(), name );
+        return new Rvarc_var_objc_objTrad( (QueueReader) ((QueueReader)r).clone(), name, queue() );
     }
 }

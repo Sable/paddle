@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2003, 2004 Ondrej Lhotak
+ * Copyright (C) 2003, 2004, 2005 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,7 +28,7 @@ import jedd.*;
 import java.util.*;
 
 public final class Rsrc_fld_dstRev extends Rsrc_fld_dstSet {
-    public Rsrc_fld_dstRev(String name) { super(name); }
+    public Rsrc_fld_dstRev(String name, PaddleQueue q) { super(name, q); }
     void add( Rsrc_fld_dst.Tuple tuple ) {
         bdd.addFirst(tuple);
     }

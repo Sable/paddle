@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2003 Ondrej Lhotak
+ * Copyright (C) 2003, 2004, 2005 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -27,34 +27,58 @@ import soot.jimple.paddle.bdddomains.*;
  */
 public class BDDCallGraph extends AbsCallGraph
 { 
-    private <srcc, srcm, stmt, kind, tgtc, tgtm> edges;
-    BDDCallGraph( Rsrcc_srcm_stmt_kind_tgtc_tgtm in, Qsrcc_srcm_stmt_kind_tgtc_tgtm out ) {
-        super(in, out);
+    private <srcc, srcm, stmt, kind, tgtc, tgtm> csEdges;
+    private <srcm, stmt, kind, tgtm> ciEdges;
+    BDDCallGraph( Rsrcc_srcm_stmt_kind_tgtc_tgtm in, Qsrcm_stmt_kind_tgtm ciout, Qsrcc_srcm_stmt_kind_tgtc_tgtm csout ) {
+        super(in, ciout, csout);
     }
     public boolean update() {
+        if(in == null) return false;
         <srcc, srcm, stmt, kind, tgtc, tgtm> newEdges = in.get();
-        newEdges -= edges;
-        edges |= newEdges;
-        out.add( newEdges );
+        newEdges -= csEdges;
+        csEdges |= newEdges;
+        if(csout != null) csout.add( newEdges );
+        <srcm, stmt, kind, tgtm> newCiEdges = (srcc=>, tgtc=>) newEdges;
+        newCiEdges -= ciEdges;
+        ciEdges |= newCiEdges;
+        if(ciout != null) ciout.add(newCiEdges);
         return newEdges != 0B;
     }
     public Rsrcc_srcm_stmt_kind_tgtc_tgtm edgesOutOf( Rctxt_method methods ) {
         return new Rsrcc_srcm_stmt_kind_tgtc_tgtmBDD(
-                edges{srcm, srcc} >< methods.get(){method, ctxt},
-                "edgesOutOf");
+                csEdges{srcm, srcc} >< methods.get(){method, ctxt},
+                "edgesOutOf", null);
     }
-    public Rsrcc_srcm_stmt_kind_tgtc_tgtm edgesOutOf( MethodOrMethodContext m ) {
+    public Rsrcm_stmt_kind_tgtm edgesOutOf( Rmethod methods ) {
+        return new Rsrcm_stmt_kind_tgtmBDD(
+                ciEdges{srcm} >< methods.get(){method},
+                "edgesOutOf", null);
+    }
+    public Rsrcc_srcm_stmt_kind_tgtc_tgtm edgesOutOf( Context c, SootMethod m ) {
         return new Rsrcc_srcm_stmt_kind_tgtc_tgtmBDD(
-            edges{srcm, srcc} ><
-            new{m.context()=>ctxt, m.method()=>method} {method, ctxt},
-            "edgesOutOf"
+            csEdges{srcm, srcc} ><
+            new{c=>ctxt, m=>method} {method, ctxt},
+            "edgesOutOf", null
         );
     }
-    public Rsrcc_srcm_stmt_kind_tgtc_tgtm edges() {
-        return new Rsrcc_srcm_stmt_kind_tgtc_tgtmBDD( edges, "edges" );
+    public Rsrcm_stmt_kind_tgtm edgesOutOf( SootMethod m ) {
+        return new Rsrcm_stmt_kind_tgtmBDD(
+            ciEdges{srcm} ><
+            new{m=>method} {method},
+            "edgesOutOf", null
+        );
     }
-    public int size() {
-        return (int) edges.size();
+    public Rsrcc_srcm_stmt_kind_tgtc_tgtm csEdges() {
+        return new Rsrcc_srcm_stmt_kind_tgtc_tgtmBDD( csEdges, "edges", null );
+    }
+    public Rsrcm_stmt_kind_tgtm ciEdges() {
+        return new Rsrcm_stmt_kind_tgtmBDD( ciEdges, "edges", null );
+    }
+    public int ciSize() {
+        return (int) ciEdges.size();
+    }
+    public int csSize() {
+        return (int) csEdges.size();
     }
 }
 

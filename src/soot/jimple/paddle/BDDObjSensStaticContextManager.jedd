@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2003 Ondrej Lhotak
+ * Copyright (C) 2003, 2004, 2005 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -32,8 +32,9 @@ public class BDDObjSensStaticContextManager extends AbsStaticContextManager
     }
     public boolean update() {
         // just reuse the old context
+        <srcc, srcm, stmt, kind, tgtm, tgtc> newIn = in.get();
         <srcc, srcm, stmt, kind, tgtm, tgtc> newOut = 
-            (tgtc=>, srcc=>srcc, srcc=>tgtc) in.get();
+            (tgtc=>, srcc=>srcc, srcc=>tgtc) newIn;
         out.add( newOut );
         return newOut != 0B;
     }

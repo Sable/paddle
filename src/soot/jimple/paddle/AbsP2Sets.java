@@ -56,4 +56,5 @@ public abstract class AbsP2Sets
         return make(cadf.ctxt(), cadf.adf());
     }
     public abstract Rvarc_var_objc_obj getReader( VarNode cvn );
+    public abstract Rvarc_var_objc_obj getReader();
 }

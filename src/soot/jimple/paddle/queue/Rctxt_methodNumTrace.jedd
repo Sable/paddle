@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2003, 2004 Ondrej Lhotak
+ * Copyright (C) 2003, 2004, 2005 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,7 +28,7 @@ import jedd.*;
 import java.util.*;
 
 public class Rctxt_methodNumTrace extends Rctxt_method {
-    public Rctxt_methodNumTrace(String name) { super(name); }
+    public Rctxt_methodNumTrace(String name, PaddleQueue q) { super(name, q); }
     protected LinkedList bdd = new LinkedList();
     void add( Rctxt_method.Tuple tuple ) {
         bdd.addLast(tuple);

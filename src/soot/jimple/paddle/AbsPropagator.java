@@ -24,7 +24,7 @@ import soot.jimple.paddle.queue.*;
 /** Propagates points-to sets along the pointer assignment graph.
  * @author Ondrej Lhotak
  */
-public abstract class AbsPropagator implements DepItem
+public abstract class AbsPropagator implements PaddleComponent
 { 
     protected Rsrcc_src_dstc_dst newSimple;
     protected Rsrcc_src_fld_dstc_dst newLoad;
@@ -47,14 +47,27 @@ public abstract class AbsPropagator implements DepItem
         this.ptout = ptout;
         this.pag = pag;
     }
+    public abstract AbsP2Sets p2sets();
     public abstract boolean update();
     public abstract boolean fieldUpdate();
-    public DepItem fieldPropagator() {
-        return new DepItem() {
+    public PaddleComponent fieldPropagator() {
+        return new PaddleComponent() {
             public boolean update() {
                 return fieldUpdate();
             }
+            public void queueDeps(DependencyManager depMan) {
+                depMan.addQueueDep(newSimple, this);
+                depMan.addQueueDep(newLoad, this);
+                depMan.addQueueDep(newStore, this);
+                depMan.addQueueDep(newAlloc, this);
+            }
         };
+    }
+    public void queueDeps(DependencyManager depMan) {
+        depMan.addQueueDep(newSimple, this);
+        depMan.addQueueDep(newLoad, this);
+        depMan.addQueueDep(newStore, this);
+        depMan.addQueueDep(newAlloc, this);
     }
 }
 

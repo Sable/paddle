@@ -29,8 +29,9 @@ import soot.util.*;
  */
 public class DependencyManager 
 { 
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
     private Map countMap = new HashMap();
+    private Set qworklist = new HashSet();
     private Heap worklist = new Heap(new Heap.Keys() {
         public int key(Object o) {
             Integer i = (Integer) countMap.get(o);
@@ -38,20 +39,34 @@ public class DependencyManager
             return i.intValue();
         }
     });
+    private MultiMap qdeps = new HashMultiMap();
     private MultiMap deps = new HashMultiMap();
     private MultiMap precs = new HashMultiMap();
     public DependencyManager() {
     }
     public void invalidate( DepItem item ) {
-        worklist.add(item);
+        if( item instanceof PaddleComponent ) {
+            worklist.add(item);
+        } else {
+            qworklist.add(item);
+        }
     }
     private boolean incflow = false;
     public void update() {
         if(incflow) return;
         incflow = true;
 worklist:
-        while( !worklist.isEmpty() ) {
-            DepItem item = (DepItem) worklist.removeMin();
+        while( true ) {
+            for( Iterator qIt = qworklist.iterator(); qIt.hasNext(); ) {
+                final PaddleQueue q = (PaddleQueue) qIt.next();
+                for( Iterator depIt = qdeps.get(q).iterator(); depIt.hasNext(); ) {
+                    final PaddleComponent dep = (PaddleComponent) depIt.next();
+                    invalidate(dep);
+                }
+            }
+            qworklist = new HashSet();
+            if(worklist.isEmpty()) break;
+            PaddleComponent item = (PaddleComponent) worklist.removeMin();
             increment(item);
             if( !checkPrec(item) ) {
                 if(DEBUG) System.out.println( "not updating "+item.getClass() );
@@ -60,7 +75,7 @@ worklist:
                 if(DEBUG) System.out.println( "updating "+item.getClass() );
                 if( item.update() ) {
                     for( Iterator depIt = deps.get(item).iterator(); depIt.hasNext(); ) {
-                        final DepItem dep = (DepItem) depIt.next();
+                        final PaddleComponent dep = (PaddleComponent) depIt.next();
                         invalidate(dep);
                     }
                 }
@@ -69,19 +84,26 @@ worklist:
         }
         incflow = false;
     }
-    public boolean checkPrec( DepItem item ) {
+    public boolean checkPrec( PaddleComponent item ) {
         for( Iterator precIt = precs.get(item).iterator(); precIt.hasNext(); ) {
-            final DepItem prec = (DepItem) precIt.next();
+            final PaddleComponent prec = (PaddleComponent) precIt.next();
             if( worklist.contains(prec) ) {
                 return false;
             }
         }
         return true;
     }
-    public void addDep( DepItem from, DepItem to ) {
+    public void addQueueDep( PaddleQueueReader from, PaddleComponent to ) {
+        addQueueDep(from.queue(), to);
+    }
+    public void addQueueDep( PaddleQueue from, PaddleComponent to ) {
+        from.addDepMan(this);
+        qdeps.put(from, to);
+    }
+    public void addDep( PaddleComponent from, PaddleComponent to ) {
         deps.put(from, to);
     }
-    public void addPrec( DepItem from, DepItem to ) {
+    public void addPrec( PaddleComponent from, PaddleComponent to ) {
         precs.put(from, to);
     }
     private void increment(DepItem item) {
@@ -93,5 +115,4 @@ worklist:
         }
         countMap.put(item, i);
     }
-    public boolean worklistEmpty() { return worklist.isEmpty(); }
 }

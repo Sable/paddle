@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2003 Ondrej Lhotak
+ * Copyright (C) 2003, 2004, 2005 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,14 +28,16 @@ import soot.*;
  */
 public class TradInsensitiveVirtualContextManager extends AbsVirtualContextManager
 { 
-    TradInsensitiveVirtualContextManager( Rctxt_var_obj_srcm_stmt_kind_tgtm in, Qsrcc_srcm_stmt_kind_tgtc_tgtm out ) {
-        super( in, out );
+    TradInsensitiveVirtualContextManager( Rvarc_var_objc_obj_srcm_stmt_kind_tgtm in, Qsrcc_srcm_stmt_kind_tgtc_tgtm out, Qobjc_obj_varc_var thisOut, NodeFactory gnf ) {
+        super( in, out, thisOut, gnf );
     }
     public boolean update() {
         boolean change = false;
         for( Iterator tIt = in.iterator(); tIt.hasNext(); ) {
-            final Rctxt_var_obj_srcm_stmt_kind_tgtm.Tuple t = (Rctxt_var_obj_srcm_stmt_kind_tgtm.Tuple) tIt.next();
+            final Rvarc_var_objc_obj_srcm_stmt_kind_tgtm.Tuple t = (Rvarc_var_objc_obj_srcm_stmt_kind_tgtm.Tuple) tIt.next();
             out.add( null, t.srcm(), t.stmt(), t.kind(), null, t.tgtm() );
+            thisOut.add( t.objc(), t.obj(), null,
+                    (VarNode) new MethodNodeFactory(t.tgtm(), gnf).caseThis() );
             change = true;
         }
         return change;

@@ -36,12 +36,12 @@ public final class PropAlias extends AbsPropagator {
         outSets = new P2SetMap();
     }
 
-    private AbsP2Sets p2sets;
+    private AbsP2Sets p2sets = new TradP2Sets();
+    public AbsP2Sets p2sets() { return p2sets; }
     /** Actually does the propagation. */
     public final boolean update() {
         boolean ret = false;
 
-        p2sets = PaddleScene.v().p2sets;
         new TopoSorter( pag, false ).sort();
         varNodeWorkList.heapify();
         /*

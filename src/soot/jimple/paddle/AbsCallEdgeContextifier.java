@@ -1,4 +1,4 @@
-/* Soot - a J*va Optimization Framework
+/* SDependencyManager depManoot - a J*va Optimization Framework
  * Copyright (C) 2004 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@ import java.util.*;
 /** Instantiates the pointer flow edges of method calls in specific contexts.
  * @author Ondrej Lhotak
  */
-public abstract class AbsCallEdgeContextifier implements DepItem
+public abstract class AbsCallEdgeContextifier implements PaddleComponent
 { 
     protected Rsrcm_stmt_kind_tgtm_src_dst parms;
     protected Rsrcm_stmt_kind_tgtm_src_dst rets;
@@ -47,5 +47,10 @@ public abstract class AbsCallEdgeContextifier implements DepItem
     }
 
     public abstract boolean update();
+    public void queueDeps(DependencyManager depMan) {
+        depMan.addQueueDep(parms, this);
+        depMan.addQueueDep(rets, this);
+        depMan.addQueueDep(calls, this);
+    }
 }
 

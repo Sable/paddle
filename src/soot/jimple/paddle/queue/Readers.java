@@ -18,6 +18,7 @@
  */
 
 package soot.jimple.paddle.queue;
+import soot.jimple.paddle.*;
 import soot.*;
 import soot.util.*;
 import java.util.*;
@@ -32,15 +33,12 @@ public class Readers {
 
     private List readers = new ArrayList();
 
-    public interface Reader {
-        public boolean hasNext();
-    }
-    public void add( Reader r ) {
+    public void add( PaddleQueueReader r ) {
         readers.add(r);
     }
     public void checkEmptiness() {
         for( Iterator rIt = readers.iterator(); rIt.hasNext(); ) {
-            final Reader r = (Reader) rIt.next();
+            final PaddleQueueReader r = (PaddleQueueReader) rIt.next();
             if( r.hasNext() ) {
                 G.v().out.println( "Reader "+r+" is not empty." );
             }

@@ -1,0 +1,82 @@
+/* Soot - a J*va Optimization Framework
+ * Copyright (C) 2005 Ondrej Lhotak
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+
+package soot.jimple.paddle;
+import soot.jimple.paddle.bdddomains.*;
+import soot.jimple.paddle.queue.*;
+import java.util.*;
+import soot.*;
+import soot.jimple.toolkits.callgraph.*;
+
+/** Prints number of contexts for each method, and call edge,
+ * and the number of equivalence classes of contexts for each variable.
+ * @author Ondrej Lhotak
+ */
+public class ContextCountPrinter
+{ 
+    public static void printContextCounts() {
+        System.out.println( "Begin method context counts" );
+        <ctxt, method> contextMethods = 
+            Results.v().reachableMethods().contextMethods().get();
+        for( Iterator mIt = ((ctxt=>) contextMethods).iterator(); mIt.hasNext(); ) {
+            final SootMethod m = (SootMethod) mIt.next();
+            <ctxt> contexts = new{m=>method}{method}<>contextMethods{method};
+            System.out.println( contexts.size()+": "+m);
+        }
+        System.out.println( "End method context counts" );
+
+        System.out.println( "Begin edge context counts" );
+        AbsCallGraph cg = Results.v().callGraph();
+        <srcc, srcm, stmt, kind, tgtc, tgtm> csEdges = cg.csEdges().get();
+        for( Iterator tIt = cg.ciEdges().iterator(); tIt.hasNext(); ) {
+            final Rsrcm_stmt_kind_tgtm.Tuple t = (Rsrcm_stmt_kind_tgtm.Tuple) tIt.next();
+            <srcc, tgtc> contexts = 
+                new{t.srcm()=>srcm, t.stmt()=>stmt,
+                    t.kind()=>kind, t.tgtm()=>tgtm}{srcm, stmt, kind, tgtm}<>
+                                            csEdges{srcm, stmt, kind, tgtm};
+            System.out.println(
+                contexts.size()+
+                ": "+(new Edge(t.srcm(), t.stmt(), t.tgtm(), t.kind())) );
+        }
+        System.out.println( "End edge context counts" );
+
+        AbsP2Sets p2sets = Results.v().p2sets();
+        if(p2sets != null) {
+            System.out.println( "Begin variable context counts" );
+            for( Iterator vnIt = PaddleNumberers.v().varNodeNumberer().iterator(); vnIt.hasNext(); ) {
+                final VarNode vn = (VarNode) vnIt.next();
+                <varc:MEASURE1, var:MEASURE2, objc:MEASURE3, obj:MEASURE4>
+                    p2set = p2sets.getReader(vn).get();
+                System.out.println(
+                    ((obj=>, objc=>)p2set).size()+":"+
+                    ((var=>, objc=>)p2set).width(MEASURE1.v())+":"+
+                    vn);
+            }
+            System.out.println( "End variable context counts" );
+        }
+
+        <varc:MEASURE1, var:MEASURE2, objc:MEASURE3, obj:MEASURE4> 
+            p2relation = p2sets.getReader().get();
+        System.out.println( "Total number of contexts in points-to relation: "+
+            ((var=>, objc=>, obj=>) p2relation).size() );
+        System.out.println( "Total equivalence classes of contexts in points-to relation: "+p2relation.width(MEASURE1.v()) );
+    }
+}
+
+

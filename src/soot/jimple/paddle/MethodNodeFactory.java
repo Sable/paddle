@@ -29,13 +29,14 @@ import java.util.*;
  * @author Ondrej Lhotak
  */
 public class MethodNodeFactory extends AbstractJimpleValueSwitch {
-    public MethodNodeFactory( SootMethod method ) {
+    public MethodNodeFactory( SootMethod method, NodeFactory gnf ) {
         this.method = method;
+        this.gnf = gnf;
     }
 
-    private SootMethod method;
-    private NodeFactory gnf = PaddleScene.v().nodeFactory();
-    private NodeManager nm = PaddleScene.v().nodeManager();
+    private final SootMethod method;
+    private final NodeFactory gnf;
+    private final NodeManager nm = PaddleScene.v().nodeManager();
 
     public Node getNode( Value v ) {
         v.apply( this );
@@ -125,7 +126,7 @@ public class MethodNodeFactory extends AbstractJimpleValueSwitch {
 	setResult( gnf.caseThrow() );
     }
     final public void caseInstanceFieldRef( InstanceFieldRef ifr ) {
-	if( PaddleScene.v().options().field_based() || PaddleScene.v().options().vta() || PaddleScene.v().options().rta() ) {
+	if( PaddleScene.v().options().field_based() || PaddleScene.v().options().rta() ) {
 	    setResult( nm.makeGlobalVarNode( 
 			ifr.getField(), 
 			ifr.getField().getType() ) );

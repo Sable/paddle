@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2003, 2004 Ondrej Lhotak
+ * Copyright (C) 2003, 2004, 2005 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -29,7 +29,7 @@ import java.util.*;
 
 public class Rvar_method_typeIter extends Rvar_method_type{
     protected Iterator r;
-    public Rvar_method_typeIter( Iterator r, String name ) { super(name); this.r = r; }
+    public Rvar_method_typeIter( Iterator r, String name, PaddleQueue q ) { super(name, q); this.r = r; }
     public Iterator iterator() {
         return new Iterator() {
             public boolean hasNext() {

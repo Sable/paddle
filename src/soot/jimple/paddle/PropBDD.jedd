@@ -37,7 +37,7 @@ public class PropBDD extends AbsPropagator {
     }
 
     /*package*/ <varc, var, objc, obj> pt = 0B;
-    /*package*/ <basec:C1, base, fld, objc:C2, obj> fieldPt = 0B;
+    /*package*/ <basec, base, fld, objc, obj> fieldPt = 0B;
 
     protected <varc, var, objc, obj> typeFilter() {
         final <varc, objc> allContexts = 1B;
@@ -54,14 +54,14 @@ public class PropBDD extends AbsPropagator {
     }
 
     /** Propagate points-to relation pt over assignments simple. */
-    protected <varc, var, objc, obj> propSimple(
-        <varc, var, objc, obj> pt,
-        <srcc, src, dstc, dst> simple ) {
+    protected <varc:C1, var, objc:C3, obj> propSimple(
+        <varc:C1, var, objc:C3, obj> pt,
+        <srcc:C1, src, dstc:C2, dst> simple ) {
 
         <varc, var, objc, obj> ret = 0B;
         while( true ) {
             pt = typeFilter() &
-                ((dstc=>varc, dst=>var) (srcc=>C3)
+                ((dstc=>varc, dst=>var) 
                                        simple {srcc, src} 
                                         <> pt {varc, var} );
             pt -= ret;
@@ -72,12 +72,12 @@ public class PropBDD extends AbsPropagator {
     }
 
     /** Propagate points-to relation pt over stores stores pointing to storePt. */
-    protected <basec:C1, base:H1, fld, objc:C2, obj:H2> propStore(
+    protected <basec:C2, base:H1, fld, objc:C3, obj:H2> propStore(
         <varc, var, objc, obj> pt,
         <srcc, src, fld, dstc, dst> store,
         <varc, var, objc, obj> storePt ) {
 
-        <objc:C3, obj, varc, var, fld> objectsBeingStored =
+        <objc, obj, varc, var, fld> objectsBeingStored =
             (dstc=>varc, dst=>var) store {srcc, src} 
                                    <> pt {varc, var};
                                         
@@ -91,7 +91,7 @@ public class PropBDD extends AbsPropagator {
         <srcc, src, fld, dstc, dst> load,
         <varc, var, objc, obj> loadPt ) {
 
-        <basec, base, fld, dstc:C3, dst> loadsFromHeap;
+        <basec, base, fld, dstc, dst> loadsFromHeap;
         loadsFromHeap =                   load{srcc, src} 
             <> (objc=>basec, obj=>base) loadPt{varc, var};
 
@@ -100,17 +100,17 @@ public class PropBDD extends AbsPropagator {
     }
 
     public boolean fieldUpdate() {
-        <varc, var, objc, obj> veryOldPt = pt;
+        <varc, var, objc, obj> oldPt = pt;
 
         fieldPt |= propStore( pt, pag.allStore().get(), pt );
         pt |= propLoad( fieldPt, pag.allLoad().get(), pt ) & typeFilter();
 
         outputPt( pt );
-        return pt != veryOldPt;
+        return pt != oldPt;
     }
 
     public boolean update() {
-        <varc, var, objc, obj> veryOldPt = pt;
+        <varc, var, objc, obj> oldPt = pt;
 
         pt |= newAlloc.get() & typeFilter();
         pt |= propSimple( pt, pag.allSimple().get() ) & typeFilter();
@@ -121,8 +121,11 @@ public class PropBDD extends AbsPropagator {
                 G.v().out.println( "Major iteration: " );
         }
 
-        return pt != veryOldPt;
+        return pt != oldPt;
     }
+
+    private BDDP2Sets p2sets = new BDDP2Sets(this);
+    public AbsP2Sets p2sets() { return p2sets; }
 
     /* End of public methods. */
     /* End of package methods. */

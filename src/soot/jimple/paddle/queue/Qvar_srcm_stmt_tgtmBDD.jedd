@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2003, 2004 Ondrej Lhotak
+ * Copyright (C) 2003, 2004, 2005 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -41,7 +41,7 @@ public final class Qvar_srcm_stmt_tgtmBDD extends Qvar_srcm_stmt_tgtm {
         }
     }
     public Rvar_srcm_stmt_tgtm reader( String rname ) {
-        Rvar_srcm_stmt_tgtm ret = new Rvar_srcm_stmt_tgtmBDD( name+":"+rname );
+        Rvar_srcm_stmt_tgtm ret = new Rvar_srcm_stmt_tgtmBDD( name+":"+rname, this );
         readers.add( ret );
         return ret;
     }

@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2003 Ondrej Lhotak
+ * Copyright (C) 2003, 2004, 2005 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -26,16 +26,31 @@ import soot.*;
  * context.
  * @author Ondrej Lhotak
  */
-public class BDDObjSensVirtualContextManager extends AbsVirtualContextManager
+public class BDDObjSensVirtualContextManager extends BDDVirtualContextManager
 { 
-    BDDObjSensVirtualContextManager( Rctxt_var_obj_srcm_stmt_kind_tgtm in, Qsrcc_srcm_stmt_kind_tgtc_tgtm out ) {
-        super( in, out );
+    BDDObjSensVirtualContextManager( Rvarc_var_objc_obj_srcm_stmt_kind_tgtm in, Qsrcc_srcm_stmt_kind_tgtc_tgtm out, Qobjc_obj_varc_var thisOut, NodeFactory gnf ) {
+        super( in, out, thisOut, gnf );
     }
     public boolean update() {
-        <srcc, srcm, stmt, kind, tgtm, tgtc> newOut = 
-            (ctxt=>srcc, var=>, obj=>tgtc)(obj=>C2)in.get();
-        out.add( newOut );
-        return newOut != 0B;
+        <varc, var, objc, obj, srcm, stmt, kind, tgtm> newIn = in.get();
+
+        out.add((varc=>srcc, obj=>tgtc)(obj=>C2)(var=>, objc=>)
+            newIn );
+
+        newMethods((varc=>, var=>, objc=>, obj=>, srcm=>, stmt=>, kind=>)
+            newIn);
+        thisOut.add(
+            (base=>varc)
+            (base=>C1)
+            (obj=>H1, base=>H2)
+            (obj=>obj, obj=>base)
+            (obj=>H1)
+            (
+                (varc=>, var=>, srcm=>, stmt=>, kind=>)
+                newIn{tgtm} <>
+                thisVar(){method}) );
+
+        return newIn != 0B;
     }
 }
 

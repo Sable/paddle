@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2003, 2004 Ondrej Lhotak
+ * Copyright (C) 2003, 2004, 2005 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -46,6 +46,6 @@ public class Qvar_typeDebug extends Qvar_type {
         }
     }
     public Rvar_type reader( String rname ) {
-        return new Rvar_typeDebug( (Rvar_typeBDD) bdd.reader(rname), (Rvar_typeSet) trad.reader(rname), name+":"+rname );
+        return new Rvar_typeDebug( (Rvar_typeBDD) bdd.reader(rname), (Rvar_typeSet) trad.reader(rname), name+":"+rname, this );
     }
 }

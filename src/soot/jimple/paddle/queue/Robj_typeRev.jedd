@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2003, 2004 Ondrej Lhotak
+ * Copyright (C) 2003, 2004, 2005 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,7 +28,7 @@ import jedd.*;
 import java.util.*;
 
 public final class Robj_typeRev extends Robj_typeSet {
-    public Robj_typeRev(String name) { super(name); }
+    public Robj_typeRev(String name, PaddleQueue q) { super(name, q); }
     void add( Robj_type.Tuple tuple ) {
         bdd.addFirst(tuple);
     }

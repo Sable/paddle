@@ -28,11 +28,8 @@ import soot.toolkits.graph.*;
  * more than once.
  * @author Ondrej Lhotak
  */
-public class ExecutesManyAnalysis extends SceneTransformer
+public class ExecutesManyAnalysis 
 { 
-    public ExecutesManyAnalysis( PaddleSingletons.Global g ) {}
-    public static ExecutesManyAnalysis v() { return PaddleG.v().soot_jimple_paddle_ExecutesManyAnalysis(); }
-
     public class IntraProc extends ForwardFlowAnalysis {
         public IntraProc(UnitGraph g) {
             super(g);
@@ -100,7 +97,7 @@ public class ExecutesManyAnalysis extends SceneTransformer
         }
     }
 
-    protected void internalTransform( String phaseName, Map options ) {
+    public void analyze() {
         <ctxt> allContexts = 1B;
         for( Iterator clIt = Scene.v().getApplicationClasses().iterator(); clIt.hasNext(); ) {
             final SootClass cl = (SootClass) clIt.next();
@@ -120,7 +117,7 @@ public class ExecutesManyAnalysis extends SceneTransformer
                 }
             }
         }
-        callGraph = (kind=>) Results.v().callGraph().edges().get();
+        callGraph = (kind=>) Results.v().callGraph().csEdges().get();
 
         while(true) {
             <ctxt, stmt> oldUnit = twiceUnit;

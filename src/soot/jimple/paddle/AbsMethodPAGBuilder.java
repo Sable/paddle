@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2003, 2004 Ondrej Lhotak
+ * Copyright (C) 2003, 2004, 2005 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -24,27 +24,33 @@ import soot.jimple.paddle.queue.*;
 /** Creates intra-procedural pointer assignment edges.
  * @author Ondrej Lhotak
  */
-public abstract class AbsMethodPAGBuilder implements DepItem
+public abstract class AbsMethodPAGBuilder implements PaddleComponent
 { 
-    protected Rctxt_method in;
+    protected Rmethod in;
     protected Qsrc_dst simple;
     protected Qsrc_fld_dst load;
     protected Qsrc_dst_fld store;
     protected Qobj_var alloc;
+    protected NodeFactory gnf;
 
     AbsMethodPAGBuilder( 
-        Rctxt_method in,
+        Rmethod in,
         Qsrc_dst simple,
         Qsrc_fld_dst load,
         Qsrc_dst_fld store,
-        Qobj_var alloc ) {
+        Qobj_var alloc,
+		NodeFactory gnf) {
         this.in = in;
         this.simple = simple;
         this.load = load;
         this.store = store;
         this.alloc = alloc;
+        this.gnf = gnf;
     }
     public abstract boolean update();
+    public void queueDeps(DependencyManager depMan) {
+        depMan.addQueueDep(in, this);
+    }
 }
 
 

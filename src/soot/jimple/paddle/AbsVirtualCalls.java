@@ -24,27 +24,35 @@ import soot.jimple.paddle.queue.*;
 /** Resolves virtual calls based on the actual type of the receiver.
  * @author Ondrej Lhotak
  */
-public abstract class AbsVirtualCalls implements DepItem
+public abstract class AbsVirtualCalls implements PaddleComponent
 { 
     protected Rvarc_var_objc_obj pt;
     protected Rvar_srcm_stmt_dtp_signature_kind receivers;
     protected Rvar_srcm_stmt_tgtm specials;
-    protected Qctxt_var_obj_srcm_stmt_kind_tgtm out;
+    protected Qvarc_var_objc_obj_srcm_stmt_kind_tgtm out;
     protected Qsrcc_srcm_stmt_kind_tgtc_tgtm statics;
+    protected AbsP2Sets p2sets;
 
     AbsVirtualCalls( Rvarc_var_objc_obj pt,
             Rvar_srcm_stmt_dtp_signature_kind receivers,
             Rvar_srcm_stmt_tgtm specials,
-            Qctxt_var_obj_srcm_stmt_kind_tgtm out,
-            Qsrcc_srcm_stmt_kind_tgtc_tgtm statics
+            Qvarc_var_objc_obj_srcm_stmt_kind_tgtm out,
+            Qsrcc_srcm_stmt_kind_tgtc_tgtm statics,
+            AbsP2Sets p2sets
         ) {
         this.pt = pt;
         this.receivers = receivers;
         this.specials = specials;
         this.out = out;
         this.statics = statics;
+        this.p2sets = p2sets;
     }
     public abstract boolean update();
+    public void queueDeps(DependencyManager depMan) {
+        depMan.addQueueDep(pt, this);
+        depMan.addQueueDep(receivers, this);
+        depMan.addQueueDep(specials, this);
+    }
 }
 
 

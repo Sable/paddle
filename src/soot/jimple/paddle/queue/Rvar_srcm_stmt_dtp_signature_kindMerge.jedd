@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2003, 2004 Ondrej Lhotak
+ * Copyright (C) 2003, 2004, 2005 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -32,7 +32,7 @@ public final class Rvar_srcm_stmt_dtp_signature_kindMerge extends Rvar_srcm_stmt
     private Rvar_srcm_stmt_dtp_signature_kind in1;
     private Rvar_srcm_stmt_dtp_signature_kind in2;
     public Rvar_srcm_stmt_dtp_signature_kindMerge( Rvar_srcm_stmt_dtp_signature_kind in1, Rvar_srcm_stmt_dtp_signature_kind in2 ) {
-        super(in1.name+"+"+in2.name);
+        super(in1.name+"+"+in2.name, null);
         this.in1 = in1;
         this.in2 = in2;
     }

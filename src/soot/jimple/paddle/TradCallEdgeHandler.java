@@ -29,18 +29,22 @@ import soot.util.*;
  */
 public class TradCallEdgeHandler extends AbsCallEdgeHandler
 { 
+    public final boolean PROCESS_THIS;
     TradCallEdgeHandler( 
-        Rsrcc_srcm_stmt_kind_tgtc_tgtm in,
+        Rsrcm_stmt_kind_tgtm in,
         Qsrcm_stmt_kind_tgtm_src_dst parms,
-        Qsrcm_stmt_kind_tgtm_src_dst rets ) {
-        super(in, parms, rets);
+        Qsrcm_stmt_kind_tgtm_src_dst rets,
+        NodeFactory gnf,
+        boolean processThis ) {
+        super(in, parms, rets, gnf);
+        PROCESS_THIS = processThis;
     }
 
     Set seenEdges = new HashSet();
     public boolean update() {
         boolean ret = false;
         for( Iterator tIt = in.iterator(); tIt.hasNext(); ) {
-            final Rsrcc_srcm_stmt_kind_tgtc_tgtm.Tuple t = (Rsrcc_srcm_stmt_kind_tgtc_tgtm.Tuple) tIt.next();
+            final Rsrcm_stmt_kind_tgtm.Tuple t = (Rsrcm_stmt_kind_tgtm.Tuple) tIt.next();
             if( !t.kind().passesParameters() ) continue;
 
             if( !seenEdges.add( new Cons(new Cons(t.srcm(), t.stmt()),
@@ -52,9 +56,9 @@ public class TradCallEdgeHandler extends AbsCallEdgeHandler
         return ret;
     }
 
-    protected void processEdge( Rsrcc_srcm_stmt_kind_tgtc_tgtm.Tuple t ) {
-        MethodNodeFactory srcnf = new MethodNodeFactory(t.srcm());
-        MethodNodeFactory tgtnf = new MethodNodeFactory(t.tgtm());
+    protected void processEdge( Rsrcm_stmt_kind_tgtm.Tuple t ) {
+        MethodNodeFactory srcnf = new MethodNodeFactory(t.srcm(), gnf);
+        MethodNodeFactory tgtnf = new MethodNodeFactory(t.tgtm(), gnf);
         if( t.kind().isExplicit() || t.kind() == Kind.THREAD ) {
             addCallTarget( t, srcnf, tgtnf );
         } else {
@@ -64,14 +68,18 @@ public class TradCallEdgeHandler extends AbsCallEdgeHandler
                 // return of doPrivileged()
 
                 InvokeExpr ie = ((Stmt) t.stmt()).getInvokeExpr();
-                addParmEdge( t, srcnf.getNode(ie.getArg(0)), tgtnf.caseThis() );
+                if( processThis(t.kind()) ) {
+                    addParmEdge( t, srcnf.getNode(ie.getArg(0)), tgtnf.caseThis() );
+                }
 
                 if( t.stmt() instanceof AssignStmt ) {
                     AssignStmt as = (AssignStmt) t.stmt();
                     addRetEdge( t, tgtnf.caseRet(), srcnf.getNode(as.getLeftOp()) );
                 }
             } else if( t.kind() == Kind.INVOKE_FINALIZE ) {
-                addParmEdge( t, srcnf.caseParm(0), tgtnf.caseThis() );
+                if( processThis(t.kind()) ) {
+                    addParmEdge( t, srcnf.caseParm(0), tgtnf.caseThis() );
+                }
             } else if( t.kind() == Kind.FINALIZE ) {
                 AssignStmt as = (AssignStmt) t.stmt();
                 Local lhs = (Local) as.getLeftOp();
@@ -80,9 +88,11 @@ public class TradCallEdgeHandler extends AbsCallEdgeHandler
                 Stmt s = (Stmt) t.stmt();
                 InstanceInvokeExpr iie = (InstanceInvokeExpr) s.getInvokeExpr();
                 VarNode cls = (VarNode) srcnf.getNode( iie.getBase() );
-                Node newObject = PaddleScene.v().nodeFactory().caseNewInstance( cls );
+                Node newObject = gnf.caseNewInstance( cls );
 
-                addParmEdge( t, newObject, tgtnf.caseThis() );
+                if( processThis(t.kind())) {
+                    addParmEdge( t, newObject, tgtnf.caseThis() );
+                }
                 if( t.stmt() instanceof AssignStmt ) {
                     AssignStmt as = (AssignStmt) t.stmt();
                     addRetEdge( t, newObject, srcnf.getNode(as.getLeftOp()) );
@@ -95,7 +105,7 @@ public class TradCallEdgeHandler extends AbsCallEdgeHandler
 
     /** Adds method target as a possible target of the invoke expression in s.
      **/
-    final private void addCallTarget( Rsrcc_srcm_stmt_kind_tgtc_tgtm.Tuple t,
+    final private void addCallTarget( Rsrcm_stmt_kind_tgtm.Tuple t,
                                      MethodNodeFactory srcnf,
                                      MethodNodeFactory tgtnf ) {
         Stmt s = (Stmt) t.stmt();
@@ -111,7 +121,9 @@ public class TradCallEdgeHandler extends AbsCallEdgeHandler
         if( ie instanceof InstanceInvokeExpr ) {
             InstanceInvokeExpr iie = (InstanceInvokeExpr) ie;
 
-            addParmEdge( t, srcnf.getNode(iie.getBase()), tgtnf.caseThis() );
+            if( processThis(t.kind()) ) { 
+                addParmEdge( t, srcnf.getNode(iie.getBase()), tgtnf.caseThis() );
+            }
         }
         if( s instanceof AssignStmt ) {
             Value dest = ( (AssignStmt) s ).getLeftOp();
@@ -122,13 +134,20 @@ public class TradCallEdgeHandler extends AbsCallEdgeHandler
         }
     }
 
-    protected void addParmEdge( Rsrcc_srcm_stmt_kind_tgtc_tgtm.Tuple cgEdge, Node src, Node dst ) {
+    protected void addParmEdge( Rsrcm_stmt_kind_tgtm.Tuple cgEdge, Node src, Node dst ) {
         parms.add(cgEdge.srcm(), cgEdge.stmt(), cgEdge.kind(), cgEdge.tgtm(),
                 (VarNode) src, (VarNode) dst);
     }
-    private void addRetEdge( Rsrcc_srcm_stmt_kind_tgtc_tgtm.Tuple cgEdge, Node src, Node dst ) {
+    private void addRetEdge( Rsrcm_stmt_kind_tgtm.Tuple cgEdge, Node src, Node dst ) {
         rets.add(cgEdge.srcm(), cgEdge.stmt(), cgEdge.kind(), cgEdge.tgtm(),
                 (VarNode) src, (VarNode) dst);
+    }
+    private boolean processThis(Kind kind) {
+        if(PROCESS_THIS) return true;
+        if(kind == Kind.VIRTUAL || kind == Kind.INTERFACE
+                || kind == Kind.PRIVILEGED || kind == Kind.INVOKE_FINALIZE) 
+            return false;
+        return true;
     }
 }
 

@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2004 Ondrej Lhotak
+ * Copyright (C) 2004, 2005 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,29 +28,41 @@ import soot.*;
  * context.
  * @author Ondrej Lhotak
  */
-public class BDDKObjSensVirtualContextManager extends AbsVirtualContextManager
+public class BDDKObjSensVirtualContextManager extends BDDVirtualContextManager
 { 
-    BDDKObjSensVirtualContextManager( Rctxt_var_obj_srcm_stmt_kind_tgtm in, Qsrcc_srcm_stmt_kind_tgtc_tgtm out, int k ) {
-        super( in, out );
+    BDDKObjSensVirtualContextManager( Rvarc_var_objc_obj_srcm_stmt_kind_tgtm in, Qsrcc_srcm_stmt_kind_tgtc_tgtm out, Qobjc_obj_varc_var thisOut, NodeFactory gnf, int k ) {
+        super( in, out, thisOut, gnf );
         this.k = k;
     }
     private Jedd.Shifter shifter;
     private int k;
+    private int shiftWidth() {
+        return ((ContextStringNumberer) Scene.v().getContextNumberer())
+            .shiftWidth;
+    }
     public boolean update() {
         if( shifter == null ) {
-            int[] from = new int[(k-1)*ContextStringNumberer.SHIFT_WIDTH];
-            int[] to = new int[(k-1)*ContextStringNumberer.SHIFT_WIDTH];
+            int[] from = new int[(k-1)*shiftWidth()];
+            int[] to = new int[(k-1)*shiftWidth()];
             for( int i = 0; i < from.length; i++ ) {
                 from[i] = i + C1.v().firstBit();
-                to[i] = i + C2.v().firstBit() + ContextStringNumberer.SHIFT_WIDTH;
+                to[i] = i + C2.v().firstBit() + shiftWidth();
             }
             shifter = Jedd.v().makeShifter( from, to );
         }
-        <srcc:C1, srcm, stmt, kind, tgtc:C2, tgtm> newEdges = 
-            (ctxt=>srcc, var=>, obj=>tgtc)(obj=>C2) in.get();
-        newEdges = (<srcc, srcm, stmt, kind, tgtc, tgtm>)
+        <varc, var, objc, obj, srcm, stmt, kind, tgtm> newIn = in.get();
+        <varc:C1, objc:C3, obj, srcm, stmt, kind, tgtc:C2, tgtm> newEdges = 
+            (var=>, obj=>obj, obj=>tgtc) newIn;
+        newEdges = (<varc, objc, obj, srcm, stmt, kind, tgtc, tgtm>)
             newEdges.applyShifter(shifter);
-        out.add( newEdges );
-        return newEdges != 0B;
+        out.add((varc=>srcc, objc=>, obj=>) newEdges);
+
+        newMethods((varc=>, objc=>, obj=>, srcm=>, stmt=>, kind=>, tgtc=>)
+            newEdges);
+        thisOut.add(
+            (varc=>, srcm=>, stmt=>, kind=>, tgtc=>varc) newEdges{tgtm} <>
+            thisVar(){method} );
+
+        return newIn != 0B;
     }
 }

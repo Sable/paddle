@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2003, 2004 Ondrej Lhotak
+ * Copyright (C) 2003, 2004, 2005 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -30,8 +30,9 @@ import java.util.*;
 public final class Rsrcc_srcm_stmt_kind_tgtc_tgtmBDD extends Rsrcc_srcm_stmt_kind_tgtc_tgtm {
     private <srcc:C1, srcm:MS, stmt:ST, kind:KD, tgtc:C2, tgtm:MT> bdd;
     void add( <srcc:C1, srcm:MS, stmt:ST, kind:KD, tgtc:C2, tgtm:MT> tuple ) { bdd |= tuple; }
-    public Rsrcc_srcm_stmt_kind_tgtc_tgtmBDD( <srcc:C1, srcm:MS, stmt:ST, kind:KD, tgtc:C2, tgtm:MT> bdd, String name ) { this(name); add(bdd); }
-    Rsrcc_srcm_stmt_kind_tgtc_tgtmBDD(String name) { super(name); bdd = 0B; }
+    public Rsrcc_srcm_stmt_kind_tgtc_tgtmBDD( <srcc:C1, srcm:MS, stmt:ST, kind:KD, tgtc:C2, tgtm:MT> bdd, String name, PaddleQueue q ) { this(name, q); add(bdd); }
+    public Rsrcc_srcm_stmt_kind_tgtc_tgtmBDD( <srcc:C1, srcm:MS, stmt:ST, kind:KD, tgtc:C2, tgtm:MT> bdd ) { this("", null); add(bdd); }
+    Rsrcc_srcm_stmt_kind_tgtc_tgtmBDD(String name, PaddleQueue q) { super(name, q); bdd = 0B; }
     public Iterator iterator() {;
         return new Iterator() {
             private Iterator it;

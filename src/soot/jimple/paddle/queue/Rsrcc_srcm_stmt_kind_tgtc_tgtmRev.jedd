@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2003, 2004 Ondrej Lhotak
+ * Copyright (C) 2003, 2004, 2005 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,7 +28,7 @@ import jedd.*;
 import java.util.*;
 
 public final class Rsrcc_srcm_stmt_kind_tgtc_tgtmRev extends Rsrcc_srcm_stmt_kind_tgtc_tgtmSet {
-    public Rsrcc_srcm_stmt_kind_tgtc_tgtmRev(String name) { super(name); }
+    public Rsrcc_srcm_stmt_kind_tgtc_tgtmRev(String name, PaddleQueue q) { super(name, q); }
     void add( Rsrcc_srcm_stmt_kind_tgtc_tgtm.Tuple tuple ) {
         bdd.addFirst(tuple);
     }

@@ -26,7 +26,7 @@ import java.util.*;
 /** Keeps track of the type and method of each node.
  * @author Ondrej Lhotak
  */
-public abstract class AbsNodeInfo implements DepItem
+public abstract class AbsNodeInfo implements PaddleComponent
 { 
     protected Rvar_method_type locals;
     protected Rvar_type globals;
@@ -46,5 +46,11 @@ public abstract class AbsNodeInfo implements DepItem
     }
 
     public abstract boolean update();
+    public void queueDeps(DependencyManager depMan) {
+        depMan.addQueueDep(locals, this);
+        depMan.addQueueDep(globals, this);
+        depMan.addQueueDep(localallocs, this);
+        depMan.addQueueDep(globalallocs, this);
+    }
 }
 

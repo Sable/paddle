@@ -41,5 +41,7 @@ public class PaddleNumberers {
     public ArrayNumberer contextVarNodeNumberer() { return contextVarNodeNumberer; }
     private ArrayNumberer contextAllocNodeNumberer = new ArrayNumberer();
     public ArrayNumberer contextAllocNodeNumberer() { return contextAllocNodeNumberer; }
+
+    public jedd.Domain contextDomain = null;
 }
 

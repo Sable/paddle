@@ -31,14 +31,14 @@ import java.util.*;
  */
 public class TradStaticCallBuilder extends AbsStaticCallBuilder
 { 
-    TradStaticCallBuilder( Rctxt_method in, Qsrcc_srcm_stmt_kind_tgtc_tgtm out, Qvar_srcm_stmt_dtp_signature_kind receivers, Qvar_srcm_stmt_tgtm specials ) {
-        super( in, out, receivers, specials );
+    TradStaticCallBuilder( Rmethod in, Qsrcm_stmt_kind_tgtm out, Qvar_srcm_stmt_dtp_signature_kind receivers, Qvar_srcm_stmt_tgtm specials, NodeFactory gnf ) {
+        super( in, out, receivers, specials, gnf );
     }
     private boolean change;
     public boolean update() {
         change = false;
         for( Iterator tIt = in.iterator(); tIt.hasNext(); ) {
-            final Rctxt_method.Tuple t = (Rctxt_method.Tuple) tIt.next();
+            final Rmethod.Tuple t = (Rmethod.Tuple) tIt.next();
             SootMethod m = t.method();
             if( m.isNative() ) processNativeMethod(m);
             else if( !m.isPhantom() ) processMethod( m );
@@ -48,12 +48,12 @@ public class TradStaticCallBuilder extends AbsStaticCallBuilder
 
     protected void processNativeMethod( SootMethod source ) {
         if( source.getSignature().equals( "<java.lang.ref.Finalizer: void invokeFinalizeMethod(java.lang.Object)>" )) {
-            VarNode receiver = (VarNode) new MethodNodeFactory(source).caseParm(0);
+            VarNode receiver = (VarNode) new MethodNodeFactory(source, gnf).caseParm(0);
             receivers.add( receiver, source, null, null, sigFinalize, Kind.INVOKE_FINALIZE );
         }
     }
     protected void processMethod( SootMethod source ) {
-        MethodNodeFactory mnf = new MethodNodeFactory(source);
+        MethodNodeFactory mnf = new MethodNodeFactory(source, gnf);
         final SootClass scl = source.getDeclaringClass();
         if( source.isNative() || source.isPhantom() ) return;
         
@@ -89,10 +89,12 @@ public class TradStaticCallBuilder extends AbsStaticCallBuilder
                         }
                     }
 
-                // Deal with PRIVILEGED calls
                 } else {
+                    // Deal with STATIC calls
                     SootMethod tgt = ((StaticInvokeExpr) ie).getMethod();
                     addEdge(source, s, tgt);
+
+                    // Deal with PRIVILEGED calls
                     if( tgt.getSignature().equals( "<java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedAction)>" )
                     ||  tgt.getSignature().equals( "<java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedAction,java.security.AccessControlContext)>" ) ) {
                         VarNode receiver = (VarNode) mnf.getNode(ie.getArg(0));
@@ -218,7 +220,7 @@ public class TradStaticCallBuilder extends AbsStaticCallBuilder
 
     protected void addEdge( SootMethod src, Stmt stmt, SootMethod tgt, Kind kind ) {
         Scene.v().getUnitNumberer().add(stmt);
-        out.add( null, src, stmt, kind, null, tgt );
+        out.add( src, stmt, kind, tgt );
         change = true;
     }
 

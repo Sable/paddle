@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2003, 2004 Ondrej Lhotak
+ * Copyright (C) 2003, 2004, 2005 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -27,12 +27,15 @@ import soot.util.queue.*;
 import jedd.*;
 import java.util.*;
 
-public abstract class Rctxt_method implements Readers.Reader {
-    public Rctxt_method( String name ) {
+public abstract class Rctxt_method implements PaddleQueueReader {
+    public Rctxt_method( String name, PaddleQueue q ) {
         this.name = name;
+        this.q = q;
         Readers.v().add(this);
     }
     protected String name;
+    protected PaddleQueue q;
+    public PaddleQueue queue() { return q; }
     public final String toString() { return name; }
     public abstract Iterator iterator();
     public abstract <ctxt:C1, method:MS> get();

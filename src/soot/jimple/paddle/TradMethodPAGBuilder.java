@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2003 Ondrej Lhotak
+ * Copyright (C) 2003, 2004, 2005 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -31,23 +31,25 @@ import java.util.*;
 public class TradMethodPAGBuilder extends AbsMethodPAGBuilder
 { 
     TradMethodPAGBuilder( 
-        Rctxt_method in,
+        Rmethod in,
         Qsrc_dst simple,
         Qsrc_fld_dst load,
         Qsrc_dst_fld store,
-        Qobj_var alloc ) {
-        super(in, simple, load, store, alloc);
+        Qobj_var alloc,
+		NodeFactory gnf
+		) {
+        super(in, simple, load, store, alloc, gnf);
     }
     protected NodeManager nm = PaddleScene.v().nodeManager();
     public boolean update() {
         for( Iterator tIt = in.iterator(); tIt.hasNext(); ) {
-            final Rctxt_method.Tuple t = (Rctxt_method.Tuple) tIt.next();
+            final Rmethod.Tuple t = (Rmethod.Tuple) tIt.next();
             build(t.method());
         }
         return true;
     }
     protected void build(SootMethod method) {
-        MethodNodeFactory nf = new MethodNodeFactory(method);
+        MethodNodeFactory nf = new MethodNodeFactory(method, gnf);
         if( method.isNative() ) {
             if( PaddleScene.v().options().simulate_natives() ) {
                 buildNative(method, nf);

@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2003, 2004 Ondrej Lhotak
+ * Copyright (C) 2003, 2004, 2005 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -29,7 +29,7 @@ import java.util.*;
 
 public class Robjc_obj_varc_varIter extends Robjc_obj_varc_var{
     protected Iterator r;
-    public Robjc_obj_varc_varIter( Iterator r, String name ) { super(name); this.r = r; }
+    public Robjc_obj_varc_varIter( Iterator r, String name, PaddleQueue q ) { super(name, q); this.r = r; }
     public Iterator iterator() {
         return new Iterator() {
             public boolean hasNext() {
@@ -42,8 +42,8 @@ public class Robjc_obj_varc_varIter extends Robjc_obj_varc_var{
             public void remove() { throw new UnsupportedOperationException(); }
         };
     }
-    public <objc:C2, obj:H1, varc:C1, var:V1> get() {
-        <objc:C2, obj:H1, varc:C1, var:V1> ret = 0B;
+    public <objc:C3, obj:H1, varc:C1, var:V1> get() {
+        <objc:C3, obj:H1, varc:C1, var:V1> ret = 0B;
         while( r.hasNext() ) {
             ret |= new { r.next()=>objc, r.next()=>obj, r.next()=>varc, r.next()=>var };
         }

@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2003 Ondrej Lhotak
+ * Copyright (C) 2003, 2004, 2005 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,24 +28,23 @@ import soot.jimple.paddle.bdddomains.*;
 public class BDDContextCallGraphBuilder extends AbsContextCallGraphBuilder 
 { 
     BDDContextCallGraphBuilder( Rctxt_method methodsIn,
-        Rsrcc_srcm_stmt_kind_tgtc_tgtm edgesIn,
-        Qsrcc_srcm_stmt_kind_tgtc_tgtm out,
-        AbsCallGraph cicg ) {
-        super( methodsIn, edgesIn, out, cicg );
+        Rsrcm_stmt_kind_tgtm edgesIn,
+        Qsrcc_srcm_stmt_kind_tgtc_tgtm out
+        ) {
+        super( methodsIn, edgesIn, out );
     }
     private <ctxt, method> m2c = 0B;
+    private <srcm, stmt, kind, tgtm> cicg = 0B;
     public boolean update() {
-        <srcc, srcm, stmt, kind, tgtc, tgtm> newEdges = edgesIn.get();
+        <srcm, stmt, kind, tgtm> newEdges = edgesIn.get();
         <srcc, srcm, stmt, kind, tgtc, tgtm> newOut =
-             (srcc=>) newEdges{srcm} >< (ctxt=>srcc) m2c{method};
+             new{null=>tgtc}{} ><
+             (newEdges{srcm} >< (ctxt=>srcc) m2c{method}){};
+        cicg |= newEdges;
 
         <ctxt, method> methods = methodsIn.get();
-        // get all edges out of all the methods, ignoring context
-        Rsrcc_srcm_stmt_kind_tgtc_tgtm edges = cicg.edgesOutOf(
-            new Rctxt_methodBDD( (ctxt=>) methods{} >< new{null=>ctxt}{},
-                "ccgb" ) );
-        // add in the contexts as source contexts
-        newOut |= (srcc=>) edges.get(){srcm} >< (ctxt=>srcc) methods{method};
+        newOut |= new{null=>tgtc}{} ><
+            (cicg{srcm} >< (ctxt=>srcc) methods{method}){};
         out.add( newOut );
         m2c |= methods;
         return newOut != 0B;
