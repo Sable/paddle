@@ -33,7 +33,7 @@ public class BDDObjSensVirtualContextManager extends AbsVirtualContextManager
     }
     public boolean update() {
         <srcc, srcm, stmt, kind, tgtm, tgtc> newOut = 
-            (ctxt=>srcc, var=>, obj=>tgtc)in.get();
+            (ctxt=>srcc, var=>, obj=>tgtc)(obj=>C2)in.get();
         out.add( newOut );
         return newOut != 0B;
     }

@@ -97,9 +97,9 @@ public class PaddleTransformer extends SceneTransformer
         CallGraph cg = new CallGraph();
         for( Iterator tIt = PaddleScene.v().cg.edges().iterator(); tIt.hasNext(); ) {
             final Rsrcc_srcm_stmt_kind_tgtc_tgtm.Tuple t = (Rsrcc_srcm_stmt_kind_tgtc_tgtm.Tuple) tIt.next();
-            Edge e = new Edge( MethodContext.v( t.srcm(), t.srcc() ),
+            Edge e = new Edge( t.srcm(),
                                   t.stmt(),
-                                  MethodContext.v( t.tgtm(), t.tgtc() ),
+                                  t.tgtm(),
                                   t.kind() );
             cg.addEdge(e);
         }

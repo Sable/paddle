@@ -26,6 +26,7 @@ import java.util.*;
 import java.util.zip.*;
 import java.io.*;
 import jedd.*;
+import jedd.order.*;
 
 /** This class puts all of the pieces of Paddle together and connects them
  * with queues.
@@ -141,11 +142,22 @@ public class PaddleScene
                 throw new RuntimeException( "Unhandled option: "+options.backend() );
         }
         if( options.backend() != PaddleOptions.backend_none ) {
-            PhysicalDomain[] vs = { V1.v(), V2.v(), MS.v(), ST.v(), VC1.v(), VC2.v(), VC3.v() };
-            PhysicalDomain[] ts = { T1.v(), T2.v(), T3.v(), MT.v(), SG.v() };
-            PhysicalDomain[] cs = { C1.v(), C2.v(), C3.v() };
-            Object[] order = { cs, vs, M3.v(), FD.v(), H1.v(), H2.v(), ts, KD.v() };
-            Jedd.v().setOrder( order, true );
+            int sw = ContextStringNumberer.SHIFT_WIDTH;
+            Jedd.v().setOrder( 
+                new Seq(
+                    new Interleave(
+                        new Permute(sw, C1.v()),
+                        new Permute(sw, C2.v()),
+                        new Permute(sw, C3.v())
+                    ),
+                    new Interleave(V1.v(), V2.v(), MS.v(), ST.v(), VC1.v(), VC2.v(), VC3.v()),
+                    M3.v(),
+                    FD.v(),
+                    H1.v(),
+                    H2.v(),
+                    new Interleave(T1.v(), T2.v(), T3.v(), MT.v(), SG.v()),
+                    KD.v()
+                ) );
         }
         if( options.profile() ) {
             Jedd.v().enableProfiling();
@@ -160,7 +172,7 @@ public class PaddleScene
 
         depMan.addDep(scgbout, cicg);
 
-        depMan.addDep(cicgout, rm);
+        //depMan.addDep(cicgout, rm);
         depMan.addDep(csout, rm);
 
         depMan.addDep(rmout, scgb);
@@ -288,6 +300,77 @@ public class PaddleScene
         // for speed only
         depMan.addPrec(fprop, prop);
 
+        depMan.addPrec(prop, paout);
+        depMan.addPrec(prop, vcr);
+        depMan.addPrec(prop, virtualcalls);
+        depMan.addPrec(prop, vcm);
+        depMan.addPrec(prop, vcmout);
+        depMan.addPrec(prop, staticcalls);
+        depMan.addPrec(prop, scm);
+        depMan.addPrec(prop, scmout);
+        depMan.addPrec(prop, cg);
+        depMan.addPrec(prop, cgout);
+        depMan.addPrec(prop, rc);
+        depMan.addPrec(prop, rcout);
+        depMan.addPrec(prop, cs);
+        depMan.addPrec(prop, csout);
+        depMan.addPrec(prop, rm);
+        depMan.addPrec(prop, rmout);
+        depMan.addPrec(prop, scgb);
+        depMan.addPrec(prop, scgbout);
+        depMan.addPrec(prop, cicg);
+        depMan.addPrec(prop, cicgout);
+        depMan.addPrec(prop, cscgb);
+        depMan.addPrec(prop, receivers);
+        depMan.addPrec(prop, specials);
+        depMan.addPrec(prop, ecs);
+        depMan.addPrec(prop, ecsout);
+        depMan.addPrec(prop, ceh);
+        depMan.addPrec(prop, parms);
+        depMan.addPrec(prop, rets);
+        depMan.addPrec(prop, cec);
+        depMan.addPrec(prop, mpb);
+        depMan.addPrec(prop, alloc);
+        depMan.addPrec(prop, simple);
+        depMan.addPrec(prop, load);
+        depMan.addPrec(prop, store);
+        depMan.addPrec(prop, mpc);
+
+        depMan.addPrec(fprop, paout);
+        depMan.addPrec(fprop, vcr);
+        depMan.addPrec(fprop, virtualcalls);
+        depMan.addPrec(fprop, vcm);
+        depMan.addPrec(fprop, vcmout);
+        depMan.addPrec(fprop, staticcalls);
+        depMan.addPrec(fprop, scm);
+        depMan.addPrec(fprop, scmout);
+        depMan.addPrec(fprop, cg);
+        depMan.addPrec(fprop, cgout);
+        depMan.addPrec(fprop, rc);
+        depMan.addPrec(fprop, rcout);
+        depMan.addPrec(fprop, cs);
+        depMan.addPrec(fprop, csout);
+        depMan.addPrec(fprop, rm);
+        depMan.addPrec(fprop, rmout);
+        depMan.addPrec(fprop, scgb);
+        depMan.addPrec(fprop, scgbout);
+        depMan.addPrec(fprop, cicg);
+        depMan.addPrec(fprop, cicgout);
+        depMan.addPrec(fprop, cscgb);
+        depMan.addPrec(fprop, receivers);
+        depMan.addPrec(fprop, specials);
+        depMan.addPrec(fprop, ecs);
+        depMan.addPrec(fprop, ecsout);
+        depMan.addPrec(fprop, ceh);
+        depMan.addPrec(fprop, parms);
+        depMan.addPrec(fprop, rets);
+        depMan.addPrec(fprop, cec);
+        depMan.addPrec(fprop, mpb);
+        depMan.addPrec(fprop, alloc);
+        depMan.addPrec(fprop, simple);
+        depMan.addPrec(fprop, load);
+        depMan.addPrec(fprop, store);
+        depMan.addPrec(fprop, mpc);
     }
     private void makeSetFactories() {
         switch( options.set_impl() ) {
@@ -355,7 +438,7 @@ public class PaddleScene
     public void solve() {
         for( Iterator mIt = Scene.v().getEntryPoints().iterator(); mIt.hasNext(); ) {
             final SootMethod m = (SootMethod) mIt.next();
-            rm.add( null, m );
+            //rm.add( null, m );
             rc.add( null, m );
         }
         if(!USE_DEP_MAN) {
@@ -456,7 +539,7 @@ public class PaddleScene
         nodeFactory = new NodeFactory( simple, load, store, alloc );
 
         cicg = new BDDCallGraph( scgbout.reader("cicg"), cicgout );
-        rm = new BDDReachableMethods( cicgout.reader("rm"), csout.reader("rm"), rmout, cicg );
+        rm = new BDDReachableMethods( new Qsrcc_srcm_stmt_kind_tgtc_tgtmBDD("null").reader("null"), csout.reader("rm"), rmout, cicg );
         scgb = new TradStaticCallBuilder( rmout.reader("scgb"), scgbout, receivers, specials );
 
         cg = new BDDCallGraph( 
@@ -683,7 +766,7 @@ public class PaddleScene
         nodeFactory = new NodeFactory( simple, load, store, alloc );
 
         cicg = new TradCallGraph( scgbout.reader("cicg"), cicgout );
-        rm = new TradReachableMethods( cicgout.reader("rm"), csout.reader("rm"), rmout, cicg );
+        rm = new TradReachableMethods( new Qsrcc_srcm_stmt_kind_tgtc_tgtmTrad("null").reader("null"), csout.reader("rm"), rmout, cicg );
         scgb = new TradStaticCallBuilder( rmout.reader("scgb"), scgbout, receivers, specials );
 
         cg = new TradCallGraph( 

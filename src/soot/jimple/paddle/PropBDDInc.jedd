@@ -61,11 +61,11 @@ public final class PropBDDInc extends PropBDD {
         <varc,var,objc,obj>
             ptFromSimple2 = propSimple( ptFromAllocAndSimple1|ptFromLoad,
                 pag.allSimple().get() ) & typeFilter();
+        ptFromLoad = 0B;
         <varc,var,objc,obj>
             ptFromAllocAndSimple = ptFromAllocAndSimple1|ptFromSimple2;
         pt |= ptFromAllocAndSimple;
         outputPt( ptFromAllocAndSimple );
-
 
         if( PaddleScene.v().options().verbose() ) {
             G.v().out.println( "Major iteration: " );

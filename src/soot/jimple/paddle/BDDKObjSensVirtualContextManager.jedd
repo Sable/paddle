@@ -47,7 +47,7 @@ public class BDDKObjSensVirtualContextManager extends AbsVirtualContextManager
             shifter = Jedd.v().makeShifter( from, to );
         }
         <srcc:C1, srcm, stmt, kind, tgtc:C2, tgtm> newEdges = 
-            (ctxt=>srcc, var=>, obj=>tgtc) in.get();
+            (ctxt=>srcc, var=>, obj=>tgtc)(obj=>C2) in.get();
         newEdges = (<srcc, srcm, stmt, kind, tgtc, tgtm>)
             newEdges.applyShifter(shifter);
         out.add( newEdges );

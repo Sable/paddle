@@ -1,5 +1,5 @@
 digraph overview {
-    size="7.5,10";
+    size="7.5,7.5";
     mclimit=100.0;
     nslimit=100.0;
     node [shape=box];
@@ -17,8 +17,8 @@ digraph overview {
     ecsout [label="ecsout\nMSKM"];
     rcout [label="rcout\nCM"];
     csout [label="csout\nM"];
-    parms [label="parms\nMSKMVV"];
-    rets [label="rets\nMSKMVV"];
+    parms [label="parms\nMSKMLL"];
+    rets [label="rets\nMSKMLL"];
 
     merge [label="merge\nCMSKCM"];
 
@@ -52,7 +52,7 @@ digraph overview {
 
     scgbout -> CICG -> cicgout;
     cicgout -> RM -> rmout;
-    CICG -> RM [style=dotted];
+    CICG -> RM [style=dotted,constraint=false];
 
     rmout -> SCGB -> scgbout;
     SCGB -> receivers;
@@ -61,17 +61,17 @@ digraph overview {
     scmout -> merge;
     vcmout -> merge;
     merge -> CG -> cgout;
-    CICG -> CG [style=dotted];
+    CICG -> CG [style=dotted,constraint=false];
 
     cgout -> RC -> rcout;
-    CG -> RC [style=dotted];
+    CG -> RC [style=dotted,constraint=false];
 
     rcout -> CS -> csout;
     csout -> RM;
 
     rcout -> CSCGB -> staticcalls;
     cicgout -> CSCGB;
-    CICG -> CSCGB [style=dotted];
+    CICG -> CSCGB [style=dotted,constraint=false];
 
     rmout -> MPB;
     MPB -> simple;
@@ -100,8 +100,8 @@ digraph overview {
     cgout -> CEC;
     CEC -> csimple;
 
-    NI -> MPC [style=dotted];
-    NI -> CEC [style=dotted];
+    NI -> MPC [style=dotted,constraint=false];
+    NI -> CEC [style=dotted,constraint=false];
 
     csimple -> PAG;
     cload -> PAG;
@@ -113,7 +113,7 @@ digraph overview {
     cstore -> PROP;
     calloc -> PROP;
     PROP -> paout;
-    PAG -> PROP [style=dotted];
+    PAG -> PROP [style=dotted,constraint=false];
 
     receivers -> VCR;
     specials -> VCR;
@@ -139,6 +139,6 @@ digraph overview {
     globals -> TM;
     localallocs -> TM;
     globalallocs -> TM;
-    TM -> PROP [style=dotted];
+    TM -> PROP [style=dotted,constraint=false];
 }
 
