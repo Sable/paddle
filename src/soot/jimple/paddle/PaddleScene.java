@@ -144,7 +144,7 @@ public class PaddleScene
             PhysicalDomain[] vs = { V1.v(), V2.v(), MS.v(), ST.v(), VC1.v(), VC2.v(), VC3.v() };
             PhysicalDomain[] ts = { T1.v(), T2.v(), T3.v(), MT.v(), SG.v() };
             PhysicalDomain[] cs = { C1.v(), C2.v(), C3.v() };
-            Object[] order = { cs, vs, FD.v(), H1.v(), H2.v(), ts, KD.v() };
+            Object[] order = { cs, vs, M3.v(), FD.v(), H1.v(), H2.v(), ts, KD.v() };
             Jedd.v().setOrder( order, true );
         }
         if( options.profile() ) {

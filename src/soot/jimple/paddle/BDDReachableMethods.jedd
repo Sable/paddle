@@ -79,5 +79,8 @@ public class BDDReachableMethods extends AbsReachableMethods
         <ctxt, method> newM = new{ c=>ctxt, m=>method };
         return (reachables & newM) != 0B;
     }
+    Rctxt_method methods() {
+        return new Rctxt_methodBDD(reachables, "methods");
+    }
 }
 

@@ -1,0 +1,185 @@
+/* Soot - a J*va Optimization Framework
+ * Copyright (C) 2003, 2004 Ondrej Lhotak
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+
+package soot.jimple.paddle;
+import soot.*;
+import soot.jimple.*;
+import soot.jimple.paddle.bdddomains.*;
+import java.util.*;
+
+/** Generates side-effect information from points-to sets and call graph. */
+public class SideEffectAnalysis extends SceneTransformer {
+    public SideEffectAnalysis( PaddleSingletons.Global g ) {}
+    public static SideEffectAnalysis v() { return PaddleG.v().soot_jimple_paddle_SideEffectAnalysis(); }
+
+    // non-transitive read/write sets: stmt in method reads/writes field fld of
+    // object obj
+    <method, stmt, fld:FD, obj> ntread = 0B;
+    <method, stmt, fld:FD, obj> ntwrite = 0B;
+
+    // transitive read/write sets: stmt in method, or some method that it
+    // (possibly indirectly) calls, reads/writes field fld of object obj
+    <method, stmt, fld, obj> read = 0B;
+    <method, stmt, fld, obj> write = 0B;
+
+    /** Create a read or write set specifying that stmt s of method m reads
+     *  or writes the value v. */
+    private <method, stmt, fld, obj> addValue( Value v, SootMethod m, Stmt s ) {
+	if( v instanceof InstanceFieldRef ) {
+            System.out.println( "***"+m+s+v );
+            Scene.v().getUnitNumberer().add( s );
+	    InstanceFieldRef ifr = (InstanceFieldRef) v;
+            return new {
+                    m=>method,
+                    s=>stmt,
+                    ifr.getField()=>fld
+                } {} >< (varc=>, var=>, objc=>)
+                    p2sets().getReader(varNode(m, (Local)ifr.getBase())).get() {};
+	} else if( v instanceof StaticFieldRef ) {
+            System.out.println( "***"+m+s+v );
+            Scene.v().getUnitNumberer().add( s );
+	    StaticFieldRef sfr = (StaticFieldRef) v;
+            return new {
+                m=>method,
+                s=>stmt,
+                sfr.getField()=>fld,
+                null=>obj };
+	} else if( v instanceof ArrayRef ) {
+            System.out.println( "***"+m+s+v );
+            Scene.v().getUnitNumberer().add( s );
+	    ArrayRef ar = (ArrayRef) v;
+            return new {
+                    m=>method,
+                    s=>stmt,
+                    ArrayElement.v()=>fld
+                } {} >< (varc=>, var=>, objc=>)
+                    p2sets().getReader(varNode(m, (Local)ar.getBase())).get() {};
+	}
+	return 0B;
+    }
+
+    private VarNode varNode(SootMethod m, Local l) {
+        return (VarNode) new MethodNodeFactory(m).getNode(l);
+    }
+
+    private AbsP2Sets p2sets() {
+        return Results.v().p2sets();
+    }
+
+    /** Compute the non-transitive read set for stmt s of method m. */
+    private <method, stmt, fld, obj> ntReadSet( SootMethod m, Stmt s ) {
+	if( s instanceof AssignStmt ) {
+	    AssignStmt a = (AssignStmt) s;
+	    Value r = a.getRightOp();
+	    return addValue( r, m, s );
+	}
+        return 0B;
+    }
+
+    /** Compute the non-transitive write set for stmt s of method m. */
+    private <method, stmt, fld, obj> ntWriteSet( SootMethod m, Stmt s ) {
+        if( s instanceof AssignStmt ) {
+	    AssignStmt a = (AssignStmt) s;
+	    Value l = a.getLeftOp();
+	    return addValue( l, m, s );
+	}
+        return 0B;
+    }
+
+    /** Compute the non-transitive read/write sets of each stmt of method m.  */
+    private void findNTRWSets( SootMethod m ) {
+        for( Iterator sIt = m.retrieveActiveBody().getUnits().iterator(); sIt.hasNext(); ) {
+            final Stmt s = (Stmt) sIt.next();
+            ntwrite |= ntWriteSet( m, s );
+            ntread |= ntReadSet( m, s );
+        }
+	SootClass c = m.getDeclaringClass();
+	if( !c.isApplicationClass() ) {
+	    m.releaseActiveBody();
+	}
+    }
+
+    private AbsCallGraph cg() {
+        return Results.v().callGraph();
+    }
+
+    /** From the non-transitive read/write sets for each stmt, compute the 
+     *  transitive closure over call graph edges. */
+    private void closure() {
+        // add the non-transitive read/write sets into the transitive ones
+        read |= ntread;
+        write |= ntwrite;
+
+        // find the transitive closure of call graph edges
+        <srcm, stmt, tgtm> closecg = (srcc=>, kind=>, tgtc=>) cg().edges().get();
+        while( closecg != ( closecg |=
+            closecg {tgtm} <> (srcm=>M3)(stmt=>) closecg {srcm} ) );
+
+        // close the read/write sets under the closure of call graph edges
+        read |= (srcm=>method) ( closecg {tgtm} <> (stmt=>) ntread {method} );
+        write |= (srcm=>method) ( closecg {tgtm} <> (stmt=>) ntwrite {method} );
+    }
+
+    public void analyze() {
+        System.out.println( "side effect analysis analyzing methods" );
+        for( Iterator mIt = ((srcm=>, srcc=>, stmt=>, kind=>, tgtc=>) cg().edges().get()).iterator(); mIt.hasNext(); ) {
+            final SootMethod m = (SootMethod) mIt.next();
+            if( m.isAbstract() ) continue;
+            if( m.isNative() ) continue;
+            findNTRWSets( m );
+        }
+        System.out.println( "side effect analysis calculating closure" );
+        closure();
+        System.out.println( "side effect analysis done" );
+
+        output();
+    }
+
+    private void output() {
+        <method> methods = 0B;
+        for( Iterator cIt = Scene.v().getApplicationClasses().iterator(); cIt.hasNext(); ) {
+            final SootClass c = (SootClass) cIt.next();
+            for( Iterator mIt = c.getMethods().iterator(); mIt.hasNext(); ) {
+                final SootMethod m = (SootMethod) mIt.next();
+                System.out.println( "adding reachable method "+m );
+                methods |= new { m=>method };
+            }
+        }
+        System.out.println( "Read sets:\n"+(read {method} >< methods {method}).toString() );
+        System.out.println( "Write sets:\n"+(write {method} >< methods {method}).toString() );
+        System.out.println( "NTRead:\n"+ntread.toString() );
+        System.out.println( "NTWrite:\n"+ntwrite.toString() );
+    }
+    protected void internalTransform( String phaseName, Map options ) {
+        analyze();
+    }
+
+    public Iterator readSet( SootMethod m, Stmt s ) {
+        return ((obj=>) 
+            (read{method, stmt} <> new {m=>method, s=>stmt}{method, stmt}))
+            .iterator();
+    }
+
+    public Iterator writeSet( SootMethod m, Stmt s ) {
+        return ((obj=>) 
+            (write{method, stmt} <> new {m=>method, s=>stmt}{method, stmt}))
+            .iterator();
+    }
+}
+

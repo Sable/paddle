@@ -38,6 +38,7 @@ public abstract class AbsReachableMethods implements DepItem
     abstract boolean add( Context c, SootMethod m );
     abstract int size();
     abstract boolean contains( Context c, SootMethod m );
+    abstract Rctxt_method methods();
 }
 
 

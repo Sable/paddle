@@ -75,5 +75,14 @@ public class TradReachableMethods extends AbsReachableMethods
     boolean contains( Context c, SootMethod m ) {
         return reachables.contains(MethodContext.v(m, c));
     }
+    Rctxt_method methods() {
+        Qctxt_methodTrad qret = new Qctxt_methodTrad("methods");
+        Rctxt_method ret = qret.reader("methods");
+        for( Iterator momcIt = reachables.iterator(); momcIt.hasNext(); ) {
+            final MethodOrMethodContext momc = (MethodOrMethodContext) momcIt.next();
+            qret.add( momc.context(), momc.method() );
+        }
+        return ret;
+    }
 }
 
