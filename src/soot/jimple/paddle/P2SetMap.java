@@ -42,5 +42,8 @@ public class P2SetMap
         }
         return ret;
     }
+    public Set keySet() {
+        return map.keySet();
+    }
 }
 

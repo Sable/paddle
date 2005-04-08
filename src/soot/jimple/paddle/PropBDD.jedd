@@ -54,8 +54,8 @@ public class PropBDD extends AbsPropagator {
     }
 
     /** Propagate points-to relation pt over assignments simple. */
-    protected <varc:C1, var, objc:C3, obj> propSimple(
-        <varc:C1, var, objc:C3, obj> pt,
+    protected <varc:C1, var, objc:CH1, obj> propSimple(
+        <varc:C1, var, objc:CH1, obj> pt,
         <srcc:C1, src, dstc:C2, dst> simple ) {
 
         <varc, var, objc, obj> ret = 0B;
@@ -72,7 +72,7 @@ public class PropBDD extends AbsPropagator {
     }
 
     /** Propagate points-to relation pt over stores stores pointing to storePt. */
-    protected <basec:C2, base:H1, fld, objc:C3, obj:H2> propStore(
+    protected <basec:CH1, base:H1, fld, objc:CH2, obj:H2> propStore(
         <varc, var, objc, obj> pt,
         <srcc, src, fld, dstc, dst> store,
         <varc, var, objc, obj> storePt ) {

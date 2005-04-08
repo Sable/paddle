@@ -40,22 +40,33 @@ public class BDDReachableMethods extends AbsReachableMethods
     public boolean update() {
         boolean change = false;
 
+        System.out.println("1");
         if( methodsIn != null ) {
             <ctxt, method> newMethodsIn = methodsIn.get();
             if(add(newMethodsIn)) change = true;
         }
+        System.out.println("2");
 
         <srcc, srcm, stmt, kind, tgtc, tgtm> newEdges =
             edgesIn.get() {srcc, srcm} >< reachableCM {ctxt, method};
+        System.out.println("3");
 
         newEdges |= cg.edgesOutOf( newMethods ).get();
+        System.out.println("4");
 
         while( newEdges != 0B ) {
+            System.out.println("newEdges nodes "+newEdges.numNodes());
+        System.out.println("5");
             <ctxt, method> newTargets =
                 (srcc=>, srcm=>, stmt=>, kind=>, tgtc=>ctxt, tgtm=>method) newEdges;
+            System.out.println("newTargets nodes "+newTargets.numNodes());
             if(add( newTargets )) change = true;
+            System.out.println("reachableCM nodes "+reachableCM.numNodes());
+            System.out.println("reachableM nodes "+reachableM.numNodes());
             newEdges = cg.edgesOutOf( newMethods ).get();
+        System.out.println("6");
         }
+        System.out.println("7");
         return change;
     }
     boolean add( Context c, SootMethod m ) {
@@ -64,10 +75,14 @@ public class BDDReachableMethods extends AbsReachableMethods
     private boolean add(<ctxt, method> methodContexts) {
         boolean ret = false;
         <ctxt, method> newCM = methodContexts - reachableCM;
+            System.out.println("newCM nodes "+newCM.numNodes());
         reachableCM |= newCM;
+            System.out.println("reachableCM nodes "+reachableCM.numNodes());
         if(cmout != null) cmout.add(newCM);
         <method> newM = (ctxt=>)methodContexts - reachableM;
+            System.out.println("newM nodes "+newM.numNodes());
         reachableM |= newM;
+            System.out.println("reachableM nodes "+reachableM.numNodes());
         if(mout != null) mout.add(newM);
         return (newCM != 0B) || (newM != 0B);
     }

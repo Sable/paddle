@@ -39,7 +39,6 @@ public class SideEffectAnalysis {
      *  or writes the value v. */
     private <method, stmt, fld, obj> addValue( Value v, SootMethod m, Stmt s ) {
 	if( v instanceof InstanceFieldRef ) {
-            System.out.println( "***"+m+s+v );
             Scene.v().getUnitNumberer().add( s );
 	    InstanceFieldRef ifr = (InstanceFieldRef) v;
             SootField f = ifr.getField();
@@ -48,7 +47,6 @@ public class SideEffectAnalysis {
                 (varc=>, var=>, objc=>)
                     p2sets().getReader(varNode(m, (Local)ifr.getBase())).get() {};
 	} else if( v instanceof StaticFieldRef ) {
-            System.out.println( "***"+m+s+v );
             Scene.v().getUnitNumberer().add( s );
 	    StaticFieldRef sfr = (StaticFieldRef) v;
             SootField f = sfr.getField();
@@ -59,7 +57,6 @@ public class SideEffectAnalysis {
                 f=>fld,
                 null=>obj };
 	} else if( v instanceof ArrayRef ) {
-            System.out.println( "***"+m+s+v );
             Scene.v().getUnitNumberer().add( s );
 	    ArrayRef ar = (ArrayRef) v;
             return new {
@@ -139,34 +136,14 @@ public class SideEffectAnalysis {
     public void analyze() {
         gnf = Results.v().nodeFactory();
 
-        System.out.println( "side effect analysis analyzing methods" );
         for( Iterator mIt = ((srcm=>, stmt=>, kind=>) cg().ciEdges().get()).iterator(); mIt.hasNext(); ) {
+
             final SootMethod m = (SootMethod) mIt.next();
             if( m.isAbstract() ) continue;
             if( m.isNative() ) continue;
             findNTRWSets( m );
         }
-        System.out.println( "side effect analysis calculating closure" );
         closure();
-        System.out.println( "side effect analysis done" );
-
-        output();
-    }
-
-    private void output() {
-        <method> methods = 0B;
-        for( Iterator cIt = Scene.v().getApplicationClasses().iterator(); cIt.hasNext(); ) {
-            final SootClass c = (SootClass) cIt.next();
-            for( Iterator mIt = c.getMethods().iterator(); mIt.hasNext(); ) {
-                final SootMethod m = (SootMethod) mIt.next();
-                System.out.println( "adding reachable method "+m );
-                methods |= new { m=>method };
-            }
-        }
-        System.out.println( "Read sets:\n"+(read {method} >< methods {method}).toString() );
-        System.out.println( "Write sets:\n"+(write {method} >< methods {method}).toString() );
-        System.out.println( "NTRead:\n"+ntread.toString() );
-        System.out.println( "NTWrite:\n"+ntwrite.toString() );
     }
 
     public Iterator readSet( SootMethod m, Stmt s ) {

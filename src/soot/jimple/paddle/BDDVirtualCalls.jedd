@@ -64,6 +64,9 @@ public class BDDVirtualCalls extends AbsVirtualCalls
     private <kind> virtual = new{Kind.VIRTUAL=>kind} | new{Kind.INTERFACE=>kind} | new{Kind.PRIVILEGED=>kind} | new{Kind.INVOKE_FINALIZE=>kind};
     private <type> threads = 0B;
     private void updateNodes() {
+        <obj, tgtm> newStringConstants = 0B;
+        <obj> newNonStringConstants = 0B;
+
         // update varnodes
         for( ; lastVarNode <= PaddleNumberers.v().varNodeNumberer().size();
             lastVarNode++ ) {
@@ -89,20 +92,26 @@ public class BDDVirtualCalls extends AbsVirtualCalls
                     SootClass cls = Scene.v().getSootClass(constant);
                     for( Iterator methodIt = EntryPoints.v().clinitsOf(cls).iterator(); methodIt.hasNext(); ) {
                         final SootMethod method = (SootMethod) methodIt.next();
-                        stringConstants |= new{ an=>obj, method=>tgtm };
+                        newStringConstants |= new{ an=>obj, method=>tgtm };
                     }
                 }
             } else {
-                nonStringConstants |= new{an=>obj};
+                newNonStringConstants |= new{an=>obj};
             }
         }
         threads = (subt=>type)
             hier.subtypeRelation(){supt} <> new{clRunnable=>type}{type};
+        stringConstants |= newStringConstants;
+        nonStringConstants |= newNonStringConstants;
+        newClinitTargets |= 
+            newStringConstants | (newNonStringConstants{} >< dynamicClinits{});
     }
     protected final RefType clRunnable = RefType.v("java.lang.Runnable");
         
     private <obj, tgtm> stringConstants = 0B;
     private <obj:H1> nonStringConstants = 0B;
+    private <obj, tgtm> newClinitTargets = 0B;
+    private <obj, tgtm> clinitTargets = 0B;
     private <tgtm> dynamicClinits = 0B;
     private final NumberedString sigClinit = Scene.v().getSubSigNumberer().
         findOrAdd( "void <clinit>()" );
@@ -113,6 +122,7 @@ public class BDDVirtualCalls extends AbsVirtualCalls
 
     private <varc, var, objc, obj> newPt = 0B;
     private <varc, var, objc, obj> allPt = 0B;
+    private <varc, var, obj> allPtNoObjc = 0B;
     private <var, srcm, stmt, dtp, signature, kind> newRcv = 0B;
     private <var, srcm, stmt, dtp, signature, kind> allRcv = 0B;
     private <var, srcm, stmt, tgtm> newSpc = 0B;
@@ -126,6 +136,7 @@ public class BDDVirtualCalls extends AbsVirtualCalls
 
         newPt = pt.get();
         allPt |= newPt;
+        allPtNoObjc |= (objc=>) newPt;
 
         newRcv = receivers.get();
         allRcv |= newRcv;
@@ -143,13 +154,16 @@ public class BDDVirtualCalls extends AbsVirtualCalls
     }
 
     private <var, srcm, stmt, kind> clinits;
+    private <srcc, var, tgtm> tgtMethods;
     private void updateClinits() {
         clinits |= (dtp=>, signature=>) newRcv{kind} >< new{Kind.CLINIT=>kind}{kind};
 
-        <obj, tgtm> clinitTargets =
-            stringConstants | (nonStringConstants{} >< dynamicClinits{});
-        <srcc, var, tgtm> tgtMethods =
-            (varc=>srcc, objc=>) allPt{obj} <> clinitTargets{obj};
+        tgtMethods |=
+            ((varc=>srcc, objc=>) allPt){obj} <> newClinitTargets{obj} |
+            ((varc=>srcc, objc=>) newPt){obj} <> clinitTargets{obj};
+
+        clinitTargets |= newClinitTargets;
+        newClinitTargets = 0B;
 
         <srcc, srcm, stmt, kind, tgtc, tgtm> newStatics =
             tgtMethods{var} <> clinits{var}{} 
@@ -176,6 +190,7 @@ public class BDDVirtualCalls extends AbsVirtualCalls
     private <var, dtp, signature> threadRcvSigs = 0B;
     private <var, srcm, stmt, dtp, signature, kind> rcv = 0B;
     private <varc, var, objc, obj, type> allVarCtxtPt = 0B;
+    private <var, type> allPtTypes = 0B;
     private void updateVirtuals() {
         <var, srcm, stmt, dtp, signature, kind> newVirtRcv = 
             newRcv{kind} >< (virtual|new{Kind.THREAD=>kind}){kind};
@@ -195,9 +210,9 @@ public class BDDVirtualCalls extends AbsVirtualCalls
 
         newTypes |= (ptTypes{type} >< threads{type}){var} <> threadRcvSigs{var};
 
-        ptTypes = allocNodes{obj} <> (varc=>, objc=>) allPt{obj};
-        newTypes |= ptTypes{var} <> newRcvSigs{var};
-        newTypes |= (ptTypes{type} >< threads{type}){var} <>
+        allPtTypes |= ptTypes;
+        newTypes |= allPtTypes{var} <> newRcvSigs{var};
+        newTypes |= (allPtTypes{type} >< threads{type}){var} <>
                                     newThreadRcvSigs{var};
 
         // close under AnySubType; that is, if the receiver is AnySubType(t),
@@ -209,9 +224,10 @@ public class BDDVirtualCalls extends AbsVirtualCalls
         newTypes = newTypes{type} >< hier.concrete(){type};
 
         // if we've resolved them already, don't resolve them again
+        <signature, type> typesToResolve = ((dtp=>)newTypes) - ((method=>)targets);
+
         // for each tuple [t, s], make it [t, s, t].
-        <subt, signature, supt> toResolve = (type=>subt, type=>supt) 
-            ( ((dtp=>)newTypes) - ((method=>)targets) );
+        <subt, signature, supt> toResolve = (type=>subt, type=>supt) typesToResolve;
 
         <type, signature, method> newTargets = 0B;
 

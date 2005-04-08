@@ -36,7 +36,7 @@ public class Qobjc_obj_varc_varDebug extends Qobjc_obj_varc_var {
         bdd.add( _objc, _obj, _varc, _var );
         trad.add( _objc, _obj, _varc, _var );
     }
-    public void add( <objc:C3, obj:H1, varc:C1, var:V1> in ) {
+    public void add( <objc:CH1, obj:H1, varc:C1, var:V1> in ) {
         Iterator it = in.iterator( new Attribute[] { objc.v(), obj.v(), varc.v(), var.v() } );
         while( it.hasNext() ) {
             Object[] tuple = (Object[]) it.next();

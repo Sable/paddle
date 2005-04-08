@@ -28,10 +28,10 @@ import jedd.*;
 import java.util.*;
 
 public final class Robjc_obj_varc_varBDD extends Robjc_obj_varc_var {
-    private <objc:C3, obj:H1, varc:C1, var:V1> bdd;
-    void add( <objc:C3, obj:H1, varc:C1, var:V1> tuple ) { bdd |= tuple; }
-    public Robjc_obj_varc_varBDD( <objc:C3, obj:H1, varc:C1, var:V1> bdd, String name, PaddleQueue q ) { this(name, q); add(bdd); }
-    public Robjc_obj_varc_varBDD( <objc:C3, obj:H1, varc:C1, var:V1> bdd ) { this("", null); add(bdd); }
+    private <objc:CH1, obj:H1, varc:C1, var:V1> bdd;
+    void add( <objc:CH1, obj:H1, varc:C1, var:V1> tuple ) { bdd |= tuple; }
+    public Robjc_obj_varc_varBDD( <objc:CH1, obj:H1, varc:C1, var:V1> bdd, String name, PaddleQueue q ) { this(name, q); add(bdd); }
+    public Robjc_obj_varc_varBDD( <objc:CH1, obj:H1, varc:C1, var:V1> bdd ) { this("", null); add(bdd); }
     Robjc_obj_varc_varBDD(String name, PaddleQueue q) { super(name, q); bdd = 0B; }
     public Iterator iterator() {;
         return new Iterator() {
@@ -52,8 +52,8 @@ public final class Robjc_obj_varc_varBDD extends Robjc_obj_varc_var {
             public void remove() { throw new UnsupportedOperationException(); }
         };
     }
-    public <objc:C3, obj:H1, varc:C1, var:V1> get() {
-        <objc:C3, obj:H1, varc:C1, var:V1> ret = bdd;
+    public <objc:CH1, obj:H1, varc:C1, var:V1> get() {
+        <objc:CH1, obj:H1, varc:C1, var:V1> ret = bdd;
         bdd = 0B;
         return ret;
     }

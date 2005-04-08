@@ -37,7 +37,7 @@ public class Qobjc_obj_varc_varTrad extends Qobjc_obj_varc_var {
         q.add( _var );
         invalidate();
     }
-    public void add( <objc:C3, obj:H1, varc:C1, var:V1> in ) {
+    public void add( <objc:CH1, obj:H1, varc:C1, var:V1> in ) {
         Iterator it = in.iterator( new Attribute[] { objc.v(), obj.v(), varc.v(), var.v() } );
         while( it.hasNext() ) {
             Object[] tuple = (Object[]) it.next();

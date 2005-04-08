@@ -38,9 +38,9 @@ public class BDDEscapeAnalysis {
     private <varc, var, objc, obj> pt = 0B;
     private <basec, base, objc, obj> fieldPt = 0B;
     
-    private void setupRoots(PropBDD prop) {
-        pt = prop.pt;
-        fieldPt = (fld=>)prop.fieldPt;
+    private void setupRoots() {
+        pt = Results.v().p2sets().getReader().get();
+        fieldPt = (fld=>)Results.v().p2sets().fieldPt().get();
 
         NodeFactory gnf = Results.v().nodeFactory();
         Rmethod rmethods = Results.v().reachableMethods().methods();
@@ -112,8 +112,8 @@ public class BDDEscapeAnalysis {
         escapesMethod |= (method=>) contextMatches;
     }
 
-    public void analyze(PropBDD prop) {
-        setupRoots(prop);
+    public void analyze() {
+        setupRoots();
         propagate();
     }
 

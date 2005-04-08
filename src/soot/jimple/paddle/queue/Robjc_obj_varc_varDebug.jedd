@@ -52,7 +52,7 @@ public class Robjc_obj_varc_varDebug extends Robjc_obj_varc_var{
             public void remove() { throw new UnsupportedOperationException(); }
         };
     }
-    public <objc:C3, obj:H1, varc:C1, var:V1> get() {
+    public <objc:CH1, obj:H1, varc:C1, var:V1> get() {
         throw new RuntimeException( "NYI" );
     }
     public boolean hasNext() { return trad.hasNext(); }

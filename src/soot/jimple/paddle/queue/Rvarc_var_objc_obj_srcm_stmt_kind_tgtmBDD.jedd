@@ -28,10 +28,10 @@ import jedd.*;
 import java.util.*;
 
 public final class Rvarc_var_objc_obj_srcm_stmt_kind_tgtmBDD extends Rvarc_var_objc_obj_srcm_stmt_kind_tgtm {
-    private <varc:C1, var:V1, objc:C3, obj:H1, srcm:MS, stmt:ST, kind:KD, tgtm:MT> bdd;
-    void add( <varc:C1, var:V1, objc:C3, obj:H1, srcm:MS, stmt:ST, kind:KD, tgtm:MT> tuple ) { bdd |= tuple; }
-    public Rvarc_var_objc_obj_srcm_stmt_kind_tgtmBDD( <varc:C1, var:V1, objc:C3, obj:H1, srcm:MS, stmt:ST, kind:KD, tgtm:MT> bdd, String name, PaddleQueue q ) { this(name, q); add(bdd); }
-    public Rvarc_var_objc_obj_srcm_stmt_kind_tgtmBDD( <varc:C1, var:V1, objc:C3, obj:H1, srcm:MS, stmt:ST, kind:KD, tgtm:MT> bdd ) { this("", null); add(bdd); }
+    private <varc:C1, var:V1, objc:CH1, obj:H1, srcm:MS, stmt:ST, kind:KD, tgtm:MT> bdd;
+    void add( <varc:C1, var:V1, objc:CH1, obj:H1, srcm:MS, stmt:ST, kind:KD, tgtm:MT> tuple ) { bdd |= tuple; }
+    public Rvarc_var_objc_obj_srcm_stmt_kind_tgtmBDD( <varc:C1, var:V1, objc:CH1, obj:H1, srcm:MS, stmt:ST, kind:KD, tgtm:MT> bdd, String name, PaddleQueue q ) { this(name, q); add(bdd); }
+    public Rvarc_var_objc_obj_srcm_stmt_kind_tgtmBDD( <varc:C1, var:V1, objc:CH1, obj:H1, srcm:MS, stmt:ST, kind:KD, tgtm:MT> bdd ) { this("", null); add(bdd); }
     Rvarc_var_objc_obj_srcm_stmt_kind_tgtmBDD(String name, PaddleQueue q) { super(name, q); bdd = 0B; }
     public Iterator iterator() {;
         return new Iterator() {
@@ -52,8 +52,8 @@ public final class Rvarc_var_objc_obj_srcm_stmt_kind_tgtmBDD extends Rvarc_var_o
             public void remove() { throw new UnsupportedOperationException(); }
         };
     }
-    public <varc:C1, var:V1, objc:C3, obj:H1, srcm:MS, stmt:ST, kind:KD, tgtm:MT> get() {
-        <varc:C1, var:V1, objc:C3, obj:H1, srcm:MS, stmt:ST, kind:KD, tgtm:MT> ret = bdd;
+    public <varc:C1, var:V1, objc:CH1, obj:H1, srcm:MS, stmt:ST, kind:KD, tgtm:MT> get() {
+        <varc:C1, var:V1, objc:CH1, obj:H1, srcm:MS, stmt:ST, kind:KD, tgtm:MT> ret = bdd;
         bdd = 0B;
         return ret;
     }

@@ -51,7 +51,7 @@ public class BDDKCFAVirtualContextManager extends BDDVirtualContextManager
             shifter = Jedd.v().makeShifter( from, to );
         }
         <varc, var, objc, obj, srcm, stmt, kind, tgtm> newIn = in.get();
-        <varc:C1, objc:C3, obj, srcm, stmt, kind, tgtc:C2, tgtm> newEdges = 
+        <varc:C1, objc:CH1, obj, srcm, stmt, kind, tgtc:C2, tgtm> newEdges = 
             (var=>, stmt=>stmt, stmt=>tgtc) newIn;
         newEdges = (<varc, objc, obj, srcm, stmt, kind, tgtc, tgtm>)
             newEdges.applyShifter(shifter);

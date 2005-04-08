@@ -54,6 +54,10 @@ public class BDDPointsToSet extends PointsToSetReadOnly {
         return 0B != new{n=>obj}{obj} >< bdd{obj};
     }
 
+    public <objc, obj> bdd() {
+        return bdd;
+    }
+
     /* End of public methods. */
     /* End of package methods. */
 }

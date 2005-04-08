@@ -36,7 +36,7 @@ public class TradContextCallGraphBuilder extends AbsContextCallGraphBuilder
             ) {
         super( methodsIn, edgesIn, out );
     }
-    private CallGraph cicg;
+    private CallGraph cicg = new CallGraph();
     private MethodToContexts m2c = new MethodToContexts();
     public boolean update() {
         boolean change = false;

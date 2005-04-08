@@ -42,8 +42,8 @@ public class Rvarc_var_objc_obj_srcm_stmt_kind_tgtmIter extends Rvarc_var_objc_o
             public void remove() { throw new UnsupportedOperationException(); }
         };
     }
-    public <varc:C1, var:V1, objc:C3, obj:H1, srcm:MS, stmt:ST, kind:KD, tgtm:MT> get() {
-        <varc:C1, var:V1, objc:C3, obj:H1, srcm:MS, stmt:ST, kind:KD, tgtm:MT> ret = 0B;
+    public <varc:C1, var:V1, objc:CH1, obj:H1, srcm:MS, stmt:ST, kind:KD, tgtm:MT> get() {
+        <varc:C1, var:V1, objc:CH1, obj:H1, srcm:MS, stmt:ST, kind:KD, tgtm:MT> ret = 0B;
         while( r.hasNext() ) {
             ret |= new { r.next()=>varc, r.next()=>var, r.next()=>objc, r.next()=>obj, r.next()=>srcm, r.next()=>stmt, r.next()=>kind, r.next()=>tgtm };
         }

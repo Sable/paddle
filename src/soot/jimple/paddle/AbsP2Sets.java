@@ -57,4 +57,5 @@ public abstract class AbsP2Sets
     }
     public abstract Rvarc_var_objc_obj getReader( VarNode cvn );
     public abstract Rvarc_var_objc_obj getReader();
+    public abstract Rbasec_base_fld_objc_obj fieldPt();
 }

@@ -1,0 +1,76 @@
+/* Soot - a J*va Optimization Framework
+ * Copyright (C) 2005 Ondrej Lhotak
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+
+package soot.jimple.paddle;
+import soot.*;
+import soot.jimple.paddle.queue.*;
+import soot.jimple.paddle.bdddomains.*;
+import java.util.*;
+
+/** Implementation of Soot PointsToAnalysis interface.
+ * @author Ondrej Lhotak
+ */
+public class BDDPointsToAnalysis extends AbsPointsToAnalysis
+{ 
+    public BDDPointsToAnalysis(AbsP2Sets p2sets) {
+        super(p2sets);
+        this.pt = p2sets.getReader().get();
+        this.fieldPt = p2sets.fieldPt().get();
+    }
+
+    private <varc, var, objc, obj> pt;
+    private <basec, base, fld, objc, obj> fieldPt;
+
+    public PointsToSet reachingObjects( Local l ) {
+        if(local(l) == null) return new BDDPointsToSet(0B);
+        return new BDDPointsToSet( (varc=>) pt{var} <> new{local(l)=>var}{var} );
+    }
+    public PointsToSet reachingObjects( Context c, Local l ) {
+        if(local(l) == null) return new BDDPointsToSet(0B);
+        return new BDDPointsToSet(      pt{var,varc} 
+            <> new{local(l)=>var, c=>varc}{var,varc} );
+    }
+    public PointsToSet reachingObjects( SootField f ) {
+        if(field(f) == null) return new BDDPointsToSet(0B);
+        return new BDDPointsToSet( (varc=>) pt{var} <> new{field(f)=>var}{var} );
+    }
+    public PointsToSet reachingObjects( PointsToSet s, SootField f ) {
+        BDDPointsToSet bdds = (BDDPointsToSet) s;
+        return new BDDPointsToSet(
+            bdds.bdd(){} >< new{f=>fld}{}{objc, obj, fld}
+                            <> fieldPt{basec,base,fld} );
+    }
+    public PointsToSet reachingObjects( Local l, SootField f ) {
+        if(local(l) == null) return new BDDPointsToSet(0B);
+        return new BDDPointsToSet( (basec=>) fieldPt{base,fld} 
+                       <> new{local(l)=>var, f=>fld}{var, fld} );
+    }
+    public PointsToSet reachingObjects( Context c, Local l, SootField f ) {
+        if(local(l) == null) return new BDDPointsToSet(0B);
+        return new BDDPointsToSet(         fieldPt{basec,base,fld} 
+            <> new{c=>ctxt, local(l)=>var, f=>fld}{ctxt, var, fld} );
+    }
+    public PointsToSet reachingObjectsOfArrayElement( PointsToSet s ) {
+        BDDPointsToSet bdds = (BDDPointsToSet) s;
+        return new BDDPointsToSet(
+            bdds.bdd(){} >< new{ArrayElement.v()=>fld}{}{objc, obj, fld}
+                                           <> fieldPt{basec,base,fld} );
+    }
+}
+

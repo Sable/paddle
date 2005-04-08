@@ -51,7 +51,7 @@ public class Rvarc_var_objc_obj_srcm_stmt_kind_tgtmSet extends Rvarc_var_objc_ob
             public void remove() { throw new UnsupportedOperationException(); }
         };
     }
-    public <varc:C1, var:V1, objc:C3, obj:H1, srcm:MS, stmt:ST, kind:KD, tgtm:MT> get() {
+    public <varc:C1, var:V1, objc:CH1, obj:H1, srcm:MS, stmt:ST, kind:KD, tgtm:MT> get() {
         throw new RuntimeException();
     }
     public boolean hasNext() { return !bdd.isEmpty(); }

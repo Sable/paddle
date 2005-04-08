@@ -32,7 +32,7 @@ public abstract class Qvarc_var_objc_obj_srcm_stmt_kind_tgtm implements soot.jim
     protected String name;
     public final String toString() { return name; }
     public abstract void add( Context _varc, VarNode _var, Context _objc, AllocNode _obj, SootMethod _srcm, Unit _stmt, Kind _kind, SootMethod _tgtm );
-    public abstract void add( <varc:C1, var:V1, objc:C3, obj:H1, srcm:MS, stmt:ST, kind:KD, tgtm:MT> in );
+    public abstract void add( <varc:C1, var:V1, objc:CH1, obj:H1, srcm:MS, stmt:ST, kind:KD, tgtm:MT> in );
     public abstract Rvarc_var_objc_obj_srcm_stmt_kind_tgtm reader( String rname );
     public Rvarc_var_objc_obj_srcm_stmt_kind_tgtm revreader( String rname ) { return reader( rname ); }
     public void add( Rvarc_var_objc_obj_srcm_stmt_kind_tgtm.Tuple in ) {

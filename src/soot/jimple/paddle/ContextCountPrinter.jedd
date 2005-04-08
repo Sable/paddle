@@ -61,7 +61,7 @@ public class ContextCountPrinter
             System.out.println( "Begin variable context counts" );
             for( Iterator vnIt = PaddleNumberers.v().varNodeNumberer().iterator(); vnIt.hasNext(); ) {
                 final VarNode vn = (VarNode) vnIt.next();
-                <varc:MEASURE1, var:MEASURE2, objc:MEASURE3, obj:MEASURE4>
+                <varc:MEASURE1, var:MEASURE2, objc:MEASURE4, obj:MEASURE3>
                     p2set = p2sets.getReader(vn).get();
                 System.out.println(
                     ((obj=>, objc=>)p2set).size()+":"+
@@ -70,12 +70,17 @@ public class ContextCountPrinter
             }
             System.out.println( "End variable context counts" );
         }
-
-        <varc:MEASURE1, var:MEASURE2, objc:MEASURE3, obj:MEASURE4> 
-            p2relation = p2sets.getReader().get();
-        System.out.println( "Total number of contexts in points-to relation: "+
-            ((var=>, objc=>, obj=>) p2relation).size() );
-        System.out.println( "Total equivalence classes of contexts in points-to relation: "+p2relation.width(MEASURE1.v()) );
+    }
+    public static void printTotalContextCounts() {
+        AbsP2Sets p2sets = Results.v().p2sets();
+        if(p2sets != null) {
+            <varc:MEASURE1, var:MEASURE2, objc:MEASURE4, obj:MEASURE3> 
+                p2relation = p2sets.getReader().get();
+            System.out.println( "Total number of contexts in points-to relation: "+
+                ((var=>, objc=>, obj=>) p2relation).size() );
+            System.out.println( "Total equivalence classes of contexts in points-to relation: "+p2relation.width(MEASURE1.v()) );
+            System.out.println( "Total distinct points-to sets: "+p2relation.width(MEASURE2.v()) );
+        }
     }
 }
 

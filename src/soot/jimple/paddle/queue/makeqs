@@ -12,13 +12,14 @@ $HOME/makeq VarNode var V1 AllocNode obj H1
 $HOME/makeq Context srcc C1 VarNode src V1 Context dstc C2 VarNode dst V2
 $HOME/makeq Context srcc C1 VarNode src V1 PaddleField fld FD Context dstc C2 VarNode dst V2
 $HOME/makeq Context srcc C1 VarNode src V1 Context dstc C2 VarNode dst V2 PaddleField fld FD
-$HOME/makeq Context objc C3 AllocNode obj H1 Context varc C1 VarNode var V1
-$HOME/makeq Context varc C1 VarNode var V1 Context objc C3 AllocNode obj H1
+$HOME/makeq Context objc CH1 AllocNode obj H1 Context varc C1 VarNode var V1
+$HOME/makeq Context varc C1 VarNode var V1 Context objc CH1 AllocNode obj H1
 $HOME/makeq AllocNode obj H1
 $HOME/makeq VarNode var V1
-$HOME/makeq Context varc C1 VarNode var V1 Context objc C3 AllocNode obj H1 SootMethod srcm MS Unit stmt ST Kind kind KD SootMethod tgtm MT
+$HOME/makeq Context varc C1 VarNode var V1 Context objc CH1 AllocNode obj H1 SootMethod srcm MS Unit stmt ST Kind kind KD SootMethod tgtm MT
 $HOME/makeq VarNode var V1 SootMethod method MS Type type T1
 $HOME/makeq VarNode var V1 Type type T1
 $HOME/makeq AllocNode obj H1 SootMethod method MS Type type T1
 $HOME/makeq AllocNode obj H1 Type type T1
 $HOME/makeq SootMethod srcm MS Unit stmt ST Kind kind KD SootMethod tgtm MT VarNode src V1 VarNode dst V2
+$HOME/makeq Context basec CH1 AllocNode base H1 PaddleField fld FD Context objc CH2 AllocNode obj H2

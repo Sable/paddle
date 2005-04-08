@@ -73,6 +73,12 @@ public class PaddleTransformer extends SceneTransformer
             default:
                 throw new RuntimeException( "Unhandled kind of context" );
         }
+        if( opts.conf() == PaddleOptions.conf_cha_context_aot 
+        ||  opts.conf() == PaddleOptions.conf_ofcg_context_aot
+        ||  opts.conf() == PaddleOptions.conf_cha_context
+        ||  opts.conf() == PaddleOptions.conf_ofcg_context ) {
+            PaddleNumberers.v().contextDomain = InfCFAContextDomain.v();
+        }
 
         PaddleScene.v().setup( opts );
     }
@@ -102,6 +108,7 @@ public class PaddleTransformer extends SceneTransformer
         if( opts.set_mass() ) findSetMass();
 
         if( opts.context_counts() ) ContextCountPrinter.printContextCounts();
+        if( opts.total_context_counts() || opts.context_counts() ) ContextCountPrinter.printTotalContextCounts();
     }
 
     /*

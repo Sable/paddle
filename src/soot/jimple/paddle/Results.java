@@ -77,31 +77,14 @@ public class Results
         Scene.v().setReachableMethods(rm);
 
         if(pt != null) {
-            Scene.v().setPointsToAnalysis(new PointsToAnalysis() {
-                public PointsToSet reachingObjects( Local l ) {
-                    throw new RuntimeException("NYI");
-                }
-                public PointsToSet reachingObjects( Context c, Local l ) {
-                    throw new RuntimeException("NYI");
-                }
-                public PointsToSet reachingObjects( SootField f ) {
-                    throw new RuntimeException("NYI");
-                }
-                public PointsToSet reachingObjects( PointsToSet s, SootField f ) {
-                    throw new RuntimeException("NYI");
-                }
-                public PointsToSet reachingObjects( Local l, SootField f ) {
-                    throw new RuntimeException("NYI");
-                }
-                public PointsToSet reachingObjects( Context c, Local l, SootField f ) {
-                    throw new RuntimeException("NYI");
-                }
-                public PointsToSet reachingObjectsOfArrayElement( PointsToSet s ) {
-                    throw new RuntimeException("NYI");
-                }
-            });
+            if(pt instanceof BDDP2Sets) {
+                Scene.v().setPointsToAnalysis(new BDDPointsToAnalysis(pt));
+            } else {
+                Scene.v().setPointsToAnalysis(new TradPointsToAnalysis(pt));
+            }
         }
-    }
 
+        Scene.v().setContextSensitiveCallGraph(new PaddleContextSensitiveCallGraph(cg));
+    }
 }
 

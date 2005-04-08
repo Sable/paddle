@@ -72,5 +72,20 @@ public class TradP2Sets extends AbsP2Sets
         }
         return ret;
     }
+    public Rbasec_base_fld_objc_obj fieldPt() {
+        final Qbasec_base_fld_objc_obj retq = new Qbasec_base_fld_objc_objTrad("fieldPt");
+        Rbasec_base_fld_objc_obj ret = retq.reader("fieldPt");
+        for( Iterator cadfIt = adfToSet.keySet().iterator(); cadfIt.hasNext(); ) {
+            final ContextAllocDotField cadf = (ContextAllocDotField) cadfIt.next();
+            PointsToSetReadOnly ptset = get(cadf);
+            ptset.forall( new P2SetVisitor() {
+            public final void visit( ContextAllocNode n ) {
+                ContextAllocNode can = (ContextAllocNode) n;
+                retq.add( cadf.ctxt(), cadf.adf().base(), cadf.adf().field(),
+                    can.ctxt(), can.obj() );
+            }} );
+        }
+        return ret;
+    }
 }
 

@@ -42,8 +42,8 @@ public class Robjc_obj_varc_varIter extends Robjc_obj_varc_var{
             public void remove() { throw new UnsupportedOperationException(); }
         };
     }
-    public <objc:C3, obj:H1, varc:C1, var:V1> get() {
-        <objc:C3, obj:H1, varc:C1, var:V1> ret = 0B;
+    public <objc:CH1, obj:H1, varc:C1, var:V1> get() {
+        <objc:CH1, obj:H1, varc:C1, var:V1> ret = 0B;
         while( r.hasNext() ) {
             ret |= new { r.next()=>objc, r.next()=>obj, r.next()=>varc, r.next()=>var };
         }

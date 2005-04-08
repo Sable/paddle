@@ -60,5 +60,8 @@ public class BDDP2Sets extends AbsP2Sets
     public Rvarc_var_objc_obj getReader() {
         return new Rvarc_var_objc_objBDD(prop.pt);
     }
+    public Rbasec_base_fld_objc_obj fieldPt() {
+        return new Rbasec_base_fld_objc_objBDD(prop.fieldPt);
+    }
 }
 
