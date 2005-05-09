@@ -52,7 +52,8 @@ public class PaddleScene
     public P2SetFactory newSetFactory;
     public P2SetFactory oldSetFactory;
 
-    private PaddleOptions options;
+    private PaddleOptions options =
+        new PaddleOptions(PhaseOptions.v().getPhaseOptions("cg.paddle"));
     private CGOptions cgoptions = 
         new CGOptions(PhaseOptions.v().getPhaseOptions("cg"));
 
@@ -68,9 +69,9 @@ public class PaddleScene
         return bddh;
     }
 
-    public void setup( PaddleOptions opts ) {
-        options = opts;
-        if(!options.ignore_types()) fh = Scene.v().getOrMakeFastHierarchy();
+    private boolean jeddAlreadySetup = false;
+    public void setupJedd() {
+        if(jeddAlreadySetup) return;
         switch( options.backend() ) {
             case PaddleOptions.backend_buddy:
                 Jedd.v().setBackend("buddy"); 
@@ -545,7 +546,68 @@ public class PaddleScene
                         MEASURE3.v(),
                         MEASURE4.v()
                     ) );
+            } else if( order == 24 ) {
+                Jedd.v().setOrder( 
+                    new Seq(
+                        new Interleave(V1.v(), V2.v(), MS.v(), ST.v()),
+                        M3.v(),
+                        FD.v(),
+                        new Interleave(T1.v(), T2.v(), T3.v(), MT.v(), SG.v()),
+                        H1.v(),
+                        H2.v(),
+                        new Permute(sw, new Rev(C1.v())),
+                        new Permute(sw, new Rev(C2.v())),
+                        new Permute(sw, new Rev(C3.v())),
+                        KD.v(),
+                        MEASURE1.v(),
+                        MEASURE2.v(),
+                        MEASURE3.v(),
+                        MEASURE4.v()
+                    ) );
+            } else if( order == 25 ) {
+                Jedd.v().setOrder( 
+                    new Seq(
+                        new Interleave(V1.v(), V2.v(), MS.v(), ST.v()),
+                        M3.v(),
+                        FD.v(),
+                        new Interleave(T1.v(), T2.v(), T3.v(), MT.v(), SG.v()),
+                        H1.v(),
+                        H2.v(),
+                        new Interleave(
+                            new Permute(sw, new Rev(C1.v())),
+                            new Permute(sw, new Rev(C2.v())),
+                            new Permute(sw, new Rev(C3.v()))
+                        ),
+                        KD.v(),
+                        MEASURE1.v(),
+                        MEASURE2.v(),
+                        MEASURE3.v(),
+                        MEASURE4.v()
+                    ) );
+            } else if( order == 26 ) {
+                Jedd.v().setOrder( 
+                    new Seq(
+                        new Interleave(V1.v(), V2.v(), MS.v(), ST.v()),
+                        M3.v(),
+                        FD.v(),
+                        new Interleave(T1.v(), T2.v(), T3.v(), MT.v(), SG.v()),
+                        H1.v(),
+                        H2.v(),
+                        new Rev( new AsymInterleave(
+                            new Rev(C1.v()), sw,
+                            new Rev(C2.v()), sw,
+                            new Rev(C3.v()), sw
+                        )),
+                        KD.v(),
+                        MEASURE1.v(),
+                        MEASURE2.v(),
+                        MEASURE3.v(),
+                        MEASURE4.v()
+                    ) );
             }
+        }
+        if(options.dynamic_order()) {
+            Jedd.v().allowReorder(true);
         }
         if( options.profile() ) {
             try {
@@ -555,6 +617,12 @@ public class PaddleScene
                 throw new RuntimeException( "Couldn't output Jedd profile "+e );
             }
         }
+        jeddAlreadySetup = true;
+    }
+    public void setup(PaddleOptions opts) {
+        options = opts;
+        if(!options.ignore_types()) fh = Scene.v().getOrMakeFastHierarchy();
+        setupJedd();
         if( options.bdd() ) {
             factory = new BDDFactory();
         } else {

@@ -34,6 +34,7 @@ public class BDDCflow
     public BDDCflow() {
         stmtMethod = 0B;
         if(DEBUG) G.v().out.println("Getting call graph");
+        Date startCG = new Date();
         for( Iterator scIt = Scene.v().getApplicationClasses().iterator(); scIt.hasNext(); ) {
             final SootClass sc = (SootClass) scIt.next();
             for( Iterator mIt = sc.getMethods().iterator(); mIt.hasNext(); ) {
@@ -63,6 +64,7 @@ public class BDDCflow
             if(DEBUG) G.v().out.println("No Paddle call graph -- using Soot one.");
             for( Iterator eIt = Scene.v().getCallGraph().listener(); eIt.hasNext(); ) {
                 final Edge e = (Edge) eIt.next();
+                Scene.v().getUnitNumberer().add(e.srcStmt());
                 callEdges |= new{e.src()=>srcm, e.srcStmt()=>stmt,
                     e.kind()=>kind, e.tgt()=>tgtm};
             }
@@ -72,6 +74,8 @@ public class BDDCflow
         }
 
         callGraph = callEdges{kind} <> wantedKinds{kind};
+        Date doneCG = new Date();
+        System.out.println( "Getting call graph took "+(doneCG.getTime()-startCG.getTime())+" ms");
         if(DEBUG) G.v().out.println("Done getting call graph");
     }
     private <stmt, method> stmtMethod;
