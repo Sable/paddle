@@ -45,12 +45,9 @@ public class BDDCallGraph extends AbsCallGraph
         return newEdges != 0B;
     }
     public Rsrcc_srcm_stmt_kind_tgtc_tgtm edgesOutOf( Rctxt_method methods ) {
-        System.out.println( "csEdges has "+csEdges.numNodes() );
         <ctxt, method> methodsBDD = methods.get();
-        System.out.println( "methodsBdd has "+methodsBDD.numNodes() );
         <srcc, srcm, stmt, kind, tgtc, tgtm> result =
                 csEdges{srcm, srcc} >< methodsBDD{method, ctxt};
-        System.out.println( "result has "+result.numNodes() );
         return new Rsrcc_srcm_stmt_kind_tgtc_tgtmBDD( result,
                 "edgesOutOf", null);
     }

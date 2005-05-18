@@ -50,7 +50,7 @@ public class TradNodeInfo extends AbsNodeInfo
         }
         for( Iterator tIt = localallocs.iterator(); tIt.hasNext(); ) {
             final Robj_method_type.Tuple t = (Robj_method_type.Tuple) tIt.next();
-            if( localallocMap.put(t.obj(), t.method()) ) ret = true;
+            if(t.method() != localallocMap.put(t.obj(), t.method())) ret = true;
         }
         for( Iterator tIt = globalallocs.iterator(); tIt.hasNext(); ) {
             final Robj_type.Tuple t = (Robj_type.Tuple) tIt.next();
@@ -81,10 +81,8 @@ public class TradNodeInfo extends AbsNodeInfo
         new LargeNumberedMap(PaddleNumberers.v().varNodeNumberer());
     private NumberedSet globalSet =
         new NumberedSet(PaddleNumberers.v().varNodeNumberer());
-    private LargeNumberedMap localallocMap =
-        new LargeNumberedMap(PaddleNumberers.v().allocNodeNumberer());
-    private NumberedSet globalallocSet =
-        new NumberedSet(PaddleNumberers.v().allocNodeNumberer());
+    private Map localallocMap = new HashMap();
+    private Set globalallocSet = new HashSet();
 
 }
 

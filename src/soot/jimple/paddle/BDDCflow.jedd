@@ -75,7 +75,7 @@ public class BDDCflow
 
         callGraph = callEdges{kind} <> wantedKinds{kind};
         Date doneCG = new Date();
-        System.out.println( "Getting call graph took "+(doneCG.getTime()-startCG.getTime())+" ms");
+        if(DEBUG) G.v().out.println( "Getting call graph took "+(doneCG.getTime()-startCG.getTime())+" ms");
         if(DEBUG) G.v().out.println("Done getting call graph");
     }
     private <stmt, method> stmtMethod;

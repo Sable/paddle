@@ -31,17 +31,17 @@ import soot.jimple.toolkits.callgraph.*;
 public class ContextCountPrinter
 { 
     public static void printContextCounts() {
-        System.out.println( "Begin method context counts" );
+        G.v().out.println( "Begin method context counts" );
         <ctxt, method> contextMethods = 
             Results.v().reachableMethods().contextMethods().get();
         for( Iterator mIt = ((ctxt=>) contextMethods).iterator(); mIt.hasNext(); ) {
             final SootMethod m = (SootMethod) mIt.next();
             <ctxt> contexts = new{m=>method}{method}<>contextMethods{method};
-            System.out.println( contexts.size()+": "+m);
+            G.v().out.println( contexts.size()+": "+m);
         }
-        System.out.println( "End method context counts" );
+        G.v().out.println( "End method context counts" );
 
-        System.out.println( "Begin edge context counts" );
+        G.v().out.println( "Begin edge context counts" );
         AbsCallGraph cg = Results.v().callGraph();
         <srcc, srcm, stmt, kind, tgtc, tgtm> csEdges = cg.csEdges().get();
         for( Iterator tIt = cg.ciEdges().iterator(); tIt.hasNext(); ) {
@@ -50,25 +50,25 @@ public class ContextCountPrinter
                 new{t.srcm()=>srcm, t.stmt()=>stmt,
                     t.kind()=>kind, t.tgtm()=>tgtm}{srcm, stmt, kind, tgtm}<>
                                             csEdges{srcm, stmt, kind, tgtm};
-            System.out.println(
+            G.v().out.println(
                 contexts.size()+
                 ": "+(new Edge(t.srcm(), t.stmt(), t.tgtm(), t.kind())) );
         }
-        System.out.println( "End edge context counts" );
+        G.v().out.println( "End edge context counts" );
 
         AbsP2Sets p2sets = Results.v().p2sets();
         if(p2sets != null) {
-            System.out.println( "Begin variable context counts" );
+            G.v().out.println( "Begin variable context counts" );
             for( Iterator vnIt = PaddleNumberers.v().varNodeNumberer().iterator(); vnIt.hasNext(); ) {
                 final VarNode vn = (VarNode) vnIt.next();
                 <varc:MEASURE1, var:MEASURE2, objc:MEASURE4, obj:MEASURE3>
                     p2set = p2sets.getReader(vn).get();
-                System.out.println(
+                G.v().out.println(
                     ((obj=>, objc=>)p2set).size()+":"+
                     ((var=>, objc=>)p2set).width(MEASURE1.v())+":"+
                     vn);
             }
-            System.out.println( "End variable context counts" );
+            G.v().out.println( "End variable context counts" );
         }
     }
     public static void printTotalContextCounts() {
@@ -76,10 +76,10 @@ public class ContextCountPrinter
         if(p2sets != null) {
             <varc:MEASURE1, var:MEASURE2, objc:MEASURE4, obj:MEASURE3> 
                 p2relation = p2sets.getReader().get();
-            System.out.println( "Total number of contexts in points-to relation: "+
+            G.v().out.println( "Total number of contexts in points-to relation: "+
                 ((var=>, objc=>, obj=>) p2relation).size() );
-            System.out.println( "Total equivalence classes of contexts in points-to relation: "+p2relation.width(MEASURE1.v()) );
-            System.out.println( "Total distinct points-to sets: "+p2relation.width(MEASURE2.v()) );
+            G.v().out.println( "Total equivalence classes of contexts in points-to relation: "+p2relation.width(MEASURE1.v()) );
+            G.v().out.println( "Total distinct points-to sets: "+p2relation.width(MEASURE2.v()) );
         }
     }
 }

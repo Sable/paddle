@@ -58,7 +58,7 @@ public class BDDVirtualCalls extends AbsVirtualCalls
     }
 
     private int lastVarNode = 1;
-    private int lastAllocNode = 1;
+    private Iterator allocNodeIt = PaddleNumberers.v().allocNodeNumberer().iterator();
     private <var:V1, type> varNodes;
     private <obj, type> allocNodes;
     private <kind> virtual = new{Kind.VIRTUAL=>kind} | new{Kind.INTERFACE=>kind} | new{Kind.PRIVILEGED=>kind} | new{Kind.INVOKE_FINALIZE=>kind};
@@ -74,9 +74,10 @@ public class BDDVirtualCalls extends AbsVirtualCalls
             varNodes |= new{ vn=>var, vn.getType()=>type };
         }
 
-        for( ; lastAllocNode <= PaddleNumberers.v().allocNodeNumberer().size();
-            lastAllocNode++ ) {
-            AllocNode an = (AllocNode) PaddleNumberers.v().allocNodeNumberer().get(lastAllocNode);
+        for( Iterator anIt = allocNodeIt; anIt.hasNext(); ) {
+
+            final AllocNode an = (AllocNode) anIt.next();
+            if( an == null ) continue;
             allocNodes |= new{ an=>obj, an.getType()=>type };
 
             if( an instanceof StringConstantNode ) {

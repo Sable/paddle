@@ -29,8 +29,9 @@ public class PaddleNumberers {
     public PaddleNumberers( PaddleSingletons.Global g ) {}
     public static PaddleNumberers v() { return PaddleG.v().soot_jimple_paddle_PaddleNumberers(); }
 
-    private ArrayNumberer allocNodeNumberer = new ArrayNumberer();
-    public ArrayNumberer allocNodeNumberer() { return allocNodeNumberer; }
+    //private ArrayNumberer allocNodeNumberer = new ArrayNumberer();
+    private IterableNumberer allocNodeNumberer = new ObjNumberer();
+    public IterableNumberer allocNodeNumberer() { return allocNodeNumberer; }
     private ArrayNumberer varNodeNumberer = new ArrayNumberer();
     public ArrayNumberer varNodeNumberer() { return varNodeNumberer; }
     private ArrayNumberer fieldRefNodeNumberer = new ArrayNumberer();
