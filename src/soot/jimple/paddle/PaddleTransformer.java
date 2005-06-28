@@ -36,7 +36,7 @@ import java.io.*;
 /** Main entry point for Paddle.
  * @author Ondrej Lhotak
  */
-public class PaddleTransformer extends SceneTransformer
+public class PaddleTransformer extends IPaddleTransformer
 { 
     public static PaddleTransformer v() { return (PaddleTransformer) G.v().soot_jimple_paddle_PaddleHook().paddleTransformer(); }
 
@@ -109,6 +109,12 @@ public class PaddleTransformer extends SceneTransformer
 
         if( opts.context_counts() ) ContextCountPrinter.printContextCounts();
         if( opts.total_context_counts() || opts.context_counts() ) ContextCountPrinter.printTotalContextCounts();
+    }
+
+    /** This is called when Soot finishes executing all interprocedural phases.
+     * Paddle uses it to stop profiling if profiling is enabled. */
+    public void finishPhases() {
+        PaddleScene.v().finishPhases();
     }
 
     /*

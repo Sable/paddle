@@ -1,0 +1,86 @@
+/* Soot - a J*va Optimization Framework
+ * Copyright (C) 2005 Ondrej Lhotak
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+
+package soot.jimple.paddle;
+import soot.*;
+import soot.jimple.*;
+import soot.jimple.paddle.bdddomains.*;
+import soot.jimple.paddle.queue.*;
+import soot.util.*;
+import java.util.*;
+
+/** Finds methods that are potentially infinitely reursive. */
+public class BDDRecursiveAnalysis {
+    <srcc, srcm> recursive = 0B;
+
+    /*
+    public void analyze() {
+        <srcc, srcm, tgtc, tgtm> calls =
+            (kind=>, stmt=>) Results.v().callGraph().csEdges().get();
+        <srcc, srcm, tgtc, tgtm> newCalls;
+        do {
+            newCalls = calls{tgtc,tgtm} <> (srcc=>C3, srcm=>M3) calls{srcc,srcm};
+        } while( calls != (calls |= newCalls) );
+        <srcc, srcm> source = (tgtc=>, tgtm=>) calls;
+        <srcc, srcm, tgtc, tgtm> id =
+            (srcc=>srcc, srcc=>tgtc, srcm=>srcm, srcm=>tgtm) source;
+        recursive = (tgtc=>, tgtm=>) (calls & id);
+        //SootMethod recurse = Scene.v().getMethod("<Recurse: void recurse(Recurse)>");
+        //System.out.println( (calls{srcm} >< new{recurse=>srcm}{srcm}).toString() );
+    }
+    */
+
+    public void analyze() {
+        <kind> nonClinit = 1B - new{Kind.CLINIT=>kind};
+        <srcc:CM1, srcm:MC1, tgtc:CM2, tgtm:MC2> calls;
+        if( contextInsensitive ) {
+            <srcm:MS, tgtm:MT> cicalls =
+                (stmt=>) Results.v().callGraph().ciEdges().get(){kind} <>
+                                                       nonClinit{kind};
+            calls = cicalls{} >< new{null=>srcc, null=>tgtc}{};
+        } else {
+            <srcc:C1, srcm:MS, tgtc:C2, tgtm:MT> tmpCalls = 
+                (stmt=>) Results.v().callGraph().csEdges().get(){kind} <>
+                                                       nonClinit{kind};
+            calls = tmpCalls;
+        }
+        <srcc:CM1, srcm:MC1, tgtc:CM2, tgtm:MC2> transCalls = calls;
+        <srcc:CM2, srcm:MC2, tgtc:CM3, tgtm:MC3> newCalls = calls;
+
+        do {
+            newCalls = calls{tgtc,tgtm} <> newCalls{srcc,srcm};
+            newCalls -= transCalls;
+            transCalls |= newCalls;
+        } while( newCalls != 0B );
+
+        <srcc, srcm> source = (tgtc=>, tgtm=>) transCalls;
+        <srcc, srcm, tgtc, tgtm> id =
+            (srcc=>srcc, srcc=>tgtc, srcm=>srcm, srcm=>tgtm) source;
+        recursive = (tgtc=>, tgtm=>) (transCalls & id);
+    }
+
+    public Iterator recursiveMethods() {
+        return ((srcc=>)recursive).iterator();
+    }
+    private boolean contextInsensitive = false;
+    public void setContextInsensitive() {
+        contextInsensitive = true;
+    }
+}
+

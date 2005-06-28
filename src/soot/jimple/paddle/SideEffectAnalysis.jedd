@@ -81,6 +81,7 @@ public class SideEffectAnalysis {
 
     /** Compute the non-transitive read set for stmt s of method m. */
     private <method, stmt, fld, obj> ntReadSet( SootMethod m, Stmt s ) {
+        Scene.v().getUnitNumberer().add( s );
 	if( s instanceof AssignStmt ) {
 	    AssignStmt a = (AssignStmt) s;
 	    Value r = a.getRightOp();
@@ -91,6 +92,7 @@ public class SideEffectAnalysis {
 
     /** Compute the non-transitive write set for stmt s of method m. */
     private <method, stmt, fld, obj> ntWriteSet( SootMethod m, Stmt s ) {
+        Scene.v().getUnitNumberer().add( s );
         if( s instanceof AssignStmt ) {
 	    AssignStmt a = (AssignStmt) s;
 	    Value l = a.getLeftOp();
@@ -147,12 +149,14 @@ public class SideEffectAnalysis {
     }
 
     public Iterator readSet( SootMethod m, Stmt s ) {
+        Scene.v().getUnitNumberer().add( s );
         return ((obj=>) 
             (read{method, stmt} <> new {m=>method, s=>stmt}{method, stmt}))
             .iterator();
     }
 
     public Iterator writeSet( SootMethod m, Stmt s ) {
+        Scene.v().getUnitNumberer().add( s );
         return ((obj=>) 
             (write{method, stmt} <> new {m=>method, s=>stmt}{method, stmt}))
             .iterator();
