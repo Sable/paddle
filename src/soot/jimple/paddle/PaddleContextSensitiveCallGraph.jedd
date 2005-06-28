@@ -92,8 +92,8 @@ public class PaddleContextSensitiveCallGraph implements ContextSensitiveCallGrap
 
     private static Iterator edgeIterator(final <srcc, srcm, stmt, kind, tgtc, tgtm> edges) {
         return new Iterator() {
-            Iterator it = new Rctxt_methodBDD(
-                (srcc=>ctxt, srcm=>method, stmt=>, kind=>, tgtc=>, tgtm=>)edges).iterator();
+            Iterator it = new Rsrcc_srcm_stmt_kind_tgtc_tgtmBDD(
+                (srcc=>srcc, srcm=>srcm, stmt=>stmt, kind=>kind, tgtc=>tgtc, tgtm=>tgtm)edges).iterator();
             public boolean hasNext() {
                 return it.hasNext();
             }
