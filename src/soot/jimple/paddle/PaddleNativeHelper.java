@@ -83,4 +83,12 @@ public class PaddleNativeHelper extends NativeHelper {
 	return PaddleScene.v().nodeManager().makeGlobalVarNode( new Pair( "TempVar", new Integer( ++G.v().PaddleNativeHelper_tempVar ) ),
 		RefType.v( "java.lang.Object" ) );
     }
+    protected ReferenceVariable tempLocalVariableImpl(SootMethod method) {
+        if(PaddleScene.v().options().global_nodes_in_natives()) {
+            return tempVariableImpl();
+        } else {
+            return PaddleScene.v().nodeManager().makeLocalVarNode( new Pair( "TempVar", new Integer( ++G.v().PaddleNativeHelper_tempVar ) ),
+                    RefType.v( "java.lang.Object" ) , method );
+        }
+    }
 }
