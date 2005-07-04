@@ -36,6 +36,7 @@ import soot.jimple.toolkits.pointer.util.NativeHelper;
 public class AOTCGScene 
 { 
     public AbsCallGraph cg;
+    public AbsReachableMethodsAdapter rca;
     public AbsReachableMethods rc;
 
     public AbsMethodPAGBuilder mpb;
@@ -51,6 +52,7 @@ public class AOTCGScene
     public Qsrcc_srcm_stmt_kind_tgtc_tgtm csedges;
     public Qsrcc_srcm_stmt_kind_tgtc_tgtm cgout;
     public Qsrcm_stmt_kind_tgtm ecsout;
+    public Qctxt_method rcin;
     public Qctxt_method rcout;
     public Qsrcm_stmt_kind_tgtm_src_dst parms;
     public Qsrcm_stmt_kind_tgtm_src_dst rets;
@@ -77,6 +79,7 @@ public class AOTCGScene
         build();
 
         cg.queueDeps(depMan);
+        rca.queueDeps(depMan);
         rc.queueDeps(depMan);
         pag.queueDeps(depMan);
         prop.queueDeps(depMan);
@@ -93,7 +96,6 @@ public class AOTCGScene
         depMan.addDep(PaddleScene.v().tm, prop);
         depMan.addDep(pag, prop);
         depMan.addDep(prop, prop);
-        depMan.addDep(cg, rc);
 
         depMan.addDep(fprop, fprop);
         depMan.addDep(prop, fprop);
@@ -141,6 +143,7 @@ public class AOTCGScene
         rmout = PaddleScene.v().qFactory.Qmethod("rmout");
         cgout = PaddleScene.v().qFactory.Qsrcc_srcm_stmt_kind_tgtc_tgtm("cgout");
         ecsout = PaddleScene.v().qFactory.Qsrcm_stmt_kind_tgtm("ecsout");
+        rcin = PaddleScene.v().qFactory.Qctxt_method("rcin");
         rcout = PaddleScene.v().qFactory.Qctxt_method("rcout");
         parms = PaddleScene.v().qFactory.Qsrcm_stmt_kind_tgtm_src_dst("parms");
         rets = PaddleScene.v().qFactory.Qsrcm_stmt_kind_tgtm_src_dst("rets");
@@ -190,7 +193,8 @@ public class AOTCGScene
         buildQueues();
         buildPTA();
         cg = PaddleScene.v().factory.CallGraph( csedges.reader("cg"), ecsout, cgout );
-        rc = PaddleScene.v().factory.ReachableMethods( cgout.reader("rc"), null, rmout, rcout, cg );
+        rca = PaddleScene.v().factory.ReachableMethodsAdapter( cgout.reader("rca"), rcin );
+        rc = PaddleScene.v().factory.ReachableMethods( null, rcin.reader("rc"), rmout, rcout, null );
     }
 }
 

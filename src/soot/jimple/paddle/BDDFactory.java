@@ -141,6 +141,12 @@ public class BDDFactory extends AbsFactory
             ) {
         return new BDDReachableMethods(edgesIn, methodsIn, mout, cmout, cg);
     }
+    public AbsReachableMethodsAdapter ReachableMethodsAdapter(
+            Rsrcc_srcm_stmt_kind_tgtc_tgtm edgesIn,
+            Qctxt_method cmout
+            ) {
+        return new BDDReachableMethodsAdapter(edgesIn, cmout);
+    }
     public AbsStaticCallBuilder StaticCallBuilder(
             Rmethod in,
             Qsrcm_stmt_kind_tgtm out,

@@ -45,16 +45,18 @@ public class BDDReachableMethods extends AbsReachableMethods
             if(add(newMethodsIn)) change = true;
         }
 
-        <srcc, srcm, stmt, kind, tgtc, tgtm> newEdges =
-            edgesIn.get() {srcc, srcm} >< reachableCM {ctxt, method};
+        if( edgesIn != null ) {
+            <srcc, srcm, stmt, kind, tgtc, tgtm> newEdges =
+                edgesIn.get() {srcc, srcm} >< reachableCM {ctxt, method};
 
-        newEdges |= cg.edgesOutOf( newMethods ).get();
+            newEdges |= cg.edgesOutOf( newMethods ).get();
 
-        while( newEdges != 0B ) {
-            <ctxt, method> newTargets =
-                (srcc=>, srcm=>, stmt=>, kind=>, tgtc=>ctxt, tgtm=>method) newEdges;
-            if(add( newTargets )) change = true;
-            newEdges = cg.edgesOutOf( newMethods ).get();
+            while( newEdges != 0B ) {
+                <ctxt, method> newTargets =
+                    (srcc=>, srcm=>, stmt=>, kind=>, tgtc=>ctxt, tgtm=>method) newEdges;
+                if(add( newTargets )) change = true;
+                newEdges = cg.edgesOutOf( newMethods ).get();
+            }
         }
         return change;
     }

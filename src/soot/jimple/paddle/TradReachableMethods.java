@@ -50,15 +50,16 @@ public class TradReachableMethods extends AbsReachableMethods
             }
         }
         
-        for( Iterator tIt = edgesIn.iterator(); tIt.hasNext(); ) {
-        
-            final Rsrcc_srcm_stmt_kind_tgtc_tgtm.Tuple t = (Rsrcc_srcm_stmt_kind_tgtc_tgtm.Tuple) tIt.next();
-            change = change | processEdge( t );
-        }
-        while( newMethods.hasNext() ) {
-            for( Iterator tIt = cg.edgesOutOf( newMethods ).iterator(); tIt.hasNext(); ) {
+        if( edgesIn != null ) {
+            for( Iterator tIt = edgesIn.iterator(); tIt.hasNext(); ) {
                 final Rsrcc_srcm_stmt_kind_tgtc_tgtm.Tuple t = (Rsrcc_srcm_stmt_kind_tgtc_tgtm.Tuple) tIt.next();
                 change = change | processEdge( t );
+            }
+            while( newMethods.hasNext() ) {
+                for( Iterator tIt = cg.edgesOutOf( newMethods ).iterator(); tIt.hasNext(); ) {
+                    final Rsrcc_srcm_stmt_kind_tgtc_tgtm.Tuple t = (Rsrcc_srcm_stmt_kind_tgtc_tgtm.Tuple) tIt.next();
+                    change = change | processEdge( t );
+                }
             }
         }
         return change;

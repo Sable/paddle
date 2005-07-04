@@ -49,9 +49,8 @@ public abstract class AbsReachableMethods implements PaddleComponent
     public abstract long countContexts(SootMethod m);
     
     public void queueDeps(DependencyManager depMan) {
-        depMan.addQueueDep(edgesIn, this);
-        if(methodsIn != null)
-            depMan.addQueueDep(methodsIn, this);
+        if(edgesIn != null) depMan.addQueueDep(edgesIn, this);
+        if(methodsIn != null) depMan.addQueueDep(methodsIn, this);
     }
 }
 

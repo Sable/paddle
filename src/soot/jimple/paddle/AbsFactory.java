@@ -102,6 +102,10 @@ public abstract class AbsFactory
             Qctxt_method cmout,
             AbsCallGraph cg
             );
+    public abstract AbsReachableMethodsAdapter ReachableMethodsAdapter(
+            Rsrcc_srcm_stmt_kind_tgtc_tgtm edgesIn,
+            Qctxt_method cmout
+            );
     public abstract AbsStaticCallBuilder StaticCallBuilder(
             Rmethod in,
             Qsrcm_stmt_kind_tgtm out,
