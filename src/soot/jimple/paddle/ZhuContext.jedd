@@ -95,14 +95,14 @@ public class ZhuContext
         PseudoTopologicalOrderer topo = new PseudoTopologicalOrderer();
         List orderedComponents = topo.newList(sccel);
         if(VERBOSE) System.out.println( "Constructing CS call graph" );
-        System.out.println("There are "+scc.getComponents().size()+" scc's.");
+        if(VERBOSE) System.out.println("There are "+scc.getComponents().size()+" scc's.");
         for( Iterator componentIt = orderedComponents.iterator(); componentIt.hasNext(); ) {
             final List component = (List) componentIt.next();
             long c = 0;
-            System.out.println("Processing connected component: "+component );
+            if(VERBOSE) System.out.println("Processing connected component: "+component );
             for( Iterator dstIt = component.iterator(); dstIt.hasNext(); ) {
                 final SootMethod dst = (SootMethod) dstIt.next();
-                System.out.println("Processing destination method "+dst);
+                if(VERBOSE) System.out.println("Processing destination method "+dst);
                 <srcm, stmt, kind, tgtm> callers = 
                     cicgEdges{tgtm} >< new {dst=>tgtm}{tgtm};
                 for( Iterator eIt = new Rsrcm_stmt_kind_tgtmBDD(callers).iterator(); eIt.hasNext(); ) {
@@ -130,19 +130,17 @@ public class ZhuContext
                     methodContexts |= new{getKey(dst)=>method}{} ><
                             (tgtc=>ctxt)(srcc=>) contextEdge{};
                     if(VERBOSE) System.out.println( methodContexts.size() );
-                    //System.out.println(methodContexts.toString());
                     c += k;
                 }
             }
         }
-        //System.out.println(edges.toString());
         if(VERBOSE) System.out.println( "Adding intra-SCC edges" );
         for( Iterator eIt = new Rsrcm_stmt_kind_tgtmBDD(cicgEdges).iterator(); eIt.hasNext(); ) {
             final Rsrcm_stmt_kind_tgtm.Tuple e = (Rsrcm_stmt_kind_tgtm.Tuple) eIt.next();
             SootMethod src = e.srcm();
             SootMethod dst = e.tgtm();
             if( getKey(src) != getKey(dst) ) continue;
-            System.out.println(""+src+" -> "+dst);
+            if(VERBOSE) System.out.println(""+src+" -> "+dst);
             <ctxt> context = methodContexts{method} <>
                 new{getKey(src)=>method}{method};
             edges |= (ctxt=>srcc, ctxt=>tgtc) context{} ><
