@@ -140,25 +140,25 @@ public class AOTCGScene
     }
 
     private void buildQueues() {
-        rmout = PaddleScene.v().qFactory.Qmethod("rmout");
-        cgout = PaddleScene.v().qFactory.Qsrcc_srcm_stmt_kind_tgtc_tgtm("cgout");
-        ecsout = PaddleScene.v().qFactory.Qsrcm_stmt_kind_tgtm("ecsout");
-        rcin = PaddleScene.v().qFactory.Qctxt_method("rcin");
-        rcout = PaddleScene.v().qFactory.Qctxt_method("rcout");
-        parms = PaddleScene.v().qFactory.Qsrcm_stmt_kind_tgtm_src_dst("parms");
-        rets = PaddleScene.v().qFactory.Qsrcm_stmt_kind_tgtm_src_dst("rets");
+        rmout = PaddleScene.v().qFactory.Qmethod("aotrmout");
+        cgout = PaddleScene.v().qFactory.Qsrcc_srcm_stmt_kind_tgtc_tgtm("aotcgout");
+        ecsout = PaddleScene.v().qFactory.Qsrcm_stmt_kind_tgtm("aotecsout");
+        rcin = PaddleScene.v().qFactory.Qctxt_method("aotrcin");
+        rcout = PaddleScene.v().qFactory.Qctxt_method("aotrcout");
+        parms = PaddleScene.v().qFactory.Qsrcm_stmt_kind_tgtm_src_dst("aotparms");
+        rets = PaddleScene.v().qFactory.Qsrcm_stmt_kind_tgtm_src_dst("aotrets");
 
-        simple = PaddleScene.v().qFactory.Qsrc_dst("simple");
-        load = PaddleScene.v().qFactory.Qsrc_fld_dst("load");
-        store = PaddleScene.v().qFactory.Qsrc_dst_fld("store");
-        alloc = PaddleScene.v().qFactory.Qobj_var("alloc");
+        simple = PaddleScene.v().qFactory.Qsrc_dst("aotsimple");
+        load = PaddleScene.v().qFactory.Qsrc_fld_dst("aotload");
+        store = PaddleScene.v().qFactory.Qsrc_dst_fld("aotstore");
+        alloc = PaddleScene.v().qFactory.Qobj_var("aotalloc");
 
-        csimple = PaddleScene.v().qFactory.Qsrcc_src_dstc_dst("csimple");
-        cload = PaddleScene.v().qFactory.Qsrcc_src_fld_dstc_dst("cload");
-        cstore = PaddleScene.v().qFactory.Qsrcc_src_dstc_dst_fld("cstore");
-        calloc = PaddleScene.v().qFactory.Qobjc_obj_varc_var("calloc");
+        csimple = PaddleScene.v().qFactory.Qsrcc_src_dstc_dst("aotcsimple");
+        cload = PaddleScene.v().qFactory.Qsrcc_src_fld_dstc_dst("aotcload");
+        cstore = PaddleScene.v().qFactory.Qsrcc_src_dstc_dst_fld("aotcstore");
+        calloc = PaddleScene.v().qFactory.Qobjc_obj_varc_var("aotcalloc");
 
-        paout = PaddleScene.v().qFactory.Qvarc_var_objc_obj("paout");
+        paout = PaddleScene.v().qFactory.Qvarc_var_objc_obj("aotpaout");
 
     }
 
@@ -168,33 +168,33 @@ public class AOTCGScene
             NativeHelper.register( nativeHelper = new PaddleNativeHelper(nodeFactory) );
         }
 
-        cec = PaddleScene.v().factory.CallEdgeContextifier( PaddleScene.v().ni, parms.reader("mpc"),
-                rets.reader("mpc"), cgout.reader("mpc"), csimple );
-        ceh = PaddleScene.v().factory.CallEdgeHandler( ecsout.reader("ceh"), parms, rets, nodeFactory, true );
+        cec = PaddleScene.v().factory.CallEdgeContextifier( PaddleScene.v().ni, parms.reader("aotmpc"),
+                rets.reader("aotmpc"), cgout.reader("aotmpc"), csimple );
+        ceh = PaddleScene.v().factory.CallEdgeHandler( ecsout.reader("aotceh"), parms, rets, nodeFactory, true );
 
-        mpb = PaddleScene.v().factory.MethodPAGBuilder( rmout.reader("mpb"), simple, load, store, alloc, nodeFactory );
+        mpb = PaddleScene.v().factory.MethodPAGBuilder( rmout.reader("aotmpb"), simple, load, store, alloc, nodeFactory );
         mpc = PaddleScene.v().factory.MethodPAGContextifier(
                 PaddleScene.v().ni,
-                simple.reader("mpc"),
-                load.reader("mpc"),
-                store.reader("mpc"),
-                alloc.reader("mpc"),
-                rcout.reader("mpc"),
+                simple.reader("aotmpc"),
+                load.reader("aotmpc"),
+                store.reader("aotmpc"),
+                alloc.reader("aotmpc"),
+                rcout.reader("aotmpc"),
                 csimple, cload, cstore, calloc );
-        pag = PaddleScene.v().factory.PAG( csimple.reader("pag"), cload.reader("pag"),
-                cstore.reader("pag"), calloc.reader("pag") );
+        pag = PaddleScene.v().factory.PAG( csimple.reader("aotpag"), cload.reader("aotpag"),
+                cstore.reader("aotpag"), calloc.reader("aotpag") );
         prop = PaddleScene.v().factory.Propagator(PaddleScene.v().options().propagator(),
-                csimple.reader("prop"), cload.reader("prop"),
-                cstore.reader("prop"), calloc.reader("prop"), paout, pag);
+                csimple.reader("aotprop"), cload.reader("aotprop"),
+                cstore.reader("aotprop"), calloc.reader("aotprop"), paout, pag);
         fprop = prop.fieldPropagator();
     }
 
     private void build() {
         buildQueues();
         buildPTA();
-        cg = PaddleScene.v().factory.CallGraph( csedges.reader("cg"), ecsout, cgout );
-        rca = PaddleScene.v().factory.ReachableMethodsAdapter( cgout.reader("rca"), rcin );
-        rc = PaddleScene.v().factory.ReachableMethods( null, rcin.reader("rc"), rmout, rcout, null );
+        cg = PaddleScene.v().factory.CallGraph( csedges.reader("aotcg"), ecsout, cgout );
+        rca = PaddleScene.v().factory.ReachableMethodsAdapter( cgout.reader("aotrca"), rcin );
+        rc = PaddleScene.v().factory.ReachableMethods( null, rcin.reader("aotrc"), rmout, rcout, null );
     }
 }
 

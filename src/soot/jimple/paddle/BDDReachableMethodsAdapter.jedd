@@ -33,16 +33,17 @@ public class BDDReachableMethodsAdapter extends AbsReachableMethodsAdapter
     }
     public boolean update() {
         boolean ret = false;
+        <srcc, srcm, stmt, kind, tgtc, tgtm> newEdges = edgesIn.get();
         <ctxt, method> out = 
             (srcc=>ctxt, srcm=>method, stmt=>, kind=>, tgtc=>, tgtm=>)
-            edgesIn.get();
+            newEdges;
         if(out != 0B) {
             ret = true;
             cmout.add(out);
         }
         out = 
             (srcc=>, srcm=>, stmt=>, kind=>, tgtc=>ctxt, tgtm=>method)
-            edgesIn.get();
+            newEdges;
         if(out != 0B) {
             ret = true;
             cmout.add(out);
