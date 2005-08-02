@@ -36,8 +36,10 @@ public class Trad1CFAVirtualContextManager extends AbsVirtualContextManager
         for( Iterator tIt = in.iterator(); tIt.hasNext(); ) {
             final Rvarc_var_objc_obj_srcm_stmt_kind_tgtm.Tuple t = (Rvarc_var_objc_obj_srcm_stmt_kind_tgtm.Tuple) tIt.next();
             out.add( t.varc(), t.srcm(), t.stmt(), t.kind(), t.stmt(), t.tgtm() );
-            thisOut.add( t.objc(), t.obj(), t.stmt(),
-                (VarNode) new MethodNodeFactory(t.tgtm(), gnf).caseThis() );
+            if( thisOut != null ) {
+                thisOut.add( t.objc(), t.obj(), t.stmt(),
+                    (VarNode) new MethodNodeFactory(t.tgtm(), gnf).caseThis() );
+            }
             change = true;
         }
         return change;

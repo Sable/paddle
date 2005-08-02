@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2003, 2004, 2005 Ondrej Lhotak
+ * Copyright (C) 2005 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -26,18 +26,35 @@ import soot.*;
  * context.
  * @author Ondrej Lhotak
  */
-public class TradObjSensVirtualContextManager extends AbsVirtualContextManager
+public class TradUniqKObjSensVirtualContextManager extends AbsVirtualContextManager
 { 
-    TradObjSensVirtualContextManager( Rvarc_var_objc_obj_srcm_stmt_kind_tgtm in, Qsrcc_srcm_stmt_kind_tgtc_tgtm out, Qobjc_obj_varc_var thisOut, NodeFactory gnf ) {
+    TradUniqKObjSensVirtualContextManager( Rvarc_var_objc_obj_srcm_stmt_kind_tgtm in, Qsrcc_srcm_stmt_kind_tgtc_tgtm out, Qobjc_obj_varc_var thisOut, NodeFactory gnf, int k ) {
         super( in, out, thisOut, gnf );
+        this.k = k;
     }
+    private int k;
     public boolean update() {
         boolean change = false;
         for( Iterator tIt = in.iterator(); tIt.hasNext(); ) {
             final Rvarc_var_objc_obj_srcm_stmt_kind_tgtm.Tuple t = (Rvarc_var_objc_obj_srcm_stmt_kind_tgtm.Tuple) tIt.next();
-            out.add( t.varc(), t.srcm(), t.stmt(), t.kind(), t.obj(), t.tgtm() );
+            ContextString cs = (ContextString) t.varc();
+            if( cs == null ) cs = new ContextString(k);
+            ContextString newCs = cs;
+foundit:
+            {
+                for( int i = 0; i < k; i++ ) {
+                    if( cs.get(i) == t.obj() ) break foundit;
+                }
+                newCs = cs.push(t.obj());
+            }
+            out.add( t.varc(),
+                    t.srcm(),
+                    t.stmt(),
+                    t.kind(),
+                    newCs,
+                    t.tgtm() );
             if( thisOut != null ) {
-                thisOut.add( t.objc(), t.obj(), t.obj(),
+                thisOut.add( t.objc(), t.obj(), newCs,
                         (VarNode) new MethodNodeFactory(t.tgtm(), gnf).caseThis() );
             }
             change = true;
@@ -45,5 +62,3 @@ public class TradObjSensVirtualContextManager extends AbsVirtualContextManager
         return change;
     }
 }
-
-

@@ -37,10 +37,12 @@ public class BDDInsensitiveVirtualContextManager extends BDDVirtualContextManage
         out.add((varc=>, var=>, objc=>, obj=>) newIn{} ><
             new {null=>srcc, null=>tgtc}{} );
 
-        newMethods((varc=>, var=>, objc=>, obj=>, srcm=>, stmt=>, kind=>)
-            newIn);
-        thisOut.add((varc=>, var=>, srcm=>, stmt=>, kind=>) newIn{tgtm} <>
-            thisVar(){method} {} >< new {null=>varc}{} );
+        if( thisOut != null ) {
+            newMethods((varc=>, var=>, objc=>, obj=>, srcm=>, stmt=>, kind=>)
+                newIn);
+            thisOut.add((varc=>, var=>, srcm=>, stmt=>, kind=>) newIn{tgtm} <>
+                thisVar(){method} {} >< new {null=>varc}{} );
+        }
 
         return newIn != 0B;
     }

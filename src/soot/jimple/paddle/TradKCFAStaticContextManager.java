@@ -38,11 +38,12 @@ public class TradKCFAStaticContextManager extends AbsStaticContextManager
             final Rsrcc_srcm_stmt_kind_tgtc_tgtm.Tuple t = (Rsrcc_srcm_stmt_kind_tgtc_tgtm.Tuple) tIt.next();
             ContextString cs = (ContextString) t.srcc();
             if( cs == null ) cs = new ContextString(k);
+            ContextString newCs = cs.push(t.stmt());
             out.add( t.srcc(),
                     t.srcm(),
                     t.stmt(),
                     t.kind(),
-                    cs.push(t.stmt()),
+                    newCs,
                     t.tgtm() );
             change = true;
         }

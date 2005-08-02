@@ -37,18 +37,20 @@ public class BDDObjSensVirtualContextManager extends BDDVirtualContextManager
         out.add((varc=>srcc, obj=>tgtc)(obj=>C2)(var=>, objc=>)
             newIn );
 
-        newMethods((varc=>, var=>, objc=>, obj=>, srcm=>, stmt=>, kind=>)
-            newIn);
-        thisOut.add(
-            (base=>varc)
-            (base=>C1)
-            (obj=>H1, base=>H2)
-            (obj=>obj, obj=>base)
-            (obj=>H1)
-            (
-                (varc=>, var=>, srcm=>, stmt=>, kind=>)
-                newIn{tgtm} <>
-                thisVar(){method}) );
+        if( thisOut != null ) {
+            newMethods((varc=>, var=>, objc=>, obj=>, srcm=>, stmt=>, kind=>)
+                newIn);
+            thisOut.add(
+                (base=>varc)
+                (base=>C1)
+                (obj=>H1, base=>H2)
+                (obj=>obj, obj=>base)
+                (obj=>H1)
+                (
+                    (varc=>, var=>, srcm=>, stmt=>, kind=>)
+                    newIn{tgtm} <>
+                    thisVar(){method}) );
+        }
 
         return newIn != 0B;
     }

@@ -50,18 +50,20 @@ public class BDDKObjSensVirtualContextManager extends BDDVirtualContextManager
             }
             shifter = Jedd.v().makeShifter( from, to );
         }
-        <varc, var, objc, obj, srcm, stmt, kind, tgtm> newIn = in.get();
+        <varc, objc, obj, srcm, stmt, kind, tgtm> newIn = (var=>) in.get();
         <varc:C1, objc:CH1, obj, srcm, stmt, kind, tgtc:C2, tgtm> newEdges = 
-            (var=>, obj=>obj, obj=>tgtc) newIn;
+            (obj=>obj, obj=>tgtc) newIn;
         newEdges = (<varc, objc, obj, srcm, stmt, kind, tgtc, tgtm>)
             newEdges.applyShifter(shifter);
         out.add((varc=>srcc, objc=>, obj=>) newEdges);
 
-        newMethods((varc=>, objc=>, obj=>, srcm=>, stmt=>, kind=>, tgtc=>)
-            newEdges);
-        thisOut.add(
-            (varc=>, srcm=>, stmt=>, kind=>, tgtc=>varc) newEdges{tgtm} <>
-            thisVar(){method} );
+        if( thisOut != null ) { 
+            newMethods((varc=>, objc=>, obj=>, srcm=>, stmt=>, kind=>, tgtc=>)
+                newEdges);
+            thisOut.add(
+                (varc=>, srcm=>, stmt=>, kind=>, tgtc=>varc) newEdges{tgtm} <>
+                thisVar(){method} );
+        }
 
         return newIn != 0B;
     }

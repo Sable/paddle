@@ -202,7 +202,12 @@ public class OFCGScene
 
         cec = PaddleScene.v().factory.CallEdgeContextifier( PaddleScene.v().ni, parms.reader("mpc"),
                 rets.reader("mpc"), cgout.reader("mpc"), csimple );
-        ceh = PaddleScene.v().factory.CallEdgeHandler( ecsout.reader("ceh"), parms, rets, nodeFactory, false );
+        ceh = PaddleScene.v().factory.CallEdgeHandler( 
+                ecsout.reader("ceh"),
+                parms,
+                rets,
+                nodeFactory,
+                PaddleScene.v().options().this_edges() );
 
         mpb = PaddleScene.v().factory.MethodPAGBuilder( rmout.reader("mpb"), simple, load, store, alloc, nodeFactory );
         mpc = PaddleScene.v().factory.MethodPAGContextifier(
@@ -233,7 +238,13 @@ public class OFCGScene
         vcr = PaddleScene.v().factory.VirtualCalls( paout.reader("vcr"), receivers.reader("vcr"), specials.reader("vcr"), virtualcalls, staticcalls, prop.p2sets() );
 
         scm = PaddleScene.v().factory.StaticContextManager( PaddleScene.v().cgoptions().context(), staticcalls.reader("scm"), csedges, PaddleScene.v().cgoptions().k() );
-        vcm = PaddleScene.v().factory.VirtualContextManager( PaddleScene.v().cgoptions().context(), virtualcalls.reader("vcm"), csedges, calloc, nodeFactory, PaddleScene.v().cgoptions().k() );
+        vcm = PaddleScene.v().factory.VirtualContextManager(
+                PaddleScene.v().cgoptions().context(),
+                virtualcalls.reader("vcm"),
+                csedges,
+                PaddleScene.v().options().this_edges() ? null : calloc,
+                nodeFactory,
+                PaddleScene.v().cgoptions().k() );
     }
 }
 

@@ -37,10 +37,12 @@ public class BDD1CFAVirtualContextManager extends BDDVirtualContextManager
         out.add((varc=>srcc, var=>, objc=>, obj=>, stmt=>stmt, stmt=>tgtc)
             newIn );
 
-        newMethods((varc=>, var=>, objc=>, obj=>, srcm=>, stmt=>, kind=>)
-            newIn);
-        thisOut.add((stmt=>varc)(stmt=>C1)(varc=>, var=>, srcm=>, kind=>) 
-            newIn{tgtm} <> thisVar(){method} );
+        if( thisOut != null ) {
+            newMethods((varc=>, var=>, objc=>, obj=>, srcm=>, stmt=>, kind=>)
+                newIn);
+            thisOut.add((stmt=>varc)(stmt=>C1)(varc=>, var=>, srcm=>, kind=>) 
+                newIn{tgtm} <> thisVar(){method} );
+        }
 
         return newIn != 0B;
     }

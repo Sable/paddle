@@ -49,35 +49,38 @@ public class PaddleTransformer extends IPaddleTransformer
 
     public void setup( PaddleOptions opts ) {
         CGOptions cgoptions = new CGOptions( PhaseOptions.v().getPhaseOptions("cg") );
-        switch( cgoptions.context() ) {
-            case CGOptions.context_insens:
-                Scene.v().setContextNumberer( new MapNumberer() );
-                PaddleNumberers.v().contextDomain = KindDomain.v();
-                break;
-            case CGOptions.context_1cfa:
-                Scene.v().setContextNumberer( Scene.v().getUnitNumberer() );
-                PaddleNumberers.v().contextDomain = StmtDomain.v();
-                break;
-            case CGOptions.context_objsens:
-                Scene.v().setContextNumberer( PaddleNumberers.v().allocNodeNumberer() );
-                PaddleNumberers.v().contextDomain = ObjDomain.v();
-                break;
-            case CGOptions.context_kcfa:
-                Scene.v().setContextNumberer( new ContextStringNumberer(StmtDomain.v(), Scene.v().getUnitNumberer(), cgoptions.k()) );
-                PaddleNumberers.v().contextDomain = null;
-                break;
-            case CGOptions.context_kobjsens:
-                Scene.v().setContextNumberer( new ContextStringNumberer(ObjDomain.v(), PaddleNumberers.v().allocNodeNumberer(), cgoptions.k()) );
-                PaddleNumberers.v().contextDomain = null;
-                break;
-            default:
-                throw new RuntimeException( "Unhandled kind of context" );
-        }
         if( opts.conf() == PaddleOptions.conf_cha_context_aot 
         ||  opts.conf() == PaddleOptions.conf_ofcg_context_aot
         ||  opts.conf() == PaddleOptions.conf_cha_context
         ||  opts.conf() == PaddleOptions.conf_ofcg_context ) {
+            Scene.v().setContextNumberer( new IntegerNumberer() );
             PaddleNumberers.v().contextDomain = InfCFAContextDomain.v();
+        } else {
+            switch( cgoptions.context() ) {
+                case CGOptions.context_insens:
+                    Scene.v().setContextNumberer( new MapNumberer() );
+                    PaddleNumberers.v().contextDomain = KindDomain.v();
+                    break;
+                case CGOptions.context_1cfa:
+                    Scene.v().setContextNumberer( Scene.v().getUnitNumberer() );
+                    PaddleNumberers.v().contextDomain = StmtDomain.v();
+                    break;
+                case CGOptions.context_objsens:
+                    Scene.v().setContextNumberer( PaddleNumberers.v().allocNodeNumberer() );
+                    PaddleNumberers.v().contextDomain = ObjDomain.v();
+                    break;
+                case CGOptions.context_kcfa:
+                    Scene.v().setContextNumberer( new ContextStringNumberer(StmtDomain.v(), Scene.v().getUnitNumberer(), cgoptions.k()) );
+                    PaddleNumberers.v().contextDomain = null;
+                    break;
+                case CGOptions.context_kobjsens:
+                case CGOptions.context_uniqkobjsens:
+                    Scene.v().setContextNumberer( new ContextStringNumberer(ObjDomain.v(), PaddleNumberers.v().allocNodeNumberer(), cgoptions.k()) );
+                    PaddleNumberers.v().contextDomain = null;
+                    break;
+                default:
+                    throw new RuntimeException( "Unhandled kind of context" );
+            }
         }
 
         PaddleScene.v().setup( opts );

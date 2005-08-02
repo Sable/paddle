@@ -172,6 +172,7 @@ public class BDDFactory extends AbsFactory
             case CGOptions.context_kcfa:
                 return new BDDKCFAStaticContextManager(in, out, k);
             case CGOptions.context_kobjsens:
+            case CGOptions.context_uniqkobjsens:
                 return new BDDKObjSensStaticContextManager(in, out, k);
             default:
                 throw new RuntimeException( "Unhandled kind of context-sensitivity "+kind );
@@ -214,6 +215,8 @@ public class BDDFactory extends AbsFactory
                 return new BDDKCFAVirtualContextManager(in, out, thisOut, gnf, k);
             case CGOptions.context_kobjsens:
                 return new BDDKObjSensVirtualContextManager(in, out, thisOut, gnf, k);
+            case CGOptions.context_uniqkobjsens:
+                return new BDDUniqKObjSensVirtualContextManager(in, out, thisOut, gnf, k);
             default:
                 throw new RuntimeException( "Unhandled kind of context-sensitivity "+kind );
         }

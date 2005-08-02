@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2004 Ondrej Lhotak
+ * Copyright (C) 2005 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,13 +28,14 @@ import soot.*;
  * context.
  * @author Ondrej Lhotak
  */
-public class BDDKCFAVirtualContextManager extends BDDVirtualContextManager
+public class BDDUniqKObjSensVirtualContextManager extends BDDVirtualContextManager
 { 
-    BDDKCFAVirtualContextManager( Rvarc_var_objc_obj_srcm_stmt_kind_tgtm in, Qsrcc_srcm_stmt_kind_tgtc_tgtm out, Qobjc_obj_varc_var thisOut, NodeFactory gnf, int k ) {
+    BDDUniqKObjSensVirtualContextManager( Rvarc_var_objc_obj_srcm_stmt_kind_tgtm in, Qsrcc_srcm_stmt_kind_tgtc_tgtm out, Qobjc_obj_varc_var thisOut, NodeFactory gnf, int k ) {
         super( in, out, thisOut, gnf );
         this.k = k;
     }
     private Jedd.Shifter shifter;
+    private Jedd.Shifter[] shifters;
     private int k;
     private int shiftWidth() {
         return ((ContextStringNumberer) Scene.v().getContextNumberer())
@@ -50,14 +51,47 @@ public class BDDKCFAVirtualContextManager extends BDDVirtualContextManager
             }
             shifter = Jedd.v().makeShifter( from, to );
         }
-        <varc, var, objc, obj, srcm, stmt, kind, tgtm> newIn = in.get();
+        if( shifters == null ) {
+            shifters = new Jedd.Shifter[k];
+            for( int j = 0; j < k; j++ ) {
+                int[] from = new int[shiftWidth()];
+                int[] to = new int[shiftWidth()];
+                for( int i = 0; i < from.length; i++ ) {
+                    from[i] = i + C2.v().firstBit();
+                    to[i] = i + C1.v().firstBit() + j*shiftWidth();
+                }
+                shifters[j] = Jedd.v().makeShifter(from, to);
+            }
+        }
+
+        <varc, objc, obj, srcm, stmt, kind, tgtm> newIn = (var=>) in.get();
+
+        <obj:C2> objects = (varc=>, objc=>, srcm=>, stmt=>, kind=>, tgtm=>) newIn;
+        // This BDD will have the current object in all the context slots.
+        <varc:C1, obj:C2> existing = 0B;
+        for( int i = 0; i < k; i++ ) {
+            existing |= (<varc, obj>) objects.applyShifter(shifters[i]);
+        }
+
+        // This BDD will have all edges which already had the current
+        // object, so don't need it pushed.
+        <varc, objc, obj, srcm, stmt, kind, tgtm> unchanged =
+            newIn{obj, varc} >< existing{obj, varc};
+
+        <varc, objc, obj, srcm, stmt, kind, tgtm> changed =
+            newIn - unchanged;
+
         <varc:C1, objc:CH1, obj, srcm, stmt, kind, tgtc:C2, tgtm> newEdges = 
-            (var=>, stmt=>stmt, stmt=>tgtc) newIn;
+            (obj=>obj, obj=>tgtc) changed;
+
         newEdges = (<varc, objc, obj, srcm, stmt, kind, tgtc, tgtm>)
             newEdges.applyShifter(shifter);
+
+        newEdges |= (varc=>varc, varc=>tgtc) unchanged;
+
         out.add((varc=>srcc, objc=>, obj=>) newEdges);
 
-        if( thisOut != null ) {
+        if( thisOut != null ) { 
             newMethods((varc=>, objc=>, obj=>, srcm=>, stmt=>, kind=>, tgtc=>)
                 newEdges);
             thisOut.add(

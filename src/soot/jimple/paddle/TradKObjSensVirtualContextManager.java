@@ -46,8 +46,10 @@ public class TradKObjSensVirtualContextManager extends AbsVirtualContextManager
                     t.kind(),
                     newCs,
                     t.tgtm() );
-            thisOut.add( t.objc(), t.obj(), newCs,
-                    (VarNode) new MethodNodeFactory(t.tgtm(), gnf).caseThis() );
+            if( thisOut != null ) {
+                thisOut.add( t.objc(), t.obj(), newCs,
+                        (VarNode) new MethodNodeFactory(t.tgtm(), gnf).caseThis() );
+            }
             change = true;
         }
         return change;

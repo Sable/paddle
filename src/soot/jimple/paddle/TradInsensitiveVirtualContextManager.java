@@ -36,8 +36,10 @@ public class TradInsensitiveVirtualContextManager extends AbsVirtualContextManag
         for( Iterator tIt = in.iterator(); tIt.hasNext(); ) {
             final Rvarc_var_objc_obj_srcm_stmt_kind_tgtm.Tuple t = (Rvarc_var_objc_obj_srcm_stmt_kind_tgtm.Tuple) tIt.next();
             out.add( null, t.srcm(), t.stmt(), t.kind(), null, t.tgtm() );
-            thisOut.add( t.objc(), t.obj(), null,
-                    (VarNode) new MethodNodeFactory(t.tgtm(), gnf).caseThis() );
+            if( thisOut != null ) {
+                thisOut.add( t.objc(), t.obj(), null,
+                        (VarNode) new MethodNodeFactory(t.tgtm(), gnf).caseThis() );
+            }
             change = true;
         }
         return change;
