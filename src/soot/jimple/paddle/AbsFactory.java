@@ -19,6 +19,8 @@
 
 package soot.jimple.paddle;
 import soot.jimple.paddle.queue.*;
+import soot.jimple.toolkits.pointer.util.NativeMethodDriver;
+
 
 /** Factory that constructs Paddle components.
  * @author Ondrej Lhotak
@@ -60,7 +62,8 @@ public abstract class AbsFactory
             Qsrc_fld_dst load,
             Qsrc_dst_fld store,
             Qobj_var alloc,
-			NodeFactory gnf
+            NodeFactory gnf,
+            NativeMethodDriver nativeMethodDriver
             );
     public abstract AbsMethodPAGContextifier MethodPAGContextifier(
             AbsNodeInfo ni,

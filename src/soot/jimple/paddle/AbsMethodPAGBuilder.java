@@ -20,6 +20,8 @@
 package soot.jimple.paddle;
 import soot.*;
 import soot.jimple.paddle.queue.*;
+import soot.jimple.toolkits.pointer.util.NativeMethodDriver;
+
 
 /** Creates intra-procedural pointer assignment edges.
  * @author Ondrej Lhotak
@@ -32,6 +34,7 @@ public abstract class AbsMethodPAGBuilder implements PaddleComponent
     protected Qsrc_dst_fld store;
     protected Qobj_var alloc;
     protected NodeFactory gnf;
+    protected NativeMethodDriver nativeMethodDriver;
 
     AbsMethodPAGBuilder( 
         Rmethod in,
@@ -39,13 +42,15 @@ public abstract class AbsMethodPAGBuilder implements PaddleComponent
         Qsrc_fld_dst load,
         Qsrc_dst_fld store,
         Qobj_var alloc,
-		NodeFactory gnf) {
+	NodeFactory gnf,
+        NativeMethodDriver nativeMethodDriver) {
         this.in = in;
         this.simple = simple;
         this.load = load;
         this.store = store;
         this.alloc = alloc;
         this.gnf = gnf;
+        this.nativeMethodDriver = nativeMethodDriver;
     }
     public abstract boolean update();
     public void queueDeps(DependencyManager depMan) {

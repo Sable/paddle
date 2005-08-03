@@ -28,6 +28,7 @@ import java.io.*;
 import jedd.*;
 import jedd.order.*;
 import soot.jimple.toolkits.pointer.util.NativeHelper;
+import soot.jimple.toolkits.pointer.util.NativeMethodDriver;
 
 /** This class puts all of the pieces of Paddle together and connects them
  * with queues.
@@ -81,6 +82,7 @@ public class OFCGScene
     public Qvarc_var_objc_obj_srcm_stmt_kind_tgtm virtualcalls;
 
     private PaddleNativeHelper nativeHelper;
+    private NativeMethodDriver nativeMethodDriver;
     public NodeFactory nodeFactory;
 
     public DependencyManager depMan = new DependencyManager();
@@ -197,7 +199,8 @@ public class OFCGScene
     private void buildPTA() {
         nodeFactory = new NodeFactory( simple, load, store, alloc );
         if( PaddleScene.v().options().simulate_natives() ) {
-            NativeHelper.register( nativeHelper = new PaddleNativeHelper(nodeFactory) );
+            nativeHelper = new PaddleNativeHelper(nodeFactory);
+            nativeMethodDriver = new NativeMethodDriver(nativeHelper);
         }
 
         cec = PaddleScene.v().factory.CallEdgeContextifier( PaddleScene.v().ni, parms.reader("mpc"),
@@ -209,7 +212,7 @@ public class OFCGScene
                 nodeFactory,
                 PaddleScene.v().options().this_edges() );
 
-        mpb = PaddleScene.v().factory.MethodPAGBuilder( rmout.reader("mpb"), simple, load, store, alloc, nodeFactory );
+        mpb = PaddleScene.v().factory.MethodPAGBuilder( rmout.reader("mpb"), simple, load, store, alloc, nodeFactory, nativeMethodDriver );
         mpc = PaddleScene.v().factory.MethodPAGContextifier(
                 PaddleScene.v().ni,
                 simple.reader("mpc"),

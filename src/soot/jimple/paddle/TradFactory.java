@@ -19,6 +19,7 @@
 
 package soot.jimple.paddle;
 import soot.jimple.paddle.queue.*;
+import soot.jimple.toolkits.pointer.util.NativeMethodDriver;
 import soot.options.CGOptions;
 import soot.options.PaddleOptions;
 
@@ -72,9 +73,10 @@ public class TradFactory extends AbsFactory
             Qsrc_fld_dst load,
             Qsrc_dst_fld store,
             Qobj_var alloc,
-			NodeFactory gnf
+            NodeFactory gnf,
+            NativeMethodDriver nativeMethodDriver
             ) {
-        return new TradMethodPAGBuilder(in, simple, load, store, alloc, gnf);
+        return new TradMethodPAGBuilder(in, simple, load, store, alloc, gnf, nativeMethodDriver);
     }
     public AbsMethodPAGContextifier MethodPAGContextifier(
             AbsNodeInfo ni,

@@ -36,9 +36,10 @@ public class TradMethodPAGBuilder extends AbsMethodPAGBuilder
         Qsrc_fld_dst load,
         Qsrc_dst_fld store,
         Qobj_var alloc,
-		NodeFactory gnf
+	NodeFactory gnf,
+        NativeMethodDriver nativeMethodDriver
 		) {
-        super(in, simple, load, store, alloc, gnf);
+        super(in, simple, load, store, alloc, gnf, nativeMethodDriver);
     }
     protected NodeManager nm = PaddleScene.v().nodeManager();
     public boolean update() {
@@ -84,7 +85,7 @@ public class TradMethodPAGBuilder extends AbsMethodPAGBuilder
             if( !( method.getParameterType(i) instanceof RefLikeType ) ) continue;
 	    args[i] = nf.caseParm(i);
         }
-        NativeMethodDriver.v().process( method, thisNode, retNode, args );
+        nativeMethodDriver.process( method, thisNode, retNode, args );
     }
 }
 
