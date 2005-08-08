@@ -125,6 +125,7 @@ public class BDDFactory extends AbsFactory
                 return new PropIter(simple, load, store, alloc, propout, pag);
             case PaddleOptions.propagator_alias:
                 return new PropAlias(simple, load, store, alloc, propout, pag);
+            case PaddleOptions.propagator_auto:
             case PaddleOptions.propagator_bdd:
                 return new PropBDD(simple, load, store, alloc, propout, pag);
             case PaddleOptions.propagator_incbdd:

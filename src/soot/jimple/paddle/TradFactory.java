@@ -119,6 +119,7 @@ public class TradFactory extends AbsFactory
             AbsPAG pag
             ) {
         switch( kind ) {
+            case PaddleOptions.propagator_auto:
             case PaddleOptions.propagator_worklist:
                 return new PropWorklist(simple, load, store, alloc, propout, pag);
             case PaddleOptions.propagator_iter:

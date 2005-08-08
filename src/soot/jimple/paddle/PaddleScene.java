@@ -981,6 +981,10 @@ public class PaddleScene
             factory = new TradFactory();
         }
         switch(options.q()) {
+            case PaddleOptions.q_auto:
+                if(options.bdd()) qFactory = new BDDQFactory();
+                else qFactory = new TradQFactory();
+                break;
             case PaddleOptions.q_trad:
                 qFactory = new TradQFactory(); break;
             case PaddleOptions.q_bdd:
