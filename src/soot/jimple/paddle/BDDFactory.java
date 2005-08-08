@@ -20,7 +20,6 @@
 package soot.jimple.paddle;
 import soot.jimple.paddle.queue.*;
 import soot.jimple.toolkits.pointer.util.NativeMethodDriver;
-import soot.options.CGOptions;
 import soot.options.PaddleOptions;
 
 /** Factory that constructs Paddle components.
@@ -165,16 +164,16 @@ public class BDDFactory extends AbsFactory
             int k
             ) {
         switch(kind) {
-            case CGOptions.context_insens:
+            case PaddleOptions.context_insens:
                 return new BDDInsensitiveStaticContextManager(in, out);
-            case CGOptions.context_1cfa:
+            case PaddleOptions.context_1cfa:
                 return new BDD1CFAStaticContextManager(in, out);
-            case CGOptions.context_objsens:
+            case PaddleOptions.context_objsens:
                 return new BDDObjSensStaticContextManager(in, out);
-            case CGOptions.context_kcfa:
+            case PaddleOptions.context_kcfa:
                 return new BDDKCFAStaticContextManager(in, out, k);
-            case CGOptions.context_kobjsens:
-            case CGOptions.context_uniqkobjsens:
+            case PaddleOptions.context_kobjsens:
+            case PaddleOptions.context_uniqkobjsens:
                 return new BDDKObjSensStaticContextManager(in, out, k);
             default:
                 throw new RuntimeException( "Unhandled kind of context-sensitivity "+kind );
@@ -207,17 +206,17 @@ public class BDDFactory extends AbsFactory
             int k
             ) {
         switch(kind) {
-            case CGOptions.context_insens:
+            case PaddleOptions.context_insens:
                 return new BDDInsensitiveVirtualContextManager(in, out, thisOut, gnf);
-            case CGOptions.context_1cfa:
+            case PaddleOptions.context_1cfa:
                 return new BDD1CFAVirtualContextManager(in, out, thisOut, gnf);
-            case CGOptions.context_objsens:
+            case PaddleOptions.context_objsens:
                 return new BDDObjSensVirtualContextManager(in, out, thisOut, gnf);
-            case CGOptions.context_kcfa:
+            case PaddleOptions.context_kcfa:
                 return new BDDKCFAVirtualContextManager(in, out, thisOut, gnf, k);
-            case CGOptions.context_kobjsens:
+            case PaddleOptions.context_kobjsens:
                 return new BDDKObjSensVirtualContextManager(in, out, thisOut, gnf, k);
-            case CGOptions.context_uniqkobjsens:
+            case PaddleOptions.context_uniqkobjsens:
                 return new BDDUniqKObjSensVirtualContextManager(in, out, thisOut, gnf, k);
             default:
                 throw new RuntimeException( "Unhandled kind of context-sensitivity "+kind );

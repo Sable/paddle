@@ -96,7 +96,7 @@ public class BDDEscapeAnalysis {
         <ctxt, method, objc, obj> methodReachable = 0B;
         methodReachable |= (varc=>ctxt) pt{var} <> methodRoots{var};
         while(true) {
-            if( methodReachable !=
+            if( methodReachable ==
             (methodReachable |= methodReachable{objc,obj} <> fieldPt{basec,base}))
                 break;
         }
@@ -110,6 +110,8 @@ public class BDDEscapeAnalysis {
             (ctxt=>)methodMatches{objc,method,obj} ><
             (objc=>)methodMatches{ctxt,method,obj};
         escapesMethod |= (method=>) contextMatches;
+        escapesMethod |= ((BDDNodeInfo) PaddleScene.v().ni).globalallocSet(){}
+                    >< new{null=>objc}{};
     }
 
     public void analyze() {

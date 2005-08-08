@@ -208,8 +208,8 @@ public class CHAScene
 
         vcr = PaddleScene.v().factory.VirtualCalls( paout.reader("vcr"), receivers.reader("vcr"), specials.reader("vcr"), virtualcalls, staticcalls, prop.p2sets() );
 
-        scm = PaddleScene.v().factory.StaticContextManager( PaddleScene.v().cgoptions().context(), staticcalls.reader("scm"), csedges, PaddleScene.v().cgoptions().k() );
-        vcm = PaddleScene.v().factory.VirtualContextManager( PaddleScene.v().cgoptions().context(), virtualcalls.reader("vcm"), csedges, calloc, nodeFactory, PaddleScene.v().cgoptions().k() );
+        scm = PaddleScene.v().factory.StaticContextManager( PaddleScene.v().options().context(), staticcalls.reader("scm"), csedges, PaddleScene.v().options().k() );
+        vcm = PaddleScene.v().factory.VirtualContextManager( PaddleScene.v().options().context(), virtualcalls.reader("vcm"), csedges, calloc, nodeFactory, PaddleScene.v().options().k() );
     }
 }
 

@@ -150,11 +150,7 @@ public class MethodNodeFactory extends AbstractJimpleValueSwitch {
         }
     }
     private AllocNode makeAllocNode( Object ne, Type type, SootMethod method ) {
-        if( PaddleScene.v().options().context_heap() ) {
-            return nm.makeLocalAllocNode(ne, type, method);
-        } else {
-            return nm.makeGlobalAllocNode(ne, type, method);
-        }
+        return nm.makeLocalAllocNode(ne, type, method);
     }
     final public void caseNewMultiArrayExpr( NewMultiArrayExpr nmae ) {
         ArrayType type = (ArrayType) nmae.getType();

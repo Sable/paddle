@@ -54,12 +54,9 @@ public class PaddleScene
 
     private PaddleOptions options =
         new PaddleOptions(PhaseOptions.v().getPhaseOptions("cg.paddle"));
-    private CGOptions cgoptions = 
-        new CGOptions(PhaseOptions.v().getPhaseOptions("cg"));
 
     public NodeManager nodeManager() { return nodeManager; }
     public PaddleOptions options() { return options; }
-    public CGOptions cgoptions() { return cgoptions; }
     
     public FastHierarchy fh;
 

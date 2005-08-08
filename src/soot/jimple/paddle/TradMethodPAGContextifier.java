@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2004 Ondrej Lhotak
+ * Copyright (C) 2004, 2005 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -51,6 +51,7 @@ public class TradMethodPAGContextifier extends AbsMethodPAGContextifier
     }
 
     public boolean update() {
+        boolean contextHeap = PaddleScene.v().options().context_heap();
         boolean change = false;
         for( Iterator tIt = simple.iterator(); tIt.hasNext(); ) {
             final Rsrc_dst.Tuple t = (Rsrc_dst.Tuple) tIt.next();
@@ -111,7 +112,7 @@ public class TradMethodPAGContextifier extends AbsMethodPAGContextifier
         }
         for( Iterator tIt = alloc.iterator(); tIt.hasNext(); ) {
             final Robj_var.Tuple t = (Robj_var.Tuple) tIt.next();
-            if( ni.global(t.obj()) ) {
+            if( !contextHeap || ni.global(t.obj()) ) {
                 if( ni.global(t.var()) ) {
                     addAlloc( null, t.obj(), null, t.var() );
                     change = true;

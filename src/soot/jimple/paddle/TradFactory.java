@@ -20,7 +20,6 @@
 package soot.jimple.paddle;
 import soot.jimple.paddle.queue.*;
 import soot.jimple.toolkits.pointer.util.NativeMethodDriver;
-import soot.options.CGOptions;
 import soot.options.PaddleOptions;
 
 /** Factory that constructs Paddle components.
@@ -165,16 +164,16 @@ public class TradFactory extends AbsFactory
             int k
             ) {
         switch(kind) {
-            case CGOptions.context_insens:
+            case PaddleOptions.context_insens:
                 return new TradInsensitiveStaticContextManager(in, out);
-            case CGOptions.context_1cfa:
+            case PaddleOptions.context_1cfa:
                 return new Trad1CFAStaticContextManager(in, out);
-            case CGOptions.context_objsens:
+            case PaddleOptions.context_objsens:
                 return new TradObjSensStaticContextManager(in, out);
-            case CGOptions.context_kcfa:
+            case PaddleOptions.context_kcfa:
                 return new TradKCFAStaticContextManager(in, out, k);
-            case CGOptions.context_kobjsens:
-            case CGOptions.context_uniqkobjsens:
+            case PaddleOptions.context_kobjsens:
+            case PaddleOptions.context_uniqkobjsens:
                 return new TradKObjSensStaticContextManager(in, out, k);
             default:
                 throw new RuntimeException( "Unhandled kind of context-sensitivity "+kind );
@@ -207,17 +206,17 @@ public class TradFactory extends AbsFactory
             int k
             ) {
         switch(kind) {
-            case CGOptions.context_insens:
+            case PaddleOptions.context_insens:
                 return new TradInsensitiveVirtualContextManager(in, out, thisOut, gnf);
-            case CGOptions.context_1cfa:
+            case PaddleOptions.context_1cfa:
                 return new Trad1CFAVirtualContextManager(in, out, thisOut, gnf);
-            case CGOptions.context_objsens:
+            case PaddleOptions.context_objsens:
                 return new TradObjSensVirtualContextManager(in, out, thisOut, gnf);
-            case CGOptions.context_kcfa:
+            case PaddleOptions.context_kcfa:
                 return new TradKCFAVirtualContextManager(in, out, thisOut, gnf, k);
-            case CGOptions.context_kobjsens:
+            case PaddleOptions.context_kobjsens:
                 return new TradKObjSensVirtualContextManager(in, out, thisOut, gnf, k);
-            case CGOptions.context_uniqkobjsens:
+            case PaddleOptions.context_uniqkobjsens:
                 return new TradUniqKObjSensVirtualContextManager(in, out, thisOut, gnf, k);
             default:
                 throw new RuntimeException( "Unhandled kind of context-sensitivity "+kind );

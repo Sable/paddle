@@ -52,6 +52,7 @@ public class BDDMethodPAGContextifier extends AbsMethodPAGContextifier
     }
 
     public boolean update() {
+        boolean contextHeap = PaddleScene.v().options().context_heap();
         <srcc, src, dstc, dst> simpleOut = 0B;
         <srcc, src, fld, dstc, dst> loadOut = 0B;
         <srcc, src, fld, dstc, dst> storeOut = 0B;
@@ -82,12 +83,16 @@ public class BDDMethodPAGContextifier extends AbsMethodPAGContextifier
         mpagLoad |= newLoad{dst}><ni.localMap(){var};
         
         <var, obj> newAlloc = alloc.get();
+        <obj> globalallocSet = ni.globalallocSet();
+        if(!contextHeap) globalallocSet |= (method=>) ni.localallocMap();
         calloc.add  ((( newAlloc{var}><
                        ni.globalSet(){var}){obj}><
-                        ni.globalallocSet(){obj}){}><
+                        globalallocSet{obj}){}><
                     new{null=>varc, null=>objc}{} );
         mpagAlloc |= newAlloc{var}><ni.localMap(){var};
-        mpagAlloc |= newAlloc{obj}><ni.localallocMap(){obj};
+        if(contextHeap) {
+            mpagAlloc |= newAlloc{obj}><ni.localallocMap(){obj};
+        }
         
         <var> localSet = (method=>) ni.localMap();
 
@@ -132,7 +137,7 @@ public class BDDMethodPAGContextifier extends AbsMethodPAGContextifier
         <objc, obj, varc, var> globalAllocDsts = allocOut{var} >< ni.globalSet(){var};
         allocOut -= globalAllocDsts;
         allocOut |= ((varc=>) globalAllocDsts){} >< new{null=>varc}{};
-        <objc, obj, varc, var> globalAllocSrcs = allocOut{obj} >< ni.globalallocSet(){obj};
+        <objc, obj, varc, var> globalAllocSrcs = allocOut{obj} >< globalallocSet{obj};
         allocOut -= globalAllocSrcs;
         allocOut |= ((objc=>) globalAllocSrcs){} >< new{null=>objc}{};
         calloc.add(allocOut);

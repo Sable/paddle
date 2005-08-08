@@ -25,7 +25,6 @@ import soot.jimple.*;
 import java.util.*;
 import soot.util.*;
 import soot.options.PaddleOptions;
-import soot.options.CGOptions;
 import soot.tagkit.*;
 import soot.jimple.toolkits.callgraph.ReachableMethods;
 import soot.jimple.toolkits.callgraph.CallGraph;
@@ -48,7 +47,6 @@ public class PaddleTransformer extends IPaddleTransformer
     }
 
     public void setup( PaddleOptions opts ) {
-        CGOptions cgoptions = new CGOptions( PhaseOptions.v().getPhaseOptions("cg") );
         if( opts.conf() == PaddleOptions.conf_cha_context_aot 
         ||  opts.conf() == PaddleOptions.conf_ofcg_context_aot
         ||  opts.conf() == PaddleOptions.conf_cha_context
@@ -56,26 +54,26 @@ public class PaddleTransformer extends IPaddleTransformer
             Scene.v().setContextNumberer( new IntegerNumberer() );
             PaddleNumberers.v().contextDomain = InfCFAContextDomain.v();
         } else {
-            switch( cgoptions.context() ) {
-                case CGOptions.context_insens:
+            switch( opts.context() ) {
+                case PaddleOptions.context_insens:
                     Scene.v().setContextNumberer( new MapNumberer() );
                     PaddleNumberers.v().contextDomain = KindDomain.v();
                     break;
-                case CGOptions.context_1cfa:
+                case PaddleOptions.context_1cfa:
                     Scene.v().setContextNumberer( Scene.v().getUnitNumberer() );
                     PaddleNumberers.v().contextDomain = StmtDomain.v();
                     break;
-                case CGOptions.context_objsens:
+                case PaddleOptions.context_objsens:
                     Scene.v().setContextNumberer( PaddleNumberers.v().allocNodeNumberer() );
                     PaddleNumberers.v().contextDomain = ObjDomain.v();
                     break;
-                case CGOptions.context_kcfa:
-                    Scene.v().setContextNumberer( new ContextStringNumberer(StmtDomain.v(), Scene.v().getUnitNumberer(), cgoptions.k()) );
+                case PaddleOptions.context_kcfa:
+                    Scene.v().setContextNumberer( new ContextStringNumberer(StmtDomain.v(), Scene.v().getUnitNumberer(), opts.k()) );
                     PaddleNumberers.v().contextDomain = null;
                     break;
-                case CGOptions.context_kobjsens:
-                case CGOptions.context_uniqkobjsens:
-                    Scene.v().setContextNumberer( new ContextStringNumberer(ObjDomain.v(), PaddleNumberers.v().allocNodeNumberer(), cgoptions.k()) );
+                case PaddleOptions.context_kobjsens:
+                case PaddleOptions.context_uniqkobjsens:
+                    Scene.v().setContextNumberer( new ContextStringNumberer(ObjDomain.v(), PaddleNumberers.v().allocNodeNumberer(), opts.k()) );
                     PaddleNumberers.v().contextDomain = null;
                     break;
                 default:
