@@ -38,11 +38,15 @@ public class DoublePointsToSet extends PointsToSetInternal {
     }
     /** Returns true if this set shares some objects with other. */
     public boolean hasNonEmptyIntersection( PointsToSet other ) {
-        return oldSet.hasNonEmptyIntersection( other );
+        return oldSet.hasNonEmptyIntersection( other )
+            || newSet.hasNonEmptyIntersection( other );
     }
     /** Set of all possible run-time types of objects in the set. */
     public Set possibleTypes() {
-        return oldSet.possibleTypes();
+        Set ret = new HashSet();
+        ret.addAll(oldSet.possibleTypes());
+        ret.addAll(newSet.possibleTypes());
+        return ret;
     }
     /** Adds contents of other into this set, returns true if this set 
      * changed. */

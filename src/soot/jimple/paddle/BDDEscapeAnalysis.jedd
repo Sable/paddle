@@ -106,9 +106,14 @@ public class BDDEscapeAnalysis {
         escapesMethod |= escapesThread;
         <ctxt, method, objc, obj> methodMatches = 
             methodReachable{method,obj} >< localallocs{method,obj};
-        <objc, method, obj> contextMatches =
-            (ctxt=>)methodMatches{objc,method,obj} ><
-            (objc=>)methodMatches{ctxt,method,obj};
+        <objc, method, obj> contextMatches;
+        if(PaddleScene.v().options().context_heap()) {
+            contextMatches =
+                (ctxt=>)methodMatches{objc,method,obj} ><
+                (objc=>)methodMatches{ctxt,method,obj};
+        } else {
+            contextMatches = (ctxt=>) methodMatches;
+        }
         escapesMethod |= (method=>) contextMatches;
         escapesMethod |= ((BDDNodeInfo) PaddleScene.v().ni).globalallocSet(){}
                     >< new{null=>objc}{};
