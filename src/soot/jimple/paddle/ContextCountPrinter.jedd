@@ -72,6 +72,8 @@ public class ContextCountPrinter
         }
     }
     public static void printTotalContextCounts() {
+        AbsReachableMethods rm = Results.v().reachableMethods();
+        G.v().out.println( "Total number of methodcontexts reachable : "+rm.contextMethods().get().size() );
         AbsP2Sets p2sets = Results.v().p2sets();
         if(p2sets != null) {
             <varc:MEASURE1, var:MEASURE2, objc:MEASURE4, obj:MEASURE3> 
@@ -80,6 +82,34 @@ public class ContextCountPrinter
                 ((var=>, objc=>, obj=>) p2relation).size() );
             G.v().out.println( "Total equivalence classes of contexts in points-to relation: "+p2relation.width(MEASURE1.v()) );
             G.v().out.println( "Total distinct points-to sets: "+p2relation.width(MEASURE2.v()) );
+            BDDNodeInfo ni = (BDDNodeInfo) PaddleScene.v().ni;
+            <varc:MEASURE1, method:MEASURE15, var:MEASURE2, objc:MEASURE4, obj:MEASURE3> 
+                p2relationWithMethod =             p2relation {var} ><
+                    (method=>MS, var=>V1)
+                    (ni.localMap() |
+                        (  ni.globalSet(){} >< 
+                        new{null=>method}{}))                 {var};
+            <varc, method> methodContexts = (var=>, objc=>, obj=>) p2relationWithMethod;
+            G.v().out.println( "Total number of methodcontexts in points-to relation: "+
+                methodContexts.size() );
+            G.v().out.println( "Total equivalence classes of methodcontexts in points-to relation: "+p2relationWithMethod.width(MEASURE15.v()) );
+            G.v().out.println( "Total distinct MC points-to sets: "+p2relationWithMethod.width(MEASURE2.v()) );
+
+            if(PaddleScene.v().options().method_context_counts()) {
+                for( Iterator mIt = Results.v().reachableMethods().methodIterator(); mIt.hasNext(); ) {
+                    final SootMethod m = (SootMethod) mIt.next();
+                    <varc:MEASURE1, var:MEASURE2, objc:MEASURE4, obj:MEASURE3> 
+                        p2formethod = p2relationWithMethod{method} 
+                                        <> new{m=>method}{method};
+                    System.out.println("MC: "+
+                        (methodContexts{method} <> new{m=>method}{method}).size()+" "+
+                        p2formethod.width(MEASURE1.v())+" "+
+                        m);
+                    if(m.getName().equals("implies")) {
+                        System.out.println((methodContexts{method} <> new{m=>method}{method}).toString());
+                    }
+                }
+            }
         }
     }
 }

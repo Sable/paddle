@@ -76,16 +76,16 @@ public class TradReachableMethods extends AbsReachableMethods
         }
         return ret;
     }
-    int sizeCM() {
+    public int sizeCM() {
         return reachableCM.size();
     }
-    int sizeM() {
+    public int sizeM() {
         return reachableM.size();
     }
-    boolean contains( Context c, SootMethod m ) {
+    public boolean contains( Context c, SootMethod m ) {
         return reachableCM.contains(MethodContext.v(m, c));
     }
-    boolean contains( SootMethod m ) {
+    public boolean contains( SootMethod m ) {
         return reachableM.contains(m);
     }
     public Rctxt_method contextMethods() {

@@ -39,10 +39,10 @@ public abstract class AbsReachableMethods implements PaddleComponent
     }
     public abstract boolean update();
     abstract boolean add( Context c, SootMethod m );
-    abstract int sizeM();
-    abstract int sizeCM();
-    abstract boolean contains( Context c, SootMethod m );
-    abstract boolean contains( SootMethod m );
+    public abstract int sizeM();
+    public abstract int sizeCM();
+    public abstract boolean contains( Context c, SootMethod m );
+    public abstract boolean contains( SootMethod m );
     public abstract Rctxt_method contextMethods();
     public abstract Rmethod methods();
     public abstract Iterator methodIterator();

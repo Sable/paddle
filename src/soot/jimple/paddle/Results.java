@@ -86,5 +86,6 @@ public class Results
 
         Scene.v().setContextSensitiveCallGraph(new PaddleContextSensitiveCallGraph(cg));
     }
+    AbsNodeInfo nodeInfo;
 }
 

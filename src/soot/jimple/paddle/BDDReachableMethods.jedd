@@ -73,17 +73,17 @@ public class BDDReachableMethods extends AbsReachableMethods
         if(mout != null) mout.add(newM);
         return (newCM != 0B) || (newM != 0B);
     }
-    int sizeM() {
+    public int sizeM() {
         return (int) reachableM.size();
     }
-    int sizeCM() {
+    public int sizeCM() {
         return (int) reachableCM.size();
     }
-    boolean contains( SootMethod m ) {
+    public boolean contains( SootMethod m ) {
         <method> newM = new{ m=>method };
         return (reachableM & newM) != 0B;
     }
-    boolean contains( Context c, SootMethod m ) {
+    public boolean contains( Context c, SootMethod m ) {
         <ctxt, method> newM = new{ c=>ctxt, m=>method };
         return (reachableCM & newM) != 0B;
     }

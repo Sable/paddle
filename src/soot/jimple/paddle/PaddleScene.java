@@ -110,6 +110,7 @@ public class PaddleScene
                         new Interleave(T1.v(), T2.v(), T3.v(), MT.v(), SG.v()),
                         KD.v(),
                         MEASURE1.v(),
+                        MEASURE15.v(),
                         MEASURE2.v(),
                         MEASURE3.v(),
                         MEASURE4.v()
@@ -132,6 +133,7 @@ public class PaddleScene
                         new Interleave(T1.v(), T2.v(), T3.v(), MT.v(), SG.v()),
                         KD.v(),
                         MEASURE1.v(),
+                        MEASURE15.v(),
                         MEASURE2.v(),
                         MEASURE3.v(),
                         MEASURE4.v()
@@ -153,6 +155,7 @@ public class PaddleScene
                         new Interleave(T1.v(), T2.v(), T3.v(), MT.v(), SG.v()),
                         KD.v(),
                         MEASURE1.v(),
+                        MEASURE15.v(),
                         MEASURE2.v(),
                         MEASURE3.v(),
                         MEASURE4.v()
@@ -174,6 +177,7 @@ public class PaddleScene
                         new Interleave(H1.v(), H2.v()),
                         KD.v(),
                         MEASURE1.v(),
+                        MEASURE15.v(),
                         MEASURE2.v(),
                         MEASURE3.v(),
                         MEASURE4.v()
@@ -193,6 +197,7 @@ public class PaddleScene
                         new Interleave(H1.v(), H2.v()),
                         KD.v(),
                         MEASURE1.v(),
+                        MEASURE15.v(),
                         MEASURE2.v(),
                         MEASURE3.v(),
                         MEASURE4.v()
@@ -212,6 +217,7 @@ public class PaddleScene
                         new Interleave(H1.v(), H2.v()),
                         KD.v(),
                         MEASURE1.v(),
+                        MEASURE15.v(),
                         MEASURE2.v(),
                         MEASURE3.v(),
                         MEASURE4.v()
@@ -231,6 +237,7 @@ public class PaddleScene
                             new Permute(sw, C3.v())
                         ),
                         MEASURE1.v(),
+                        MEASURE15.v(),
                         MEASURE2.v(),
                         MEASURE3.v(),
                         MEASURE4.v()
@@ -250,6 +257,7 @@ public class PaddleScene
                         new Interleave(H1.v(), H2.v()),
                         KD.v(),
                         MEASURE1.v(),
+                        MEASURE15.v(),
                         MEASURE2.v(),
                         MEASURE3.v(),
                         MEASURE4.v()
@@ -269,6 +277,7 @@ public class PaddleScene
                         ),
                         KD.v(),
                         MEASURE1.v(),
+                        MEASURE15.v(),
                         MEASURE2.v(),
                         MEASURE3.v(),
                         MEASURE4.v()
@@ -288,6 +297,7 @@ public class PaddleScene
                         ),
                         KD.v(),
                         MEASURE1.v(),
+                        MEASURE15.v(),
                         MEASURE2.v(),
                         MEASURE3.v(),
                         MEASURE4.v()
@@ -307,6 +317,7 @@ public class PaddleScene
                         ),
                         KD.v(),
                         MEASURE1.v(),
+                        MEASURE15.v(),
                         MEASURE2.v(),
                         MEASURE3.v(),
                         MEASURE4.v()
@@ -334,6 +345,7 @@ public class PaddleScene
                         ),
                         KD.v(),
                         MEASURE1.v(),
+                        MEASURE15.v(),
                         MEASURE2.v(),
                         MEASURE3.v(),
                         MEASURE4.v()
@@ -354,6 +366,7 @@ public class PaddleScene
                         ),
                         KD.v(),
                         MEASURE1.v(),
+                        MEASURE15.v(),
                         MEASURE2.v(),
                         MEASURE3.v(),
                         MEASURE4.v()
@@ -378,6 +391,7 @@ public class PaddleScene
                         ),
                         KD.v(),
                         MEASURE1.v(),
+                        MEASURE15.v(),
                         MEASURE2.v(),
                         MEASURE3.v(),
                         MEASURE4.v()
@@ -402,6 +416,7 @@ public class PaddleScene
                         ),
                         KD.v(),
                         MEASURE1.v(),
+                        MEASURE15.v(),
                         MEASURE2.v(),
                         MEASURE3.v(),
                         MEASURE4.v()
@@ -424,6 +439,7 @@ public class PaddleScene
                         ),
                         KD.v(),
                         MEASURE1.v(),
+                        MEASURE15.v(),
                         MEASURE2.v(),
                         MEASURE3.v(),
                         MEASURE4.v()
@@ -446,6 +462,7 @@ public class PaddleScene
                         new Rev(C3.v()),
                         KD.v(),
                         MEASURE1.v(),
+                        MEASURE15.v(),
                         MEASURE2.v(),
                         MEASURE3.v(),
                         MEASURE4.v()
@@ -470,6 +487,7 @@ public class PaddleScene
                         ),
                         KD.v(),
                         MEASURE1.v(),
+                        MEASURE15.v(),
                         MEASURE2.v(),
                         MEASURE3.v(),
                         MEASURE4.v()
@@ -492,6 +510,7 @@ public class PaddleScene
                         ),
                         KD.v(),
                         MEASURE1.v(),
+                        MEASURE15.v(),
                         MEASURE2.v(),
                         MEASURE3.v(),
                         MEASURE4.v()
@@ -518,6 +537,7 @@ public class PaddleScene
                         ),
                         KD.v(),
                         MEASURE1.v(),
+                        MEASURE15.v(),
                         MEASURE2.v(),
                         MEASURE3.v(),
                         MEASURE4.v()
@@ -542,6 +562,7 @@ public class PaddleScene
                         ),
                         KD.v(),
                         MEASURE1.v(),
+                        MEASURE15.v(),
                         MEASURE2.v(),
                         MEASURE3.v(),
                         MEASURE4.v()
@@ -560,6 +581,7 @@ public class PaddleScene
                         new Permute(sw, new Rev(C3.v())),
                         KD.v(),
                         MEASURE1.v(),
+                        MEASURE15.v(),
                         MEASURE2.v(),
                         MEASURE3.v(),
                         MEASURE4.v()
@@ -580,6 +602,7 @@ public class PaddleScene
                         ),
                         KD.v(),
                         MEASURE1.v(),
+                        MEASURE15.v(),
                         MEASURE2.v(),
                         MEASURE3.v(),
                         MEASURE4.v()
@@ -600,6 +623,7 @@ public class PaddleScene
                         )),
                         KD.v(),
                         MEASURE1.v(),
+                        MEASURE15.v(),
                         MEASURE2.v(),
                         MEASURE3.v(),
                         MEASURE4.v()
@@ -631,6 +655,7 @@ public class PaddleScene
                         ),
                         KD.v(),
                         MEASURE1.v(),
+                        MEASURE15.v(),
                         MEASURE2.v(),
                         MEASURE3.v(),
                         MEASURE4.v()
@@ -660,6 +685,7 @@ public class PaddleScene
                         )),
                         KD.v(),
                         MEASURE1.v(),
+                        MEASURE15.v(),
                         MEASURE2.v(),
                         MEASURE3.v(),
                         MEASURE4.v()
@@ -689,6 +715,7 @@ public class PaddleScene
                         ),
                         KD.v(),
                         MEASURE1.v(),
+                        MEASURE15.v(),
                         MEASURE2.v(),
                         MEASURE3.v(),
                         MEASURE4.v()
@@ -718,6 +745,7 @@ public class PaddleScene
                         )),
                         KD.v(),
                         MEASURE1.v(),
+                        MEASURE15.v(),
                         MEASURE2.v(),
                         MEASURE3.v(),
                         MEASURE4.v()
@@ -747,6 +775,7 @@ public class PaddleScene
                         )),
                         KD.v(),
                         MEASURE1.v(),
+                        MEASURE15.v(),
                         MEASURE2.v(),
                         MEASURE3.v(),
                         MEASURE4.v()
@@ -776,6 +805,7 @@ public class PaddleScene
                         )),
                         KD.v(),
                         MEASURE1.v(),
+                        MEASURE15.v(),
                         MEASURE2.v(),
                         MEASURE3.v(),
                         MEASURE4.v()
@@ -805,6 +835,7 @@ public class PaddleScene
                         )),
                         KD.v(),
                         MEASURE1.v(),
+                        MEASURE15.v(),
                         MEASURE2.v(),
                         MEASURE3.v(),
                         MEASURE4.v()
@@ -834,6 +865,7 @@ public class PaddleScene
                         )),
                         KD.v(),
                         MEASURE1.v(),
+                        MEASURE15.v(),
                         MEASURE2.v(),
                         MEASURE3.v(),
                         MEASURE4.v()
@@ -863,6 +895,7 @@ public class PaddleScene
                         )),
                         KD.v(),
                         MEASURE1.v(),
+                        MEASURE15.v(),
                         MEASURE2.v(),
                         MEASURE3.v(),
                         MEASURE4.v()
@@ -892,6 +925,7 @@ public class PaddleScene
                         )),
                         KD.v(),
                         MEASURE1.v(),
+                        MEASURE15.v(),
                         MEASURE2.v(),
                         MEASURE3.v(),
                         MEASURE4.v()
@@ -921,6 +955,7 @@ public class PaddleScene
                         )),
                         KD.v(),
                         MEASURE1.v(),
+                        MEASURE15.v(),
                         MEASURE2.v(),
                         MEASURE3.v(),
                         MEASURE4.v()
@@ -950,6 +985,67 @@ public class PaddleScene
                         )),
                         KD.v(),
                         MEASURE1.v(),
+                        MEASURE15.v(),
+                        MEASURE2.v(),
+                        MEASURE3.v(),
+                        MEASURE4.v()
+                    ) );
+            } else if( order == 36 ) {
+                Jedd.v().setOrder( 
+                    new Seq(
+                        new Interleave(V1.v(), V2.v(), MS.v(), ST.v()),
+                        M3.v(),
+                        FD.v(),
+                        new Interleave(T1.v(), T2.v(), T3.v(), MT.v(), SG.v()),
+                        new Interleave(
+                            new Rev(C1.v()),
+                            new Rev(C2.v()),
+                            new Rev(C3.v())
+                        ),
+                        new Rev(new Seq(
+                            new Interleave( CM1.v(), MC1.v() ),
+                            new Interleave( CM2.v(), MC2.v() ),
+                            new Interleave( CM3.v(), MC3.v() )
+                        )),
+                        KD.v(),
+                        H1.v(),
+                        H2.v(),
+                        new Interleave(
+                            new Rev(CH1.v()),
+                            new Rev(CH2.v())
+                        ),
+                        MEASURE1.v(),
+                        MEASURE15.v(),
+                        MEASURE2.v(),
+                        MEASURE3.v(),
+                        MEASURE4.v()
+                    ) );
+            } else if( order == 37 ) {
+                Jedd.v().setOrder( 
+                    new Seq(
+                        new Interleave(V1.v(), V2.v(), MS.v(), ST.v()),
+                        M3.v(),
+                        FD.v(),
+                        new Interleave(T1.v(), T2.v(), T3.v(), MT.v(), SG.v()),
+                        new Interleave(
+                            new Rev(CH1.v()),
+                            new Rev(CH2.v()),
+                            new Rev(C1.v()),
+                            new Rev(C2.v()),
+                            new Rev(C3.v())
+                        ),
+                        new Rev(
+                            new Interleave(
+                                CM1.v(), MC1.v(),
+                                CM2.v(), MC2.v(),
+                                CM3.v(), MC3.v()
+                            )
+                        ),
+                        KD.v(),
+                        H1.v(),
+                        H2.v(),
+                        MEASURE1.v(),
+                        MEASURE15.v(),
                         MEASURE2.v(),
                         MEASURE3.v(),
                         MEASURE4.v()
