@@ -1050,6 +1050,192 @@ public class PaddleScene
                         MEASURE3.v(),
                         MEASURE4.v()
                     ) );
+            } else if( order == 38 ) {
+                Jedd.v().setOrder( 
+                    new Seq(
+                        new Interleave(
+                            new Rev(CH1.v()),
+                            new Rev(CH2.v()),
+                            new Rev(C1.v()),
+                            new Rev(C2.v()),
+                            new Rev(C3.v())
+                        ),
+                        new Interleave(V1.v(), V2.v(), MS.v(), ST.v()),
+                        M3.v(),
+                        FD.v(),
+                        new Interleave(T1.v(), T2.v(), T3.v(), MT.v(), SG.v()),
+                        H1.v(),
+                        H2.v(),
+                        new Rev(
+                            new Interleave(
+                                CM1.v(), MC1.v(),
+                                CM2.v(), MC2.v(),
+                                CM3.v(), MC3.v()
+                            )
+                        ),
+                        KD.v(),
+                        MEASURE1.v(),
+                        MEASURE15.v(),
+                        MEASURE2.v(),
+                        MEASURE3.v(),
+                        MEASURE4.v()
+                    ) );
+            } else if( order == 39 ) {
+                Jedd.v().setOrder( 
+                    new Seq(
+                        FD.v(),
+                        ST.v(),
+                        SG.v(),
+                        KD.v(),
+                        MS.v(),
+                        MT.v(),
+                        M3.v(),
+                        new Interleave(V1.v(), V2.v()),
+                        new Interleave(
+                            new Rev(C1.v()),
+                            new Rev(C2.v()),
+                            new Rev(C3.v())
+                        ),
+                        T1.v(),
+                        T2.v(),
+                        T3.v(),
+                        new Rev(
+                            new Interleave(
+                                CM1.v(), MC1.v(),
+                                CM2.v(), MC2.v(),
+                                CM3.v(), MC3.v()
+                            )
+                        ),
+                        H1.v(),
+                        H2.v(),
+                        CH1.v(),
+                        CH2.v(),
+                        MEASURE1.v(),
+                        MEASURE15.v(),
+                        MEASURE2.v(),
+                        MEASURE3.v(),
+                        MEASURE4.v()
+                    ) );
+            } else if( order == 339 ) {
+                Jedd.v().setOrder( 
+                    new Seq(
+                        new Interleave(V1.v(), V2.v(), MS.v(), ST.v()),
+                        M3.v(),
+                        FD.v(),
+                        new Interleave(T1.v(), T2.v(), T3.v(), MT.v(), SG.v()),
+                        H1.v(),
+                        H2.v(),
+                        new Interleave(
+                            new Rev(C1.v()),
+                            new Rev(C2.v()),
+                            new Rev(C3.v())
+                        ),
+                        new Rev(
+                            new Interleave(
+                                CM1.v(), MC1.v(),
+                                CM2.v(), MC2.v(),
+                                CM3.v(), MC3.v()
+                            )
+                        ),
+                        KD.v(),
+                        CH1.v(),
+                        CH2.v(),
+                        MEASURE1.v(),
+                        MEASURE15.v(),
+                        MEASURE2.v(),
+                        MEASURE3.v(),
+                        MEASURE4.v()
+                    ) );
+            } else if( order == 379 ) {
+                Jedd.v().setOrder( 
+                    new Seq(
+                        new Interleave(V1.v(), V2.v(), MS.v(), ST.v()),
+                        M3.v(),
+                        FD.v(),
+                        new Interleave(T1.v(), T2.v(), T3.v(), MT.v(), SG.v()),
+                        new Interleave(
+                            new Rev(C1.v()),
+                            new Rev(C2.v()),
+                            new Rev(C3.v())
+                        ),
+                        new Rev(
+                            new Interleave(
+                                CM1.v(), MC1.v(),
+                                CM2.v(), MC2.v(),
+                                CM3.v(), MC3.v()
+                            )
+                        ),
+                        KD.v(),
+                        H1.v(),
+                        H2.v(),
+                        CH1.v(),
+                        CH2.v(),
+                        MEASURE1.v(),
+                        MEASURE15.v(),
+                        MEASURE2.v(),
+                        MEASURE3.v(),
+                        MEASURE4.v()
+                    ) );
+            } else if( order == 389 ) {
+                Jedd.v().setOrder( 
+                    new Seq(
+                        new Interleave(
+                            new Rev(C1.v()),
+                            new Rev(C2.v()),
+                            new Rev(C3.v())
+                        ),
+                        new Interleave(V1.v(), V2.v(), MS.v(), ST.v()),
+                        M3.v(),
+                        FD.v(),
+                        new Interleave(T1.v(), T2.v(), T3.v(), MT.v(), SG.v()),
+                        H1.v(),
+                        H2.v(),
+                        new Rev(
+                            new Interleave(
+                                CM1.v(), MC1.v(),
+                                CM2.v(), MC2.v(),
+                                CM3.v(), MC3.v()
+                            )
+                        ),
+                        KD.v(),
+                        CH1.v(),
+                        CH2.v(),
+                        MEASURE1.v(),
+                        MEASURE15.v(),
+                        MEASURE2.v(),
+                        MEASURE3.v(),
+                        MEASURE4.v()
+                    ) );
+            } else if( order == 329 ) {
+                Jedd.v().setOrder( 
+                    new Seq(
+                        new Interleave(V1.v(), V2.v(), MS.v(), ST.v()),
+                        M3.v(),
+                        FD.v(),
+                        new Interleave(T1.v(), T2.v(), T3.v(), MT.v(), SG.v()),
+                        H1.v(),
+                        H2.v(),
+                        new Interleave(
+                            new Rev(C1.v()),
+                            new Rev(C2.v()),
+                            new Rev(C3.v())
+                        ),
+                        new Rev(new Seq(
+                            new Interleave( CM1.v(), MC1.v() ),
+                            new Interleave( CM2.v(), MC2.v() ),
+                            new Interleave( CM3.v(), MC3.v() )
+                        )),
+                        KD.v(),
+                        new Interleave(
+                            new Rev(CH1.v()),
+                            new Rev(CH2.v())
+                        ),
+                        MEASURE1.v(),
+                        MEASURE15.v(),
+                        MEASURE2.v(),
+                        MEASURE3.v(),
+                        MEASURE4.v()
+                    ) );
             } else {
                 throw new RuntimeException("Unspecified BDD order "+order);
             }
