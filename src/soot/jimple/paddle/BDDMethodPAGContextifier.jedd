@@ -96,19 +96,23 @@ public class BDDMethodPAGContextifier extends AbsMethodPAGContextifier
         
         <var> localSet = (method=>) ni.localMap();
 
-        <ctxt, method> contexts = rcout.get();
+        <ctxt:C1, method> contexts = rcout.get();
 
-        <ctxt, src, dst> ctxtSimple = contexts{method}<>mpagSimple{method};
+        <ctxt:C1, src, dst> ctxtSimple = contexts{method}<>mpagSimple{method};
         simpleOut |= ( (ctxt=>srcc, ctxt=>dstc) ctxtSimple );
         
-        <ctxt, src, fld, dst> ctxtStore = contexts{method}<>mpagStore{method};
+        <ctxt:C1, src, fld, dst> ctxtStore = contexts{method}<>mpagStore{method};
         storeOut |= ( (ctxt=>srcc, ctxt=>dstc) ctxtStore );
         
-        <ctxt, src, fld, dst> ctxtLoad = contexts{method}<>mpagLoad{method};
+        <ctxt:C1, src, fld, dst> ctxtLoad = contexts{method}<>mpagLoad{method};
         loadOut |= ( (ctxt=>srcc, ctxt=>dstc) ctxtLoad );
         
-        <ctxt, var, obj> ctxtAlloc = contexts{method}<>mpagAlloc{method};
-        allocOut |= ( (ctxt=>varc, ctxt=>objc) ctxtAlloc );
+        <ctxt:C1, var, obj> ctxtAlloc = contexts{method}<>mpagAlloc{method};
+        if(contextHeap) {
+            allocOut |= (ctxt=>varc, ctxt=>objc) ctxtAlloc;
+        } else {
+            allocOut |= ((ctxt=>varc) ctxtAlloc){} >< new{null=>objc}{};
+        }
 
         <srcc, src, dstc, dst> globalDsts = simpleOut{dst} >< ni.globalSet(){var};
         simpleOut -= globalDsts;
