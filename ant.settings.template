@@ -2,7 +2,7 @@
 soot.loc=${user.home}/soot/classes
 
 ## Location of Polyglot classes jar file to run Jedd with
-polyglot.jedd.jar=${user.home}/polyglot-1.3.jar
+polyglot.jedd.jar=${user.home}/polyglot-1.3.2.jar
 
 ## Version of Soot for tagging tarballs.
 soot.version=2.1.0-custom
