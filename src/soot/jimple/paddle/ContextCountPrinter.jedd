@@ -95,7 +95,6 @@ public class ContextCountPrinter
             G.v().out.println( "Total equivalence classes of methodcontexts in points-to relation: "+p2relationWithMethod.width(MEASURE15.v()) );
             G.v().out.println( "Total distinct MC points-to sets: "+p2relationWithMethod.width(MEASURE2.v()) );
 
-            /*
             if(PaddleScene.v().options().method_context_counts()) {
                 for( Iterator mIt = Results.v().reachableMethods().methodIterator(); mIt.hasNext(); ) {
                     final SootMethod m = (SootMethod) mIt.next();
@@ -111,7 +110,6 @@ public class ContextCountPrinter
                     }
                 }
             }
-            */
         }
     }
 }
