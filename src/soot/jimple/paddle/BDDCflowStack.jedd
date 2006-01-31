@@ -129,6 +129,7 @@ public class BDDCflowStack
             final SootMethod m = (SootMethod) mIt.next();
             targets |= new{m=>method};
         }
+        targets |= cflow.threadEntries();
         <stmt> ret = 0B;
         <stmt> oldRet;
         do {

@@ -35,19 +35,6 @@ public class BDDCflow
         stmtMethod = 0B;
         if(DEBUG) G.v().out.println("Getting call graph");
         Date startCG = new Date();
-        for( Iterator scIt = Scene.v().getApplicationClasses().iterator(); scIt.hasNext(); ) {
-            final SootClass sc = (SootClass) scIt.next();
-            for( Iterator mIt = sc.getMethods().iterator(); mIt.hasNext(); ) {
-                final SootMethod m = (SootMethod) mIt.next();
-                if( m.hasActiveBody() ) {
-                    for( Iterator sIt = m.getActiveBody().getUnits().iterator(); sIt.hasNext(); ) {
-                        final Stmt s = (Stmt) sIt.next();
-                        Scene.v().getUnitNumberer().add(s);
-                        stmtMethod |= new{s=>stmt, m=>method};
-                    }
-                }
-            }
-        }
         <kind> wantedKinds =
               new{Kind.STATIC=>kind} 
             | new{Kind.VIRTUAL=>kind}
@@ -72,8 +59,22 @@ public class BDDCflow
             if(DEBUG) G.v().out.println("Using Paddle call graph.");
             callEdges = cg.ciEdges().get();
         }
+        <method> methods = (srcm=>method, tgtm=>, kind=>, stmt=>) callEdges;
+        methods |= (srcm=>, tgtm=>method, kind=>, stmt=>) callEdges;
+        for( Iterator mIt = methods.iterator(); mIt.hasNext(); ) {
+            final SootMethod m = (SootMethod) mIt.next();
+            if( m.hasActiveBody() ) {
+                for( Iterator sIt = m.getActiveBody().getUnits().iterator(); sIt.hasNext(); ) {
+                    final Stmt s = (Stmt) sIt.next();
+                    Scene.v().getUnitNumberer().add(s);
+                    stmtMethod |= new{s=>stmt, m=>method};
+                }
+            }
+        }
 
         callGraph = callEdges{kind} <> wantedKinds{kind};
+        threadEntries = (tgtm=>method, srcm=>, stmt=>)
+            callEdges{kind} <> new {Kind.THREAD=>kind}{kind};
         Date doneCG = new Date();
         if(DEBUG) G.v().out.println( "Getting call graph took "+(doneCG.getTime()-startCG.getTime())+" ms");
         if(DEBUG) G.v().out.println("Done getting call graph");
@@ -82,4 +83,6 @@ public class BDDCflow
     <stmt, method> stmtMethod() { return stmtMethod; }
     private <srcm, stmt, tgtm> callGraph;
     <srcm, stmt, tgtm> callGraph() { return callGraph; }
+    private <method> threadEntries;
+    <method> threadEntries() { return threadEntries; }
 }
