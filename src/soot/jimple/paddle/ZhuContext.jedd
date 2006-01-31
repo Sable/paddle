@@ -96,6 +96,25 @@ public class ZhuContext
         List orderedComponents = topo.newList(sccel);
         if(VERBOSE) System.out.println( "Constructing CS call graph" );
         if(VERBOSE) System.out.println("There are "+scc.getComponents().size()+" scc's.");
+        if(false) {
+            int maxk = 0;
+            Map kValues = new HashMap();
+            for( Iterator componentIt = orderedComponents.iterator(); componentIt.hasNext(); ) {
+                final List component = (List) componentIt.next();
+                int k = 0;
+                for( Iterator predIt = sccel.getPredsOf(component).iterator(); predIt.hasNext(); ) {
+                    final List pred = (List) predIt.next();
+                    int newK = 1;
+                    Integer i = (Integer) kValues.get(pred);
+                    if(i != null) newK = i.intValue() + 1;
+                    if( newK > k ) k = newK;
+                }
+                kValues.put(component, new Integer(k));
+                if( k > maxk) maxk = k;
+            }
+            System.out.println( "Maximum k is "+maxk );
+            System.exit(1);
+        }
         for( Iterator componentIt = orderedComponents.iterator(); componentIt.hasNext(); ) {
             final List component = (List) componentIt.next();
             long c = 0;
