@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2004, 2005 Ondrej Lhotak
+ * Copyright (C) 2004, 2005, 2006 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -149,7 +149,11 @@ public class TradMethodPAGContextifier extends AbsMethodPAGContextifier
             }
             for( Iterator eIt = mpag.ralloc.copy().iterator(); eIt.hasNext(); ) {
                 final Robj_var.Tuple e = (Robj_var.Tuple) eIt.next();
-                addAlloc( t.ctxt(), e.obj(), t.ctxt(), e.var() );
+                if(contextHeap || ni.global(e.obj())) {
+                    addAlloc( t.ctxt(), e.obj(), t.ctxt(), e.var() );
+                } else {
+                    addAlloc( null, e.obj(), t.ctxt(), e.var() );
+                }
                 change = true;
             }
         }
@@ -175,7 +179,8 @@ public class TradMethodPAGContextifier extends AbsMethodPAGContextifier
     }
 
     private void addAlloc( Context objc, AllocNode obj, Context varc, VarNode var ) {
-        if( obj instanceof GlobalAllocNode ) objc = null;
+        boolean contextHeap = PaddleScene.v().options().context_heap();
+        if( obj instanceof GlobalAllocNode || !contextHeap) objc = null;
         if( var instanceof GlobalVarNode ) varc = null;
         calloc.add( objc, obj, varc, var );
     }
