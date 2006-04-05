@@ -1318,9 +1318,6 @@ public class PaddleScene
             case SparkOptions.set_impl_hybrid:
                 setFactory = HybridPointsToSet.getFactory();
                 break;
-            case SparkOptions.set_impl_shared:
-                setFactory = SharedPointsToSet.getFactory();
-                break;
             case SparkOptions.set_impl_array:
                 setFactory = SortedArraySet.getFactory();
                 break;
@@ -1334,9 +1331,6 @@ public class PaddleScene
                         break;
                     case SparkOptions.double_set_old_hybrid:
                         oldSetFactory = HybridPointsToSet.getFactory();
-                        break;
-                    case SparkOptions.double_set_old_shared:
-                        oldSetFactory = SharedPointsToSet.getFactory();
                         break;
                     case SparkOptions.double_set_old_array:
                         oldSetFactory = SortedArraySet.getFactory();
@@ -1353,9 +1347,6 @@ public class PaddleScene
                         break;
                     case SparkOptions.double_set_new_hybrid:
                         newSetFactory = HybridPointsToSet.getFactory();
-                        break;
-                    case SparkOptions.double_set_new_shared:
-                        newSetFactory = SharedPointsToSet.getFactory();
                         break;
                     case SparkOptions.double_set_new_array:
                         newSetFactory = SortedArraySet.getFactory();
