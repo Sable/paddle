@@ -63,6 +63,7 @@ public class BDDCflowStack
             final Stmt s = (Stmt) sIt.next();
             if( s == sh.popStmt() ) inShadow = false;
             if( inShadow ) {
+                Scene.v().getUnitNumberer().add(s);
                 ret |= new{s=>stmt}; 
             }
             if( s == sh.pushStmt() ) inShadow = true;
