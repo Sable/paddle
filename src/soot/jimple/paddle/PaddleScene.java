@@ -1,5 +1,5 @@
 /* Soot - a J*va Optimization Framework
- * Copyright (C) 2003, 2004, 2005 Ondrej Lhotak
+ * Copyright (C) 2003, 2004, 2005, 2006 Ondrej Lhotak
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -1312,46 +1312,46 @@ public class PaddleScene
 
     private void makeSetFactories() {
         switch( options.set_impl() ) {
-            case SparkOptions.set_impl_hash:
+            case PaddleOptions.set_impl_hash:
                 setFactory = HashPointsToSet.getFactory();
                 break;
-            case SparkOptions.set_impl_hybrid:
+            case PaddleOptions.set_impl_hybrid:
                 setFactory = HybridPointsToSet.getFactory();
                 break;
-            case SparkOptions.set_impl_array:
+            case PaddleOptions.set_impl_array:
                 setFactory = SortedArraySet.getFactory();
                 break;
-            case SparkOptions.set_impl_bit:
+            case PaddleOptions.set_impl_bit:
                 setFactory = BitPointsToSet.getFactory();
                 break;
-            case SparkOptions.set_impl_double:
+            case PaddleOptions.set_impl_double:
                 switch( options.double_set_old() ) {
-                    case SparkOptions.double_set_old_hash:
+                    case PaddleOptions.double_set_old_hash:
                         oldSetFactory = HashPointsToSet.getFactory();
                         break;
-                    case SparkOptions.double_set_old_hybrid:
+                    case PaddleOptions.double_set_old_hybrid:
                         oldSetFactory = HybridPointsToSet.getFactory();
                         break;
-                    case SparkOptions.double_set_old_array:
+                    case PaddleOptions.double_set_old_array:
                         oldSetFactory = SortedArraySet.getFactory();
                         break;
-                    case SparkOptions.double_set_old_bit:
+                    case PaddleOptions.double_set_old_bit:
                         oldSetFactory = BitPointsToSet.getFactory();
                         break;
                     default:
                         throw new RuntimeException();
                 }
                 switch( options.double_set_new() ) {
-                    case SparkOptions.double_set_new_hash:
+                    case PaddleOptions.double_set_new_hash:
                         newSetFactory = HashPointsToSet.getFactory();
                         break;
-                    case SparkOptions.double_set_new_hybrid:
+                    case PaddleOptions.double_set_new_hybrid:
                         newSetFactory = HybridPointsToSet.getFactory();
                         break;
-                    case SparkOptions.double_set_new_array:
+                    case PaddleOptions.double_set_new_array:
                         newSetFactory = SortedArraySet.getFactory();
                         break;
-                    case SparkOptions.double_set_new_bit:
+                    case PaddleOptions.double_set_new_bit:
                         newSetFactory = BitPointsToSet.getFactory();
                         break;
                     default:
