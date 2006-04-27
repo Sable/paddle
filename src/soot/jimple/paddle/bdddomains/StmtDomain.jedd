@@ -2,7 +2,9 @@ package soot.jimple.paddle.bdddomains;
 import jedd.*;
 import soot.*;
 
-public class StmtDomain(17) extends Domain {
+// This domain was 17 bits for the CC06 paper and thesis experiments.
+// abc needs 18 bits for lod-weka.
+public class StmtDomain(18) extends Domain {
     public Numberer numberer() {
         return new soot.util.JeddNumberer( Scene.v().getUnitNumberer() );
     }
