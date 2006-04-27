@@ -57,14 +57,10 @@ public class BDDPointsToAnalysis extends AbsPointsToAnalysis
                             <> fieldPt{basec,base,fld} );
     }
     public PointsToSet reachingObjects( Local l, SootField f ) {
-        if(local(l) == null) return new BDDPointsToSet(0B);
-        return new BDDPointsToSet( (basec=>) fieldPt{base,fld} 
-                       <> new{local(l)=>var, f=>fld}{var, fld} );
+        return reachingObjects( reachingObjects(l), f );
     }
     public PointsToSet reachingObjects( Context c, Local l, SootField f ) {
-        if(local(l) == null) return new BDDPointsToSet(0B);
-        return new BDDPointsToSet(         fieldPt{basec,base,fld} 
-            <> new{c=>ctxt, local(l)=>var, f=>fld}{ctxt, var, fld} );
+        return reachingObjects( reachingObjects(c, l), f );
     }
     public PointsToSet reachingObjectsOfArrayElement( PointsToSet s ) {
         BDDPointsToSet bdds = (BDDPointsToSet) s;
