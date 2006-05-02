@@ -68,8 +68,16 @@ public class PaddleScene
 
     private boolean jeddAlreadySetup = false;
     public void setupJedd() {
+        boolean noBackend = false;
         if(jeddAlreadySetup) return;
         switch( options.backend() ) {
+            case PaddleOptions.backend_auto:
+                if(options.bdd()) {
+                    Jedd.v().setBackend("buddy"); 
+                } else {
+                    noBackend = true;
+                }
+                break;
             case PaddleOptions.backend_buddy:
                 Jedd.v().setBackend("buddy"); 
                 break;
@@ -83,11 +91,12 @@ public class PaddleScene
                 Jedd.v().setBackend("javabdd"); 
                 break;
             case PaddleOptions.backend_none:
+                noBackend = true;
                 break;
             default:
                 throw new RuntimeException( "Unhandled option: "+options.backend() );
         }
-        if( options.backend() != PaddleOptions.backend_none ) {
+        if( !noBackend ) {
             int sw;
             if(Scene.v().getContextNumberer() instanceof ContextStringNumberer) {
                 sw = ((ContextStringNumberer) Scene.v().getContextNumberer()).shiftWidth;
