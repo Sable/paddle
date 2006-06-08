@@ -19,6 +19,7 @@
 
 package soot.jimple.paddle;
 import soot.*;
+import soot.util.*;
 import java.util.*;
 
 /** Abstract base class for implementations of points-to sets.
@@ -73,6 +74,25 @@ public abstract class PointsToSetInternal extends PointsToSetReadOnly {
     { addAll( other, null ); }
 
     public PointsToSetInternal( Type type ) { super(type); }
+
+    //Added by Adam Richard
+    protected BitVector getBitMask(PointsToSetInternal other)
+    {
+		/*Prevents propogating points-to sets of inappropriate type.
+		 *E.g. if you have in the code being analyzed:
+		 *Shape s = (Circle)c;
+		 *then the points-to set of s is only the elements in the points-to set
+		 *of c that have type Circle.
+		 */
+		//Code ripped from BitPointsToSet
+
+    	BitVector mask = null;
+        AbsTypeManager typeManager = PaddleScene.v().tm;
+    	if( !typeManager.castNeverFails( other.getType(), this.getType() ) ) {
+    		mask = typeManager.get( this.getType() );
+    	}
+    	return mask;
+    }
 
     /* End of public methods. */
     /* End of package methods. */

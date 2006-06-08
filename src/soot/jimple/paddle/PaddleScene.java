@@ -1327,6 +1327,9 @@ public class PaddleScene
             case PaddleOptions.set_impl_hybrid:
                 setFactory = HybridPointsToSet.getFactory();
                 break;
+            case PaddleOptions.set_impl_heintze:
+                setFactory = SharedHybridSet.getFactory();
+                break;
             case PaddleOptions.set_impl_array:
                 setFactory = SortedArraySet.getFactory();
                 break;
@@ -1341,6 +1344,9 @@ public class PaddleScene
                     case PaddleOptions.double_set_old_hybrid:
                         oldSetFactory = HybridPointsToSet.getFactory();
                         break;
+					case PaddleOptions.double_set_old_heintze:
+						oldSetFactory = SharedHybridSet.getFactory();
+						break;
                     case PaddleOptions.double_set_old_array:
                         oldSetFactory = SortedArraySet.getFactory();
                         break;
@@ -1357,6 +1363,9 @@ public class PaddleScene
                     case PaddleOptions.double_set_new_hybrid:
                         newSetFactory = HybridPointsToSet.getFactory();
                         break;
+					case PaddleOptions.double_set_new_heintze:
+						newSetFactory = SharedHybridSet.getFactory();
+						break;
                     case PaddleOptions.double_set_new_array:
                         newSetFactory = SortedArraySet.getFactory();
                         break;
