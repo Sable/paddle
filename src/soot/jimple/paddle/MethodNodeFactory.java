@@ -203,6 +203,14 @@ public class MethodNodeFactory extends AbstractJimpleValueSwitch {
     final public void caseNullConstant( NullConstant nr ) {
 	setResult( null );
     }
+    final public void caseClassConstant( ClassConstant cc ) {
+        AllocNode classConstant = nm.makeGlobalAllocNode( cc, cc.getType() );
+        VarNode classConstantLocal = nm.makeGlobalVarNode(
+                classConstant,
+                cc.getType() );
+        gnf.addEdge( classConstant, classConstantLocal );
+        setResult( classConstantLocal );
+    }
     final public void defaultCase( Object v ) {
 	throw new RuntimeException( "failed to handle "+v );
     }
