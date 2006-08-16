@@ -118,7 +118,7 @@ public final class PropWorklist extends AbsPropagator {
 	 //we do not use a hash set here by purpose, since this would
 	 //involve equals/hashCode being called on PointsToSets, which can be
         //expensive
-        Collection nodesToFlush = new LinkedList();
+        Set nodesToFlush = new IdentityHashSet();
         for( Iterator pairIt = edgesToPropagate.iterator(); pairIt.hasNext(); ) {
             final Object[] pair = (Object[]) pairIt.next();
             PointsToSetInternal nDotF = (PointsToSetInternal) pair[0];
