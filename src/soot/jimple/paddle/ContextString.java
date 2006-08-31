@@ -47,6 +47,25 @@ public class ContextString implements Context
         ret.string[0] = c;
         return ret;
     }
+    public ContextString pushExceptHead(Context c)
+    {
+        ContextString ret = new ContextString(string.length);
+        for( int i = string.length - 2 ; i > 0; i-- ) {
+            ret.string[i] = string[i - 1]; // push body
+        }
+        ret.string[0] = c; // push body
+		ret.string[string.length - 1] = string[string.length - 1]; // copy head
+        return ret;
+    }
+    public ContextString pushHead(Context c)
+    {
+        ContextString ret = new ContextString(string.length);
+        for( int i = string.length - 2; i >= 0; i-- ) {
+            ret.string[i] = string[i]; // copy body
+        }
+        ret.string[string.length - 1] = c; // push head
+        return ret;
+    }
     public String toString() {
         StringBuffer ret = new StringBuffer();
         ret.append( "( " );

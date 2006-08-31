@@ -1457,6 +1457,16 @@ k receiver objects.
 </long_desc>
 
                                         </value>
+                                        <value>
+                                                <name>Thread and k-Object Sensitive</name>
+                                                <alias>threadkobjsens</alias>
+<short_desc>Builds a thread and k-object-sensitive call graph</short_desc>
+<long_desc>
+Builds a context-sensitive call graph where the context is a string of up to
+(k-1) receiver objects and 1 thread (runnable) object.
+</long_desc>
+
+                                        </value>
                                         <short_desc>Select context-sensitivity level</short_desc>
                                         <long_desc>
 This option tells Paddle which level of context-sensitivity to use in constructing the call graph.
