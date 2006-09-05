@@ -50,8 +50,8 @@ public class ContextString implements Context
     public ContextString pushExceptHead(Context c)
     {
         ContextString ret = new ContextString(string.length);
-        for( int i = string.length - 2 ; i > 0; i-- ) {
-            ret.string[i] = string[i - 1]; // push body
+        for( int i = string.length-2; i > 0; i-- ) {
+            ret.string[i] = string[i-1]; // push body
         }
         ret.string[0] = c; // push body
 		ret.string[string.length - 1] = string[string.length - 1]; // copy head
