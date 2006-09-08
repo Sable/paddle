@@ -176,8 +176,8 @@ public class TradFactory extends AbsFactory
             case PaddleOptions.context_kobjsens:
             case PaddleOptions.context_uniqkobjsens:
                 return new TradKObjSensStaticContextManager(in, out, k);
-            case PaddleOptions.context_threadkobjsens:
-                return new TradThreadKObjSensStaticContextManager(in, out, k);
+//            case PaddleOptions.context_threadkobjsens:
+//                return new TradThreadKObjSensStaticContextManager(in, out, k);
             default:
                 throw new RuntimeException( "Unhandled kind of context-sensitivity "+kind );
         }
@@ -221,8 +221,8 @@ public class TradFactory extends AbsFactory
                 return new TradKObjSensVirtualContextManager(in, out, thisOut, gnf, k);
             case PaddleOptions.context_uniqkobjsens:
                 return new TradUniqKObjSensVirtualContextManager(in, out, thisOut, gnf, k);
-            case PaddleOptions.context_threadkobjsens:
-                return new TradThreadKObjSensVirtualContextManager(in, out, thisOut, gnf, k);
+//            case PaddleOptions.context_threadkobjsens:
+//                return new TradThreadKObjSensVirtualContextManager(in, out, thisOut, gnf, k);
             default:
                 throw new RuntimeException( "Unhandled kind of context-sensitivity "+kind );
         }
