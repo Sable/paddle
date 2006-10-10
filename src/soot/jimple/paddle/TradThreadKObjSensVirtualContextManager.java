@@ -44,12 +44,12 @@ public class TradThreadKObjSensVirtualContextManager extends AbsVirtualContextMa
 			{
 //				ContextString tempCs = cs.pushHead(t.obj()); // use calling object as "thread context"
 //	            newCs = tempCs.pushExceptHead(t.obj());
-//				newCs = cs.pushHead(t.obj());
-	            newCs = cs.push(t.obj());
+				newCs = cs.pushHead(t.obj());
+//	            newCs = cs.push(t.obj());
 	        }
 	        else
 	        {
-	            newCs = cs.push(t.obj());
+	            newCs = cs.pushExceptHead(t.obj());
 	        }
             out.add( t.varc(),
                     t.srcm(),

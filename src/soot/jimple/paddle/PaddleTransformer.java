@@ -73,6 +73,7 @@ public class PaddleTransformer extends IPaddleTransformer
                     break;
                 case PaddleOptions.context_kobjsens:
                 case PaddleOptions.context_uniqkobjsens:
+                case PaddleOptions.context_threadkobjsens:
                     Scene.v().setContextNumberer( new ContextStringNumberer(ObjDomain.v(), PaddleNumberers.v().allocNodeNumberer(), opts.k()) );
                     PaddleNumberers.v().contextDomain = null;
                     break;
