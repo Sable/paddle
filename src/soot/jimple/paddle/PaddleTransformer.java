@@ -110,6 +110,7 @@ public class PaddleTransformer extends IPaddleTransformer
 
         if( opts.context_counts() ) ContextCountPrinter.printContextCounts();
         if( opts.total_context_counts() || opts.context_counts() ) ContextCountPrinter.printTotalContextCounts();
+        //Results.v().p2sets().getReader().get().dump();
     }
 
     /** This is called when Soot finishes executing all interprocedural phases.
