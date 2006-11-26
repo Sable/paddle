@@ -13,6 +13,7 @@
         <javac
             destdir="classes"
             classpath="classes:${soot.loc}:${jedd.runtime.jar}"
+        	target="1.4"
             debug="true"
         >
             <src path="src"/>
