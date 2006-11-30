@@ -22,7 +22,6 @@ import soot.*;
 import soot.jimple.paddle.queue.*;
 import soot.jimple.paddle.bdddomains.*;
 import soot.options.*;
-import java.util.*;
 import java.util.zip.*;
 import java.io.*;
 import jedd.*;
@@ -31,6 +30,7 @@ import jedd.order.*;
 /** This class puts all of the pieces of Paddle together and connects them
  * with queues.
  * @author Ondrej Lhotak
+ * @author Eric Bodden
  */
 public class PaddleScene 
 { 
@@ -42,6 +42,7 @@ public class PaddleScene
     public AbsFactory factory;
     public AbsQFactory qFactory;
     private NodeManager nodeManager;
+    private NodeManagerFactory nodeManagerFactory = new NodeManagerFactory();
 
     public Qvar_method_type locals;
     public Qvar_type globals;
@@ -1403,12 +1404,24 @@ public class PaddleScene
 
     private void build() {
         buildQueues();
-        nodeManager = new NodeManager( locals, globals, localallocs, globalallocs );
+        nodeManager = nodeManagerFactory.createNodeManager(locals, globals, localallocs, globalallocs );
         ni = factory.NodeInfo( locals.reader("mpc"), globals.reader("mpc"),
                 localallocs.reader("mpc"), globalallocs.reader("mpc") );
         tm = factory.TypeManager(locals.reader("tm"), globals.reader("tm"),
                 localallocs.reader("tm"), globalallocs.reader("tm"));
     }
+    
+    /**
+     * Clients can pass in here a customized {@link NodeManagerFactory}, in order
+     * to handle node creation in a different way.
+     * For this to be effective, it must be called before {@link #setup(PaddleOptions)} is called.
+     * @param factory
+     */
+    public void overrideNodeManagerFactory(NodeManagerFactory factory) {
+    	nodeManagerFactory = factory;
+    }
+    
+    
 }
 
 
