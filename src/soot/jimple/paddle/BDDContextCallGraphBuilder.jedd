@@ -33,18 +33,18 @@ public class BDDContextCallGraphBuilder extends AbsContextCallGraphBuilder
         ) {
         super( methodsIn, edgesIn, out );
     }
-    private <ctxt, method> m2c = 0B;
-    private <srcm, stmt, kind, tgtm> cicg = 0B;
+    private <A_ctxt, A_method> m2c = 0B;
+    private <A_srcm, A_stmt, A_kind, A_tgtm> cicg = 0B;
     public boolean update() {
-        <srcm, stmt, kind, tgtm> newEdges = edgesIn.get();
-        <srcc, srcm, stmt, kind, tgtc, tgtm> newOut =
-             new{null=>tgtc}{} ><
-             (newEdges{srcm} >< (ctxt=>srcc) m2c{method}){};
+        <A_srcm, A_stmt, A_kind, A_tgtm> newEdges = edgesIn.get();
+        <A_srcc, A_srcm, A_stmt, A_kind, A_tgtc, A_tgtm> newOut =
+             new{null=>A_tgtc}{} ><
+             (newEdges{A_srcm} >< (A_ctxt=>A_srcc) m2c{A_method}){};
         cicg |= newEdges;
 
-        <ctxt, method> methods = methodsIn.get();
-        newOut |= new{null=>tgtc}{} ><
-            (cicg{srcm} >< (ctxt=>srcc) methods{method}){};
+        <A_ctxt, A_method> methods = methodsIn.get();
+        newOut |= new{null=>A_tgtc}{} ><
+            (cicg{A_srcm} >< (A_ctxt=>A_srcc) methods{A_method}){};
         out.add( newOut );
         m2c |= methods;
         return newOut != 0B;

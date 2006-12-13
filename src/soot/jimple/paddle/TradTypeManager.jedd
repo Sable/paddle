@@ -88,16 +88,16 @@ public class TradTypeManager extends AbsTypeManager
         return ret;
     }
     private BDDGetter bddGetter;
-    public <var, obj> get() {
+    public <A_var, A_obj> get() {
         if( fh == null ) return 1B;
         if( bddGetter == null ) bddGetter = new BDDGetter();
         return bddGetter.get();
     }
     class BDDGetter {
-        private <type:T1, obj> cachedTypeMasks = 0B;
-        private <var, type> cachedVarNodes = 0B;
-        private <var, obj> cachedVarObj = 0B;
-        public <var:V1, obj:H1> get() {
+        private <A_type:T1, A_obj> cachedTypeMasks = 0B;
+        private <A_var, A_type> cachedVarNodes = 0B;
+        private <A_var, A_obj> cachedVarObj = 0B;
+        public <A_var:V1, A_obj:H1> get() {
             update();
             if( change ) {
                 for( Iterator tIt = Scene.v().getTypeNumberer().iterator(); tIt.hasNext(); ) {
@@ -108,19 +108,19 @@ public class TradTypeManager extends AbsTypeManager
                     Numberer objNumberer = PaddleNumberers.v().contextAllocNodeNumberer();
                     while( bsi.hasNext() ) {
                         int objNum = bsi.next();
-                        cachedTypeMasks |= new{ t=>type, objNumberer.get(objNum)=>obj };
+                        cachedTypeMasks |= new{ t=>A_type, objNumberer.get(objNum)=>A_obj };
                     }
                 }
-                cachedVarObj = cachedTypeMasks{type} <> cachedVarNodes{type}; 
+                cachedVarObj = cachedTypeMasks{A_type} <> cachedVarNodes{A_type}; 
                 change = false;
             }
 
-            <var, type> varNodes = 0B;
+            <A_var, A_type> varNodes = 0B;
             while( newVarNodes.hasNext() ) {
                 VarNode vn = (VarNode) newVarNodes.next();
-                varNodes |= new{vn=>var, vn.getType()=>type};
+                varNodes |= new{vn=>A_var, vn.getType()=>A_type};
             }
-            cachedVarObj |= cachedTypeMasks{type} <> varNodes{type};
+            cachedVarObj |= cachedTypeMasks{A_type} <> varNodes{A_type};
             cachedVarNodes |= varNodes;
             return cachedVarObj;
         }
@@ -134,7 +134,7 @@ public class TradTypeManager extends AbsTypeManager
         if( to.equals( from ) ) return true;
         boolean ret = castNeverFailsGuts(from, to);
         /*
-        boolean ret1 = (bddh.subtypeRelation() & new{from=>subt, to=>supt}) != 0B;
+        boolean ret1 = (bddh.subtypeRelation() & new{from=>A_subt, to=>A_supt}) != 0B;
         if( ret != ret1 ) {
             throw new RuntimeException( "hierarchies disagree on cast from "+from+" to "+to+";\nfh says "+ret+" while bddh says "+ret1);
         }

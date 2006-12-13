@@ -39,8 +39,8 @@ public class Qsrcm_stmt_kind_tgtm_src_dstTrad extends Qsrcm_stmt_kind_tgtm_src_d
         q.add( _dst );
         invalidate();
     }
-    public void add( <srcm:MS, stmt:ST, kind:KD, tgtm:MT, src:V1, dst:V2> in ) {
-        Iterator it = in.iterator( new Attribute[] { srcm.v(), stmt.v(), kind.v(), tgtm.v(), src.v(), dst.v() } );
+    public void add( <A_srcm:MS, A_stmt:ST, A_kind:KD, A_tgtm:MT, A_src:V1, A_dst:V2> in ) {
+        Iterator it = in.iterator( new Attribute[] { A_srcm.v(), A_stmt.v(), A_kind.v(), A_tgtm.v(), A_src.v(), A_dst.v() } );
         while( it.hasNext() ) {
             Object[] tuple = (Object[]) it.next();
             for( int i = 0; i < 6; i++ ) {

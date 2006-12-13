@@ -2,5 +2,5 @@ package soot.jimple.paddle.bdddomains;
 import jedd.*;
 import soot.*;
 
-public class varc(ContextDomain) extends Attribute {
+public class A_obj(ObjDomain) extends Attribute {
 }

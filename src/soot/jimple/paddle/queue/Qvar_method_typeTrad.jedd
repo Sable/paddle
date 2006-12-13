@@ -36,8 +36,8 @@ public class Qvar_method_typeTrad extends Qvar_method_type {
         q.add( _type );
         invalidate();
     }
-    public void add( <var:V1, method:MS, type:T1> in ) {
-        Iterator it = in.iterator( new Attribute[] { var.v(), method.v(), type.v() } );
+    public void add( <A_var:V1, A_method:MS, A_type:T1> in ) {
+        Iterator it = in.iterator( new Attribute[] { A_var.v(), A_method.v(), A_type.v() } );
         while( it.hasNext() ) {
             Object[] tuple = (Object[]) it.next();
             for( int i = 0; i < 3; i++ ) {

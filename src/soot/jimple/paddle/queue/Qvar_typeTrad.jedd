@@ -35,8 +35,8 @@ public class Qvar_typeTrad extends Qvar_type {
         q.add( _type );
         invalidate();
     }
-    public void add( <var:V1, type:T1> in ) {
-        Iterator it = in.iterator( new Attribute[] { var.v(), type.v() } );
+    public void add( <A_var:V1, A_type:T1> in ) {
+        Iterator it = in.iterator( new Attribute[] { A_var.v(), A_type.v() } );
         while( it.hasNext() ) {
             Object[] tuple = (Object[]) it.next();
             for( int i = 0; i < 2; i++ ) {

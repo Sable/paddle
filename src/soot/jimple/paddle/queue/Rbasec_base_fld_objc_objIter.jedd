@@ -42,10 +42,10 @@ public class Rbasec_base_fld_objc_objIter extends Rbasec_base_fld_objc_obj{
             public void remove() { throw new UnsupportedOperationException(); }
         };
     }
-    public <basec:CH1, base:H1, fld:FD, objc:CH2, obj:H2> get() {
-        <basec:CH1, base:H1, fld:FD, objc:CH2, obj:H2> ret = 0B;
+    public <A_basec:CH1, A_base:H1, A_fld:FD, A_objc:CH2, A_obj:H2> get() {
+        <A_basec:CH1, A_base:H1, A_fld:FD, A_objc:CH2, A_obj:H2> ret = 0B;
         while( r.hasNext() ) {
-            ret |= new { r.next()=>basec, r.next()=>base, r.next()=>fld, r.next()=>objc, r.next()=>obj };
+            ret |= new { r.next()=>A_basec, r.next()=>A_base, r.next()=>A_fld, r.next()=>A_objc, r.next()=>A_obj };
         }
         return ret;
     }

@@ -36,8 +36,8 @@ public class Qvar_srcm_stmt_dtp_signature_kindDebug extends Qvar_srcm_stmt_dtp_s
         bdd.add( _var, _srcm, _stmt, _dtp, _signature, _kind );
         trad.add( _var, _srcm, _stmt, _dtp, _signature, _kind );
     }
-    public void add( <var:V1, srcm:MS, stmt:ST, dtp:T1, signature:SG, kind:KD> in ) {
-        Iterator it = in.iterator( new Attribute[] { var.v(), srcm.v(), stmt.v(), dtp.v(), signature.v(), kind.v() } );
+    public void add( <A_var:V1, A_srcm:MS, A_stmt:ST, A_dtp:T1, A_signature:SG, A_kind:KD> in ) {
+        Iterator it = in.iterator( new Attribute[] { A_var.v(), A_srcm.v(), A_stmt.v(), A_dtp.v(), A_signature.v(), A_kind.v() } );
         while( it.hasNext() ) {
             Object[] tuple = (Object[]) it.next();
             for( int i = 0; i < 6; i++ ) {

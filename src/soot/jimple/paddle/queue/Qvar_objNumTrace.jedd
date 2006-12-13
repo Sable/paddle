@@ -38,7 +38,7 @@ public final class Qvar_objNumTrace extends Qvar_obj {
             reader.add( in );
         }
     }
-    public void add( <var:V1, obj:H1> in ) {
+    public void add( <A_var:V1, A_obj:H1> in ) {
         throw new RuntimeException();
     }
     public Rvar_obj reader( String rname ) {

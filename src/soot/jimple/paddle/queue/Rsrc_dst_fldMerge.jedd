@@ -28,7 +28,7 @@ import jedd.*;
 import java.util.*;
 
 public final class Rsrc_dst_fldMerge extends Rsrc_dst_fld {
-    void add( <src:V1, dst:V2, fld:FD> tuple ) { throw new RuntimeException(); }
+    void add( <A_src:V1, A_dst:V2, A_fld:FD> tuple ) { throw new RuntimeException(); }
     private Rsrc_dst_fld in1;
     private Rsrc_dst_fld in2;
     public Rsrc_dst_fldMerge( Rsrc_dst_fld in1, Rsrc_dst_fld in2 ) {
@@ -48,7 +48,7 @@ public final class Rsrc_dst_fldMerge extends Rsrc_dst_fld {
             public void remove() { throw new UnsupportedOperationException(); }
         };
     }
-    public <src:V1, dst:V2, fld:FD> get() {
+    public <A_src:V1, A_dst:V2, A_fld:FD> get() {
         return in1.get() | in2.get();
     }
     public boolean hasNext() { return in1.hasNext() || in2.hasNext(); }

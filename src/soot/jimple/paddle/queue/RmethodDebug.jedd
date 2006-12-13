@@ -52,7 +52,7 @@ public class RmethodDebug extends Rmethod{
             public void remove() { throw new UnsupportedOperationException(); }
         };
     }
-    public <method:MS> get() {
+    public <A_method:MS> get() {
         throw new RuntimeException( "NYI" );
     }
     public boolean hasNext() { return trad.hasNext(); }

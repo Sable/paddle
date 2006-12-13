@@ -52,7 +52,7 @@ public class Rsrcc_src_dstc_dstDebug extends Rsrcc_src_dstc_dst{
             public void remove() { throw new UnsupportedOperationException(); }
         };
     }
-    public <srcc:C1, src:V1, dstc:C2, dst:V2> get() {
+    public <A_srcc:C1, A_src:V1, A_dstc:C2, A_dst:V2> get() {
         throw new RuntimeException( "NYI" );
     }
     public boolean hasNext() { return trad.hasNext(); }

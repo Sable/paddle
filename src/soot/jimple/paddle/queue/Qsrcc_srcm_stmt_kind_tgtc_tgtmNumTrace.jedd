@@ -38,7 +38,7 @@ public final class Qsrcc_srcm_stmt_kind_tgtc_tgtmNumTrace extends Qsrcc_srcm_stm
             reader.add( in );
         }
     }
-    public void add( <srcc:C1, srcm:MS, stmt:ST, kind:KD, tgtc:C2, tgtm:MT> in ) {
+    public void add( <A_srcc:C1, A_srcm:MS, A_stmt:ST, A_kind:KD, A_tgtc:C2, A_tgtm:MT> in ) {
         throw new RuntimeException();
     }
     public Rsrcc_srcm_stmt_kind_tgtc_tgtm reader( String rname ) {

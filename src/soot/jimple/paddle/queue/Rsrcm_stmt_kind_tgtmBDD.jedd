@@ -28,10 +28,10 @@ import jedd.*;
 import java.util.*;
 
 public final class Rsrcm_stmt_kind_tgtmBDD extends Rsrcm_stmt_kind_tgtm {
-    private <srcm:MS, stmt:ST, kind:KD, tgtm:MT> bdd;
-    void add( <srcm:MS, stmt:ST, kind:KD, tgtm:MT> tuple ) { bdd |= tuple; }
-    public Rsrcm_stmt_kind_tgtmBDD( <srcm:MS, stmt:ST, kind:KD, tgtm:MT> bdd, String name, PaddleQueue q ) { this(name, q); add(bdd); }
-    public Rsrcm_stmt_kind_tgtmBDD( <srcm:MS, stmt:ST, kind:KD, tgtm:MT> bdd ) { this("", null); add(bdd); }
+    private <A_srcm:MS, A_stmt:ST, A_kind:KD, A_tgtm:MT> bdd;
+    void add( <A_srcm:MS, A_stmt:ST, A_kind:KD, A_tgtm:MT> tuple ) { bdd |= tuple; }
+    public Rsrcm_stmt_kind_tgtmBDD( <A_srcm:MS, A_stmt:ST, A_kind:KD, A_tgtm:MT> bdd, String name, PaddleQueue q ) { this(name, q); add(bdd); }
+    public Rsrcm_stmt_kind_tgtmBDD( <A_srcm:MS, A_stmt:ST, A_kind:KD, A_tgtm:MT> bdd ) { this("", null); add(bdd); }
     Rsrcm_stmt_kind_tgtmBDD(String name, PaddleQueue q) { super(name, q); bdd = 0B; }
     public Iterator iterator() {;
         return new Iterator() {
@@ -43,7 +43,7 @@ public final class Rsrcm_stmt_kind_tgtmBDD extends Rsrcm_stmt_kind_tgtm {
             }
             public Object next() {
                 if( it == null || !it.hasNext() ) {
-                    it = bdd.iterator( new Attribute[] { srcm.v(), stmt.v(), kind.v(), tgtm.v() } );
+                    it = bdd.iterator( new Attribute[] { A_srcm.v(), A_stmt.v(), A_kind.v(), A_tgtm.v() } );
                     bdd = 0B;
                 }
                 Object[] components = (Object[]) it.next();
@@ -52,8 +52,8 @@ public final class Rsrcm_stmt_kind_tgtmBDD extends Rsrcm_stmt_kind_tgtm {
             public void remove() { throw new UnsupportedOperationException(); }
         };
     }
-    public <srcm:MS, stmt:ST, kind:KD, tgtm:MT> get() {
-        <srcm:MS, stmt:ST, kind:KD, tgtm:MT> ret = bdd;
+    public <A_srcm:MS, A_stmt:ST, A_kind:KD, A_tgtm:MT> get() {
+        <A_srcm:MS, A_stmt:ST, A_kind:KD, A_tgtm:MT> ret = bdd;
         bdd = 0B;
         return ret;
     }

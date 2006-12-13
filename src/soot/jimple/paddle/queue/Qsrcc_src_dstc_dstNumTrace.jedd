@@ -38,7 +38,7 @@ public final class Qsrcc_src_dstc_dstNumTrace extends Qsrcc_src_dstc_dst {
             reader.add( in );
         }
     }
-    public void add( <srcc:C1, src:V1, dstc:C2, dst:V2> in ) {
+    public void add( <A_srcc:C1, A_src:V1, A_dstc:C2, A_dst:V2> in ) {
         throw new RuntimeException();
     }
     public Rsrcc_src_dstc_dst reader( String rname ) {

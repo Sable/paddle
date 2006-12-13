@@ -44,32 +44,32 @@ public class BDDCallEdgeContextifier extends AbsCallEdgeContextifier
     }
 
     public boolean update() {
-        <srcc, src, dstc, dst> simpleOut = 0B;
+        <A_srcc, A_src, A_dstc, A_dst> simpleOut = 0B;
 
         allParms |= parms.get();
         allRets |= rets.get();
 
-        <srcc, srcm, stmt, kind, tgtc, tgtm> newCalls = calls.get();
+        <A_srcc, A_srcm, A_stmt, A_kind, A_tgtc, A_tgtm> newCalls = calls.get();
 
-        simpleOut |= (tgtc=>dstc) 
-            newCalls{srcm, stmt, kind, tgtm} <>
-            allParms{srcm, stmt, kind, tgtm};
-        simpleOut |= (srcc=>dstc, tgtc=>srcc)
-            newCalls{srcm, stmt, kind, tgtm} <>
-             allRets{srcm, stmt, kind, tgtm};
+        simpleOut |= (A_tgtc=>A_dstc) 
+            newCalls{A_srcm, A_stmt, A_kind, A_tgtm} <>
+            allParms{A_srcm, A_stmt, A_kind, A_tgtm};
+        simpleOut |= (A_srcc=>A_dstc, A_tgtc=>A_srcc)
+            newCalls{A_srcm, A_stmt, A_kind, A_tgtm} <>
+             allRets{A_srcm, A_stmt, A_kind, A_tgtm};
 
-        <srcc, src, dstc, dst> globalDsts = simpleOut{dst} >< ni.globalSet(){var};
+        <A_srcc, A_src, A_dstc, A_dst> globalDsts = simpleOut{A_dst} >< ni.globalSet(){A_var};
         simpleOut -= globalDsts;
-        simpleOut |= ((dstc=>) globalDsts){} >< new{null=>dstc}{};
-        <srcc, src, dstc, dst> globalSrcs = simpleOut{src} >< ni.globalSet(){var};
+        simpleOut |= ((A_dstc=>) globalDsts){} >< new{null=>A_dstc}{};
+        <A_srcc, A_src, A_dstc, A_dst> globalSrcs = simpleOut{A_src} >< ni.globalSet(){A_var};
         simpleOut -= globalSrcs;
-        simpleOut |= ((srcc=>) globalSrcs){} >< new{null=>srcc}{};
+        simpleOut |= ((A_srcc=>) globalSrcs){} >< new{null=>A_srcc}{};
         csimple.add(simpleOut);
 
         return simpleOut != 0B;
     }
 
-    private <srcm, stmt, kind, tgtm, src, dst> allParms = 0B;
-    private <srcm, stmt, kind, tgtm, src, dst> allRets = 0B;
+    private <A_srcm, A_stmt, A_kind, A_tgtm, A_src, A_dst> allParms = 0B;
+    private <A_srcm, A_stmt, A_kind, A_tgtm, A_src, A_dst> allRets = 0B;
 }
 

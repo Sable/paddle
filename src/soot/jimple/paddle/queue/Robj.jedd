@@ -38,7 +38,7 @@ public abstract class Robj implements PaddleQueueReader {
     public PaddleQueue queue() { return q; }
     public final String toString() { return name; }
     public abstract Iterator iterator();
-    public abstract <obj:H1> get();
+    public abstract <A_obj:H1> get();
     public abstract boolean hasNext();
     public static class Tuple {
         private AllocNode _obj;

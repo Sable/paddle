@@ -28,10 +28,10 @@ import jedd.*;
 import java.util.*;
 
 public final class Rsrcc_srcm_stmt_kind_tgtc_tgtmBDD extends Rsrcc_srcm_stmt_kind_tgtc_tgtm {
-    private <srcc:C1, srcm:MS, stmt:ST, kind:KD, tgtc:C2, tgtm:MT> bdd;
-    void add( <srcc:C1, srcm:MS, stmt:ST, kind:KD, tgtc:C2, tgtm:MT> tuple ) { bdd |= tuple; }
-    public Rsrcc_srcm_stmt_kind_tgtc_tgtmBDD( <srcc:C1, srcm:MS, stmt:ST, kind:KD, tgtc:C2, tgtm:MT> bdd, String name, PaddleQueue q ) { this(name, q); add(bdd); }
-    public Rsrcc_srcm_stmt_kind_tgtc_tgtmBDD( <srcc:C1, srcm:MS, stmt:ST, kind:KD, tgtc:C2, tgtm:MT> bdd ) { this("", null); add(bdd); }
+    private <A_srcc:C1, A_srcm:MS, A_stmt:ST, A_kind:KD, A_tgtc:C2, A_tgtm:MT> bdd;
+    void add( <A_srcc:C1, A_srcm:MS, A_stmt:ST, A_kind:KD, A_tgtc:C2, A_tgtm:MT> tuple ) { bdd |= tuple; }
+    public Rsrcc_srcm_stmt_kind_tgtc_tgtmBDD( <A_srcc:C1, A_srcm:MS, A_stmt:ST, A_kind:KD, A_tgtc:C2, A_tgtm:MT> bdd, String name, PaddleQueue q ) { this(name, q); add(bdd); }
+    public Rsrcc_srcm_stmt_kind_tgtc_tgtmBDD( <A_srcc:C1, A_srcm:MS, A_stmt:ST, A_kind:KD, A_tgtc:C2, A_tgtm:MT> bdd ) { this("", null); add(bdd); }
     Rsrcc_srcm_stmt_kind_tgtc_tgtmBDD(String name, PaddleQueue q) { super(name, q); bdd = 0B; }
     public Iterator iterator() {;
         return new Iterator() {
@@ -43,7 +43,7 @@ public final class Rsrcc_srcm_stmt_kind_tgtc_tgtmBDD extends Rsrcc_srcm_stmt_kin
             }
             public Object next() {
                 if( it == null || !it.hasNext() ) {
-                    it = bdd.iterator( new Attribute[] { srcc.v(), srcm.v(), stmt.v(), kind.v(), tgtc.v(), tgtm.v() } );
+                    it = bdd.iterator( new Attribute[] { A_srcc.v(), A_srcm.v(), A_stmt.v(), A_kind.v(), A_tgtc.v(), A_tgtm.v() } );
                     bdd = 0B;
                 }
                 Object[] components = (Object[]) it.next();
@@ -52,8 +52,8 @@ public final class Rsrcc_srcm_stmt_kind_tgtc_tgtmBDD extends Rsrcc_srcm_stmt_kin
             public void remove() { throw new UnsupportedOperationException(); }
         };
     }
-    public <srcc:C1, srcm:MS, stmt:ST, kind:KD, tgtc:C2, tgtm:MT> get() {
-        <srcc:C1, srcm:MS, stmt:ST, kind:KD, tgtc:C2, tgtm:MT> ret = bdd;
+    public <A_srcc:C1, A_srcm:MS, A_stmt:ST, A_kind:KD, A_tgtc:C2, A_tgtm:MT> get() {
+        <A_srcc:C1, A_srcm:MS, A_stmt:ST, A_kind:KD, A_tgtc:C2, A_tgtm:MT> ret = bdd;
         bdd = 0B;
         return ret;
     }

@@ -28,10 +28,10 @@ import jedd.*;
 import java.util.*;
 
 public final class Rsrcm_stmt_kind_tgtm_src_dstBDD extends Rsrcm_stmt_kind_tgtm_src_dst {
-    private <srcm:MS, stmt:ST, kind:KD, tgtm:MT, src:V1, dst:V2> bdd;
-    void add( <srcm:MS, stmt:ST, kind:KD, tgtm:MT, src:V1, dst:V2> tuple ) { bdd |= tuple; }
-    public Rsrcm_stmt_kind_tgtm_src_dstBDD( <srcm:MS, stmt:ST, kind:KD, tgtm:MT, src:V1, dst:V2> bdd, String name, PaddleQueue q ) { this(name, q); add(bdd); }
-    public Rsrcm_stmt_kind_tgtm_src_dstBDD( <srcm:MS, stmt:ST, kind:KD, tgtm:MT, src:V1, dst:V2> bdd ) { this("", null); add(bdd); }
+    private <A_srcm:MS, A_stmt:ST, A_kind:KD, A_tgtm:MT, A_src:V1, A_dst:V2> bdd;
+    void add( <A_srcm:MS, A_stmt:ST, A_kind:KD, A_tgtm:MT, A_src:V1, A_dst:V2> tuple ) { bdd |= tuple; }
+    public Rsrcm_stmt_kind_tgtm_src_dstBDD( <A_srcm:MS, A_stmt:ST, A_kind:KD, A_tgtm:MT, A_src:V1, A_dst:V2> bdd, String name, PaddleQueue q ) { this(name, q); add(bdd); }
+    public Rsrcm_stmt_kind_tgtm_src_dstBDD( <A_srcm:MS, A_stmt:ST, A_kind:KD, A_tgtm:MT, A_src:V1, A_dst:V2> bdd ) { this("", null); add(bdd); }
     Rsrcm_stmt_kind_tgtm_src_dstBDD(String name, PaddleQueue q) { super(name, q); bdd = 0B; }
     public Iterator iterator() {;
         return new Iterator() {
@@ -43,7 +43,7 @@ public final class Rsrcm_stmt_kind_tgtm_src_dstBDD extends Rsrcm_stmt_kind_tgtm_
             }
             public Object next() {
                 if( it == null || !it.hasNext() ) {
-                    it = bdd.iterator( new Attribute[] { srcm.v(), stmt.v(), kind.v(), tgtm.v(), src.v(), dst.v() } );
+                    it = bdd.iterator( new Attribute[] { A_srcm.v(), A_stmt.v(), A_kind.v(), A_tgtm.v(), A_src.v(), A_dst.v() } );
                     bdd = 0B;
                 }
                 Object[] components = (Object[]) it.next();
@@ -52,8 +52,8 @@ public final class Rsrcm_stmt_kind_tgtm_src_dstBDD extends Rsrcm_stmt_kind_tgtm_
             public void remove() { throw new UnsupportedOperationException(); }
         };
     }
-    public <srcm:MS, stmt:ST, kind:KD, tgtm:MT, src:V1, dst:V2> get() {
-        <srcm:MS, stmt:ST, kind:KD, tgtm:MT, src:V1, dst:V2> ret = bdd;
+    public <A_srcm:MS, A_stmt:ST, A_kind:KD, A_tgtm:MT, A_src:V1, A_dst:V2> get() {
+        <A_srcm:MS, A_stmt:ST, A_kind:KD, A_tgtm:MT, A_src:V1, A_dst:V2> ret = bdd;
         bdd = 0B;
         return ret;
     }

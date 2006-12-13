@@ -43,42 +43,42 @@ public class BDDVirtualCalls extends AbsVirtualCalls
                 final SootMethod m = (SootMethod) mIt.next();
                 if( m.isAbstract() ) continue;
                 declaresMethod |= new{
-                        m.getDeclaringClass().getType()=>type,
-                        m.getNumberedSubSignature()=>signature,
-                        m=>method };
+                        m.getDeclaringClass().getType()=>A_type,
+                        m.getNumberedSubSignature()=>A_signature,
+                        m=>A_method };
             }
         }
         for( Iterator clsIt = Scene.v().dynamicClasses().iterator(); clsIt.hasNext(); ) {
             final SootClass cls = (SootClass) clsIt.next();
             for( Iterator clinitIt = EntryPoints.v().clinitsOf(cls).iterator(); clinitIt.hasNext(); ) {
                 final SootMethod clinit = (SootMethod) clinitIt.next();
-                dynamicClinits |= new{clinit=>tgtm};
+                dynamicClinits |= new{clinit=>A_tgtm};
             }
         }
     }
 
     private int lastVarNode = 1;
     private Iterator allocNodeIt = PaddleNumberers.v().allocNodeNumberer().iterator();
-    private <var:V1, type> varNodes;
-    private <obj, type> allocNodes;
-    private <kind> virtual = new{Kind.VIRTUAL=>kind} | new{Kind.INTERFACE=>kind} | new{Kind.PRIVILEGED=>kind} | new{Kind.INVOKE_FINALIZE=>kind};
-    private <type> threads = 0B;
+    private <A_var:V1, A_type> varNodes;
+    private <A_obj, A_type> allocNodes;
+    private <A_kind> virtual = new{Kind.VIRTUAL=>A_kind} | new{Kind.INTERFACE=>A_kind} | new{Kind.PRIVILEGED=>A_kind} | new{Kind.INVOKE_FINALIZE=>A_kind};
+    private <A_type> threads = 0B;
     private void updateNodes() {
-        <obj, tgtm> newStringConstants = 0B;
-        <obj> newNonStringConstants = 0B;
+        <A_obj, A_tgtm> newStringConstants = 0B;
+        <A_obj> newNonStringConstants = 0B;
 
         // update varnodes
         for( ; lastVarNode <= PaddleNumberers.v().varNodeNumberer().size();
             lastVarNode++ ) {
             VarNode vn = (VarNode) PaddleNumberers.v().varNodeNumberer().get(lastVarNode);
-            varNodes |= new{ vn=>var, vn.getType()=>type };
+            varNodes |= new{ vn=>A_var, vn.getType()=>A_type };
         }
 
         for( Iterator anIt = allocNodeIt; anIt.hasNext(); ) {
 
             final AllocNode an = (AllocNode) anIt.next();
             if( an == null ) continue;
-            allocNodes |= new{ an=>obj, an.getType()=>type };
+            allocNodes |= new{ an=>A_obj, an.getType()=>A_type };
 
             if( an instanceof StringConstantNode ) {
                 StringConstantNode scn = (StringConstantNode) an;
@@ -93,15 +93,15 @@ public class BDDVirtualCalls extends AbsVirtualCalls
                     SootClass cls = Scene.v().getSootClass(constant);
                     for( Iterator methodIt = EntryPoints.v().clinitsOf(cls).iterator(); methodIt.hasNext(); ) {
                         final SootMethod method = (SootMethod) methodIt.next();
-                        newStringConstants |= new{ an=>obj, method=>tgtm };
+                        newStringConstants |= new{ an=>A_obj, method=>A_tgtm };
                     }
                 }
             } else {
-                newNonStringConstants |= new{an=>obj};
+                newNonStringConstants |= new{an=>A_obj};
             }
         }
-        threads = (subt=>type)
-            hier.subtypeRelation(){supt} <> new{clRunnable=>type}{type};
+        threads = (A_subt=>A_type)
+            hier.subtypeRelation(){A_supt} <> new{clRunnable=>A_type}{A_type};
         stringConstants |= newStringConstants;
         nonStringConstants |= newNonStringConstants;
         newClinitTargets |= 
@@ -109,25 +109,25 @@ public class BDDVirtualCalls extends AbsVirtualCalls
     }
     protected final RefType clRunnable = RefType.v("java.lang.Runnable");
         
-    private <obj, tgtm> stringConstants = 0B;
-    private <obj:H1> nonStringConstants = 0B;
-    private <obj, tgtm> newClinitTargets = 0B;
-    private <obj, tgtm> clinitTargets = 0B;
-    private <tgtm> dynamicClinits = 0B;
+    private <A_obj, A_tgtm> stringConstants = 0B;
+    private <A_obj:H1> nonStringConstants = 0B;
+    private <A_obj, A_tgtm> newClinitTargets = 0B;
+    private <A_obj, A_tgtm> clinitTargets = 0B;
+    private <A_tgtm> dynamicClinits = 0B;
     private final NumberedString sigClinit = Scene.v().getSubSigNumberer().
         findOrAdd( "void <clinit>()" );
     
-    private <type, signature, method> targets = 0B;
-    private <type, signature, method> declaresMethod = 0B;
+    private <A_type, A_signature, A_method> targets = 0B;
+    private <A_type, A_signature, A_method> declaresMethod = 0B;
     private BDDHierarchy hier = PaddleScene.v().BDDHierarchy();
 
-    private <varc, var, objc, obj> newPt = 0B;
-    private <varc, var, objc, obj> allPt = 0B;
-    private <varc, var, obj> allPtNoObjc = 0B;
-    private <var, srcm, stmt, dtp, signature, kind> newRcv = 0B;
-    private <var, srcm, stmt, dtp, signature, kind> allRcv = 0B;
-    private <var, srcm, stmt, tgtm> newSpc = 0B;
-    private <var, srcm, stmt, tgtm> allSpc = 0B;
+    private <A_varc, A_var, A_objc, A_obj> newPt = 0B;
+    private <A_varc, A_var, A_objc, A_obj> allPt = 0B;
+    private <A_varc, A_var, A_obj> allPtNoObjc = 0B;
+    private <A_var, A_srcm, A_stmt, A_dtp, A_signature, A_kind> newRcv = 0B;
+    private <A_var, A_srcm, A_stmt, A_dtp, A_signature, A_kind> allRcv = 0B;
+    private <A_var, A_srcm, A_stmt, A_tgtm> newSpc = 0B;
+    private <A_var, A_srcm, A_stmt, A_tgtm> allSpc = 0B;
 
     private boolean change;
     public boolean update() {
@@ -137,7 +137,7 @@ public class BDDVirtualCalls extends AbsVirtualCalls
 
         newPt = pt.get();
         allPt |= newPt;
-        allPtNoObjc |= (objc=>) newPt;
+        allPtNoObjc |= (A_objc=>) newPt;
 
         newRcv = receivers.get();
         allRcv |= newRcv;
@@ -154,139 +154,139 @@ public class BDDVirtualCalls extends AbsVirtualCalls
         return change;
     }
 
-    private <var, srcm, stmt, kind> clinits;
-    private <srcc, var, tgtm> tgtMethods;
+    private <A_var, A_srcm, A_stmt, A_kind> clinits;
+    private <A_srcc, A_var, A_tgtm> tgtMethods;
     private void updateClinits() {
-        clinits |= (dtp=>, signature=>) newRcv{kind} >< new{Kind.CLINIT=>kind}{kind};
+        clinits |= (A_dtp=>, A_signature=>) newRcv{A_kind} >< new{Kind.CLINIT=>A_kind}{A_kind};
 
         tgtMethods |=
-            ((varc=>srcc, objc=>) allPt){obj} <> newClinitTargets{obj} |
-            ((varc=>srcc, objc=>) newPt){obj} <> clinitTargets{obj};
+            ((A_varc=>A_srcc, A_objc=>) allPt){A_obj} <> newClinitTargets{A_obj} |
+            ((A_varc=>A_srcc, A_objc=>) newPt){A_obj} <> clinitTargets{A_obj};
 
         clinitTargets |= newClinitTargets;
         newClinitTargets = 0B;
 
-        <srcc, srcm, stmt, kind, tgtc, tgtm> newStatics =
-            tgtMethods{var} <> clinits{var}{} 
-                         >< new{null=>tgtc}{};
+        <A_srcc, A_srcm, A_stmt, A_kind, A_tgtc, A_tgtm> newStatics =
+            tgtMethods{A_var} <> clinits{A_var}{} 
+                         >< new{null=>A_tgtc}{};
         statics.add( newStatics );
         if( newStatics != 0B ) change = true;
     }
-    private <varc, var, objc, obj, srcm, stmt, tgtm> resolvedSpecials = 0B;
+    private <A_varc, A_var, A_objc, A_obj, A_srcm, A_stmt, A_tgtm> resolvedSpecials = 0B;
     private void updateSpecials() {
 
-        <varc, var, objc, obj, srcm, stmt, tgtm> newSpecials =
-            newPt{var} >< allSpc{var}
-            | allPt{var} >< newSpc{var};
+        <A_varc, A_var, A_objc, A_obj, A_srcm, A_stmt, A_tgtm> newSpecials =
+            newPt{A_var} >< allSpc{A_var}
+            | allPt{A_var} >< newSpc{A_var};
 
         newSpecials -= resolvedSpecials;
         resolvedSpecials |= newSpecials;
 
-        out.add( newSpecials{} >< new{Kind.SPECIAL=>kind}{} );
+        out.add( newSpecials{} >< new{Kind.SPECIAL=>A_kind}{} );
         if( newSpecials != 0B ) change = true;
     }
 
-    private <var, srcm, stmt, type, kind, tgtm> callSiteTargets = 0B;
-    private <var, dtp, signature> rcvSigs = 0B;
-    private <var, dtp, signature> threadRcvSigs = 0B;
-    private <var, srcm, stmt, dtp, signature, kind> rcv = 0B;
-    private <varc, var, objc, obj, type> allVarCtxtPt = 0B;
-    private <var, type> allPtTypes = 0B;
+    private <A_var, A_srcm, A_stmt, A_type, A_kind, A_tgtm> callSiteTargets = 0B;
+    private <A_var, A_dtp, A_signature> rcvSigs = 0B;
+    private <A_var, A_dtp, A_signature> threadRcvSigs = 0B;
+    private <A_var, A_srcm, A_stmt, A_dtp, A_signature, A_kind> rcv = 0B;
+    private <A_varc, A_var, A_objc, A_obj, A_type> allVarCtxtPt = 0B;
+    private <A_var, A_type> allPtTypes = 0B;
     private void updateVirtuals() {
-        <var, srcm, stmt, dtp, signature, kind> newVirtRcv = 
-            newRcv{kind} >< (virtual|new{Kind.THREAD=>kind}){kind};
+        <A_var, A_srcm, A_stmt, A_dtp, A_signature, A_kind> newVirtRcv = 
+            newRcv{A_kind} >< (virtual|new{Kind.THREAD=>A_kind}){A_kind};
         rcv |= newVirtRcv;
 
-        <var, dtp, signature, kind> sigs = (srcm=>, stmt=>) newVirtRcv;
-        <var, dtp, signature> newRcvSigs = sigs{kind} <> virtual{kind};
+        <A_var, A_dtp, A_signature, A_kind> sigs = (A_srcm=>, A_stmt=>) newVirtRcv;
+        <A_var, A_dtp, A_signature> newRcvSigs = sigs{A_kind} <> virtual{A_kind};
         rcvSigs |= newRcvSigs;
-        <var, dtp, signature> newThreadRcvSigs = sigs{kind} <>
-                               new{Kind.THREAD=>kind}{kind};
+        <A_var, A_dtp, A_signature> newThreadRcvSigs = sigs{A_kind} <>
+                               new{Kind.THREAD=>A_kind}{A_kind};
         threadRcvSigs |= newThreadRcvSigs;
 
         // resolve new points-to sets
-        <var, type> ptTypes = allocNodes{obj} <> (varc=>, objc=>) newPt{obj}; 
+        <A_var, A_type> ptTypes = allocNodes{A_obj} <> (A_varc=>, A_objc=>) newPt{A_obj}; 
 
-        <type, dtp, signature> newTypes = ptTypes{var} <> rcvSigs{var};
+        <A_type, A_dtp, A_signature> newTypes = ptTypes{A_var} <> rcvSigs{A_var};
 
-        newTypes |= (ptTypes{type} >< threads{type}){var} <> threadRcvSigs{var};
+        newTypes |= (ptTypes{A_type} >< threads{A_type}){A_var} <> threadRcvSigs{A_var};
 
         allPtTypes |= ptTypes;
-        newTypes |= allPtTypes{var} <> newRcvSigs{var};
-        newTypes |= (allPtTypes{type} >< threads{type}){var} <>
-                                    newThreadRcvSigs{var};
+        newTypes |= allPtTypes{A_var} <> newRcvSigs{A_var};
+        newTypes |= (allPtTypes{A_type} >< threads{A_type}){A_var} <>
+                                    newThreadRcvSigs{A_var};
 
         // close under AnySubType; that is, if the receiver is AnySubType(t),
         // replace it with all subtypes of t
         hier.update();
-        newTypes |= newTypes{type} <> hier.anySub(){anyst};
+        newTypes |= newTypes{A_type} <> hier.anySub(){A_anyst};
 
         // only resolve concrete types
-        newTypes = newTypes{type} >< hier.concrete(){type};
+        newTypes = newTypes{A_type} >< hier.concrete(){A_type};
 
         // if we've resolved them already, don't resolve them again
-        <signature, type> typesToResolve = ((dtp=>)newTypes) - ((method=>)targets);
+        <A_signature, A_type> typesToResolve = ((A_dtp=>)newTypes) - ((A_method=>)targets);
 
         // for each tuple [t, s], make it [t, s, t].
-        <subt, signature, supt> toResolve = (type=>subt, type=>supt) typesToResolve;
+        <A_subt, A_signature, A_supt> toResolve = (A_type=>A_subt, A_type=>A_supt) typesToResolve;
 
-        <type, signature, method> newTargets = 0B;
+        <A_type, A_signature, A_method> newTargets = 0B;
 
         do {
             // figure out which receivers are already resolved (if the
             // corresponding class already declares the method)
-            <subt, signature, supt, method> resolved =
-                toResolve {supt, signature} >< declaresMethod {type, signature};
+            <A_subt, A_signature, A_supt, A_method> resolved =
+                toResolve {A_supt, A_signature} >< declaresMethod {A_type, A_signature};
 
             // remove resolved ones
-            toResolve -= (method=>) resolved;
+            toResolve -= (A_method=>) resolved;
 
             // add resolved ones to targets
-            newTargets |= (subt=>type, supt=>) resolved;
+            newTargets |= (A_subt=>A_type, A_supt=>) resolved;
 
             // move one step up the hierarchy for the other receiver types
-            toResolve =                          toResolve {supt} 
-                <> (supt=>T3) (hier.extend()|hier.array()) {subt};
+            toResolve =                          toResolve {A_supt} 
+                <> (A_supt=>T3) (hier.extend()|hier.array()) {A_subt};
         } while( toResolve != 0B );
 
 
-        <varc, var, objc, obj, type> typedPt = allocNodes{obj}><newPt{obj};
+        <A_varc, A_var, A_objc, A_obj, A_type> typedPt = allocNodes{A_obj}><newPt{A_obj};
 
         // close typedPt under AnySubType
-        typedPt |= typedPt{type} <> hier.anySub(){anyst};
-        <varc, var, dtp, objc, obj, type> varCtxtPt =
-            typedPt{var} >< (type=>dtp) varNodes{var};
+        typedPt |= typedPt{A_type} <> hier.anySub(){A_anyst};
+        <A_varc, A_var, A_dtp, A_objc, A_obj, A_type> varCtxtPt =
+            typedPt{A_var} >< (A_type=>A_dtp) varNodes{A_var};
 
         // Weed out types coming from AnySubType that are not compatible
         // with the declared type of the variable.
-        varCtxtPt =         varCtxtPt{type, dtp} 
-            >< hier.subtypeRelation(){subt, supt};
+        varCtxtPt =         varCtxtPt{A_type, A_dtp} 
+            >< hier.subtypeRelation(){A_subt, A_supt};
 
         // Weed out non-concrete actual types.
-        varCtxtPt = varCtxtPt{type} >< hier.concrete(){type};
+        varCtxtPt = varCtxtPt{A_type} >< hier.concrete(){A_type};
 
-        allVarCtxtPt |= (dtp=>) varCtxtPt;
+        allVarCtxtPt |= (A_dtp=>) varCtxtPt;
 
-        <var, srcm, stmt, dtp, type, kind, tgtm> newCallSiteTargets =
-            newVirtRcv{signature} <> (method=>tgtm) targets{signature}
-            | rcv{signature} <> (method=>tgtm) newTargets{signature};
+        <A_var, A_srcm, A_stmt, A_dtp, A_type, A_kind, A_tgtm> newCallSiteTargets =
+            newVirtRcv{A_signature} <> (A_method=>A_tgtm) targets{A_signature}
+            | rcv{A_signature} <> (A_method=>A_tgtm) newTargets{A_signature};
 
         targets |= newTargets;
 
         // If the dtp is null, it means we don't know it, so allow anything
-        newCallSiteTargets = newCallSiteTargets{type, dtp}
-                      >< hier.subtypeRelation(){subt, supt}
-                    | newCallSiteTargets{dtp} >< new{null=>dtp}{dtp};
+        newCallSiteTargets = newCallSiteTargets{A_type, A_dtp}
+                      >< hier.subtypeRelation(){A_subt, A_supt}
+                    | newCallSiteTargets{A_dtp} >< new{null=>A_dtp}{A_dtp};
 
-        callSiteTargets |= (dtp=>) newCallSiteTargets;
+        callSiteTargets |= (A_dtp=>) newCallSiteTargets;
 
-        <varc, var, objc, obj, srcm, stmt, kind, tgtm> newVirtuals =
-            (type=>) (
-                             (dtp=>) varCtxtPt{type, var}
-                            >< callSiteTargets{type, var} );
+        <A_varc, A_var, A_objc, A_obj, A_srcm, A_stmt, A_kind, A_tgtm> newVirtuals =
+            (A_type=>) (
+                             (A_dtp=>) varCtxtPt{A_type, A_var}
+                            >< callSiteTargets{A_type, A_var} );
         newVirtuals |= 
-            (type=>) (      allVarCtxtPt{type, var}
-            >< (dtp=>)newCallSiteTargets{type, var});
+            (A_type=>) (      allVarCtxtPt{A_type, A_var}
+            >< (A_dtp=>)newCallSiteTargets{A_type, A_var});
 
         out.add( newVirtuals );
         if( newVirtuals != 0B ) change = true;

@@ -32,24 +32,24 @@ public class BDDObjSensVirtualContextManager extends BDDVirtualContextManager
         super( in, out, thisOut, gnf );
     }
     public boolean update() {
-        <varc, var, objc, obj, srcm, stmt, kind, tgtm> newIn = in.get();
+        <A_varc, A_var, A_objc, A_obj, A_srcm, A_stmt, A_kind, A_tgtm> newIn = in.get();
 
-        out.add((varc=>srcc, obj=>tgtc)(obj=>C2)(var=>, objc=>)
+        out.add((A_varc=>A_srcc, A_obj=>A_tgtc)(A_obj=>C2)(A_var=>, A_objc=>)
             newIn );
 
         if( thisOut != null ) {
-            newMethods((varc=>, var=>, objc=>, obj=>, srcm=>, stmt=>, kind=>)
+            newMethods((A_varc=>, A_var=>, A_objc=>, A_obj=>, A_srcm=>, A_stmt=>, A_kind=>)
                 newIn);
             thisOut.add(
-                (base=>varc)
-                (base=>C1)
-                (obj=>H1, base=>H2)
-                (obj=>obj, obj=>base)
-                (obj=>H1)
+                (A_base=>A_varc)
+                (A_base=>C1)
+                (A_obj=>H1, A_base=>H2)
+                (A_obj=>A_obj, A_obj=>A_base)
+                (A_obj=>H1)
                 (
-                    (varc=>, var=>, srcm=>, stmt=>, kind=>)
-                    newIn{tgtm} <>
-                    thisVar(){method}) );
+                    (A_varc=>, A_var=>, A_srcm=>, A_stmt=>, A_kind=>)
+                    newIn{A_tgtm} <>
+                    thisVar(){A_method}) );
         }
 
         return newIn != 0B;

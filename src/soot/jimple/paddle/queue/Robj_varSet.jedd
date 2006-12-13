@@ -51,7 +51,7 @@ public class Robj_varSet extends Robj_var {
             public void remove() { throw new UnsupportedOperationException(); }
         };
     }
-    public <obj:H1, var:V1> get() {
+    public <A_obj:H1, A_var:V1> get() {
         throw new RuntimeException();
     }
     public boolean hasNext() { return !bdd.isEmpty(); }

@@ -38,7 +38,7 @@ public final class Qbasec_base_fld_objc_objNumTrace extends Qbasec_base_fld_objc
             reader.add( in );
         }
     }
-    public void add( <basec:CH1, base:H1, fld:FD, objc:CH2, obj:H2> in ) {
+    public void add( <A_basec:CH1, A_base:H1, A_fld:FD, A_objc:CH2, A_obj:H2> in ) {
         throw new RuntimeException();
     }
     public Rbasec_base_fld_objc_obj reader( String rname ) {

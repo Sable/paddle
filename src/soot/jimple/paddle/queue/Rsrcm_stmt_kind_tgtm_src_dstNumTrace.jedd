@@ -52,7 +52,7 @@ public class Rsrcm_stmt_kind_tgtm_src_dstNumTrace extends Rsrcm_stmt_kind_tgtm_s
             public void remove() { throw new UnsupportedOperationException(); }
         };
     }
-    public <srcm:MS, stmt:ST, kind:KD, tgtm:MT, src:V1, dst:V2> get() {
+    public <A_srcm:MS, A_stmt:ST, A_kind:KD, A_tgtm:MT, A_src:V1, A_dst:V2> get() {
         throw new RuntimeException();
     }
     public boolean hasNext() { return !bdd.isEmpty(); }

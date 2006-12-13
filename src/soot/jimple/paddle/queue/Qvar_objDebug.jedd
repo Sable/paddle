@@ -36,8 +36,8 @@ public class Qvar_objDebug extends Qvar_obj {
         bdd.add( _var, _obj );
         trad.add( _var, _obj );
     }
-    public void add( <var:V1, obj:H1> in ) {
-        Iterator it = in.iterator( new Attribute[] { var.v(), obj.v() } );
+    public void add( <A_var:V1, A_obj:H1> in ) {
+        Iterator it = in.iterator( new Attribute[] { A_var.v(), A_obj.v() } );
         while( it.hasNext() ) {
             Object[] tuple = (Object[]) it.next();
             for( int i = 0; i < 2; i++ ) {

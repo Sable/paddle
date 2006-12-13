@@ -38,7 +38,7 @@ public abstract class Rsrcc_srcm_stmt_kind_tgtc_tgtm implements PaddleQueueReade
     public PaddleQueue queue() { return q; }
     public final String toString() { return name; }
     public abstract Iterator iterator();
-    public abstract <srcc:C1, srcm:MS, stmt:ST, kind:KD, tgtc:C2, tgtm:MT> get();
+    public abstract <A_srcc:C1, A_srcm:MS, A_stmt:ST, A_kind:KD, A_tgtc:C2, A_tgtm:MT> get();
     public abstract boolean hasNext();
     public static class Tuple {
         private Context _srcc;

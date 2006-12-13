@@ -38,7 +38,7 @@ public final class Qsrcm_stmt_kind_tgtmSet extends Qsrcm_stmt_kind_tgtm {
             reader.add( in );
         }
     }
-    public void add( <srcm:MS, stmt:ST, kind:KD, tgtm:MT> in ) {
+    public void add( <A_srcm:MS, A_stmt:ST, A_kind:KD, A_tgtm:MT> in ) {
         throw new RuntimeException();
     }
     public Rsrcm_stmt_kind_tgtm reader( String rname ) {

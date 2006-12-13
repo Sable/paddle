@@ -42,10 +42,10 @@ public class Rsrcc_src_dstc_dstIter extends Rsrcc_src_dstc_dst{
             public void remove() { throw new UnsupportedOperationException(); }
         };
     }
-    public <srcc:C1, src:V1, dstc:C2, dst:V2> get() {
-        <srcc:C1, src:V1, dstc:C2, dst:V2> ret = 0B;
+    public <A_srcc:C1, A_src:V1, A_dstc:C2, A_dst:V2> get() {
+        <A_srcc:C1, A_src:V1, A_dstc:C2, A_dst:V2> ret = 0B;
         while( r.hasNext() ) {
-            ret |= new { r.next()=>srcc, r.next()=>src, r.next()=>dstc, r.next()=>dst };
+            ret |= new { r.next()=>A_srcc, r.next()=>A_src, r.next()=>A_dstc, r.next()=>A_dst };
         }
         return ret;
     }

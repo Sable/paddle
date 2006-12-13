@@ -38,7 +38,7 @@ public final class Qvarc_var_objc_objSet extends Qvarc_var_objc_obj {
             reader.add( in );
         }
     }
-    public void add( <varc:C1, var:V1, objc:CH1, obj:H1> in ) {
+    public void add( <A_varc:C1, A_var:V1, A_objc:CH1, A_obj:H1> in ) {
         throw new RuntimeException();
     }
     public Rvarc_var_objc_obj reader( String rname ) {

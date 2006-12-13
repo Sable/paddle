@@ -2,5 +2,5 @@ package soot.jimple.paddle.bdddomains;
 import jedd.*;
 import soot.*;
 
-public class stmt(StmtDomain) extends Attribute {
+public class A_signature(SigDomain) extends Attribute {
 }

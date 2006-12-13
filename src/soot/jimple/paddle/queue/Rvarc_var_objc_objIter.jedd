@@ -42,10 +42,10 @@ public class Rvarc_var_objc_objIter extends Rvarc_var_objc_obj{
             public void remove() { throw new UnsupportedOperationException(); }
         };
     }
-    public <varc:C1, var:V1, objc:CH1, obj:H1> get() {
-        <varc:C1, var:V1, objc:CH1, obj:H1> ret = 0B;
+    public <A_varc:C1, A_var:V1, A_objc:CH1, A_obj:H1> get() {
+        <A_varc:C1, A_var:V1, A_objc:CH1, A_obj:H1> ret = 0B;
         while( r.hasNext() ) {
-            ret |= new { r.next()=>varc, r.next()=>var, r.next()=>objc, r.next()=>obj };
+            ret |= new { r.next()=>A_varc, r.next()=>A_var, r.next()=>A_objc, r.next()=>A_obj };
         }
         return ret;
     }

@@ -50,19 +50,19 @@ public class BDDKCFAVirtualContextManager extends BDDVirtualContextManager
             }
             shifter = Jedd.v().makeShifter( from, to );
         }
-        <varc, var, objc, obj, srcm, stmt, kind, tgtm> newIn = in.get();
-        <varc:C1, objc:CH1, obj, srcm, stmt, kind, tgtc:C2, tgtm> newEdges = 
-            (var=>, stmt=>stmt, stmt=>tgtc) newIn;
-        newEdges = (<varc, objc, obj, srcm, stmt, kind, tgtc, tgtm>)
+        <A_varc, A_var, A_objc, A_obj, A_srcm, A_stmt, A_kind, A_tgtm> newIn = in.get();
+        <A_varc:C1, A_objc:CH1, A_obj, A_srcm, A_stmt, A_kind, A_tgtc:C2, A_tgtm> newEdges = 
+            (A_var=>, A_stmt=>A_stmt, A_stmt=>A_tgtc) newIn;
+        newEdges = (<A_varc, A_objc, A_obj, A_srcm, A_stmt, A_kind, A_tgtc, A_tgtm>)
             newEdges.applyShifter(shifter);
-        out.add((varc=>srcc, objc=>, obj=>) newEdges);
+        out.add((A_varc=>A_srcc, A_objc=>, A_obj=>) newEdges);
 
         if( thisOut != null ) {
-            newMethods((varc=>, objc=>, obj=>, srcm=>, stmt=>, kind=>, tgtc=>)
+            newMethods((A_varc=>, A_objc=>, A_obj=>, A_srcm=>, A_stmt=>, A_kind=>, A_tgtc=>)
                 newEdges);
             thisOut.add(
-                (varc=>, srcm=>, stmt=>, kind=>, tgtc=>varc) newEdges{tgtm} <>
-                thisVar(){method} );
+                (A_varc=>, A_srcm=>, A_stmt=>, A_kind=>, A_tgtc=>A_varc) newEdges{A_tgtm} <>
+                thisVar(){A_method} );
         }
 
         return newIn != 0B;

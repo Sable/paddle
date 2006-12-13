@@ -38,7 +38,7 @@ public final class Qsrc_dst_fldSet extends Qsrc_dst_fld {
             reader.add( in );
         }
     }
-    public void add( <src:V1, dst:V2, fld:FD> in ) {
+    public void add( <A_src:V1, A_dst:V2, A_fld:FD> in ) {
         throw new RuntimeException();
     }
     public Rsrc_dst_fld reader( String rname ) {

@@ -2,5 +2,5 @@ package soot.jimple.paddle.bdddomains;
 import jedd.*;
 import soot.*;
 
-public class arrayt(TypeDomain) extends Attribute {
+public class A_curstmt(StmtDomain) extends Attribute {
 }

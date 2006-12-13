@@ -38,7 +38,7 @@ public final class QvarNumTrace extends Qvar {
             reader.add( in );
         }
     }
-    public void add( <var:V1> in ) {
+    public void add( <A_var:V1> in ) {
         throw new RuntimeException();
     }
     public Rvar reader( String rname ) {

@@ -40,69 +40,69 @@ public class BDDCflowStack
         for( Iterator sIt = isValids.iterator(); sIt.hasNext(); ) {
             final Stmt s = (Stmt) sIt.next();
             Scene.v().getUnitNumberer().add(s);
-            this.isValids |= new {s=>stmt};
+            this.isValids |= new {s=>A_stmt};
         }
         for( Iterator sIt = shadows.iterator(); sIt.hasNext(); ) {
             final Shadow s = (Shadow) sIt.next();
             ShadowNumberer.v().add(s);
             Scene.v().getUnitNumberer().add(s.pushStmt());
             Scene.v().getUnitNumberer().add(s.popStmt());
-            this.shadows |= new {s=>shadow};
-            this.pushes |= new {s=>shadow, s.pushStmt()=>stmt};
+            this.shadows |= new {s=>A_shadow};
+            this.pushes |= new {s=>A_shadow, s.pushStmt()=>A_stmt};
         }
     }
 
     private void debug(String s) {
         if(DEBUG) G.v().out.println(s);
     }
-    private <stmt> within(Shadow sh) {
+    private <A_stmt> within(Shadow sh) {
         debug("Doing within "+sh);
-        <stmt> ret = 0B;
+        <A_stmt> ret = 0B;
         boolean inShadow = false;
         for( Iterator sIt = sh.method().getActiveBody().getUnits().iterator(); sIt.hasNext(); ) {
             final Stmt s = (Stmt) sIt.next();
             if( s == sh.popStmt() ) inShadow = false;
             if( inShadow ) {
                 Scene.v().getUnitNumberer().add(s);
-                ret |= new{s=>stmt}; 
+                ret |= new{s=>A_stmt}; 
             }
             if( s == sh.pushStmt() ) inShadow = true;
         }
         return ret;
     }
 
-    private <method> targetsOf(<stmt> calls) {
-        return (srcm=>, tgtm=>method) cflow.callGraph(){stmt} <> calls{stmt};
+    private <A_method> targetsOf(<A_stmt> calls) {
+        return (A_srcm=>, A_tgtm=>A_method) cflow.callGraph(){A_stmt} <> calls{A_stmt};
     }
 
-    private <shadow, method> targetsOfShadow(<shadow, stmt> calls) {
-        return (srcm=>, tgtm=>method) cflow.callGraph(){stmt} <> calls{stmt};
+    private <A_shadow, A_method> targetsOfShadow(<A_shadow, A_stmt> calls) {
+        return (A_srcm=>, A_tgtm=>A_method) cflow.callGraph(){A_stmt} <> calls{A_stmt};
     }
 
-    private <stmt> stmtsIn(<method> methods) {
-        return cflow.stmtMethod(){method} <> methods{method};
+    private <A_stmt> stmtsIn(<A_method> methods) {
+        return cflow.stmtMethod(){A_method} <> methods{A_method};
     }
 
-    private <shadow, stmt> stmtsInShadow(<shadow, method> methods) {
-        return cflow.stmtMethod(){method} <> methods{method};
+    private <A_shadow, A_stmt> stmtsInShadow(<A_shadow, A_method> methods) {
+        return cflow.stmtMethod(){A_method} <> methods{A_method};
     }
 
-    private <shadow, stmt> mayCflow() {
-        <shadow, stmt> ret = 0B;
+    private <A_shadow, A_stmt> mayCflow() {
+        <A_shadow, A_stmt> ret = 0B;
         for( Iterator shIt = shadows.iterator(); shIt.hasNext(); ) {
             final Shadow sh = (Shadow) shIt.next();
-            ret |= new {sh=>shadow}{} >< within(sh){};
+            ret |= new {sh=>A_shadow}{} >< within(sh){};
         }
         while(true) {
-            <shadow, method> targets = targetsOfShadow(ret);
+            <A_shadow, A_method> targets = targetsOfShadow(ret);
             if( ret == (ret |= stmtsInShadow(targets)) ) break;
         }
         return ret;
     }
 
     /*
-    private <stmt> mustCflow() {
-        <stmt> ret = 0B;
+    private <A_stmt> mustCflow() {
+        <A_stmt> ret = 0B;
         for( Iterator shIt = shadows.iterator(); shIt.hasNext(); ) {
             final Shadow sh = (Shadow) shIt.next();
             if( sh.unconditional() ) {
@@ -110,31 +110,31 @@ public class BDDCflowStack
             }
         }
         while(true) {
-            <method> methods = targetsOf(ret) - targetsOf(1B - ret);
+            <A_method> methods = targetsOf(ret) - targetsOf(1B - ret);
             if( ret == (ret |= stmtsIn(methods)) ) break;
         }
         return ret;
     }
     */
 
-    private <stmt> mustCflow() {
-        <stmt> shadowStmts = 0B;
+    private <A_stmt> mustCflow() {
+        <A_stmt> shadowStmts = 0B;
         for( Iterator shIt = shadows.iterator(); shIt.hasNext(); ) {
             final Shadow sh = (Shadow) shIt.next();
             if( sh.unconditional() ) {
                 shadowStmts |= within(sh);
             }
         }
-        <method> targets = 0B;
+        <A_method> targets = 0B;
         for( Iterator mIt = Scene.v().getEntryPoints().iterator(); mIt.hasNext(); ) {
             final SootMethod m = (SootMethod) mIt.next();
-            targets |= new{m=>method};
+            targets |= new{m=>A_method};
         }
         targets |= cflow.threadEntries();
-        <stmt> ret = 0B;
-        <stmt> oldRet;
+        <A_stmt> ret = 0B;
+        <A_stmt> oldRet;
         do {
-            <stmt> targetStmts = stmtsIn(targets);
+            <A_stmt> targetStmts = stmtsIn(targets);
             targetStmts -= shadowStmts;
             targets = targetsOf(targetStmts);
             oldRet = ret;
@@ -143,13 +143,13 @@ public class BDDCflowStack
         return 1B - ret;
     }
 
-    private <shadow:V1> shadows = 0B;
-    private <shadow, stmt> pushes = 0B;
-    private <stmt> mustCflow = 1B;
-    private <shadow, stmt> mayCflow = 1B;
-    private <stmt> isValids = 0B;
-    private <stmt> neverValid = 0B;
-    private <stmt> alwaysValid = 0B;
+    private <A_shadow:V1> shadows = 0B;
+    private <A_shadow, A_stmt> pushes = 0B;
+    private <A_stmt> mustCflow = 1B;
+    private <A_shadow, A_stmt> mayCflow = 1B;
+    private <A_stmt> isValids = 0B;
+    private <A_stmt> neverValid = 0B;
+    private <A_stmt> alwaysValid = 0B;
 
     public String queryStats() {
         return "LaTeX: "
@@ -173,7 +173,7 @@ public class BDDCflowStack
      */
     public boolean neverValid( Stmt s ) {
         if( mayCflow == 1B ) mayCflow = mayCflow();
-        return new{s=>stmt}{stmt} >< (shadow=>) mayCflow{stmt} == 0B;
+        return new{s=>A_stmt}{A_stmt} >< (A_shadow=>) mayCflow{A_stmt} == 0B;
     }
 
     /** Returns true if the call to isValid() in statement s always returns
@@ -181,13 +181,13 @@ public class BDDCflowStack
      */
     public boolean alwaysValid( Stmt s ) {
         if( mustCflow == 1B ) mustCflow = mustCflow();
-        return new{s=>stmt}{stmt} >< mustCflow{stmt} != 0B;
+        return new{s=>A_stmt}{A_stmt} >< mustCflow{A_stmt} != 0B;
     }
 
-    private <stmt> computeNeverValid() {
+    private <A_stmt> computeNeverValid() {
         if(neverValid != 0B) return neverValid;
         if( mayCflow == 1B ) mayCflow = mayCflow();
-        <stmt> mayBeValid = (shadow=>) mayCflow{stmt} >< isValids{stmt};
+        <A_stmt> mayBeValid = (A_shadow=>) mayCflow{A_stmt} >< isValids{A_stmt};
         neverValid = isValids - mayBeValid;
         return neverValid;
     }
@@ -201,13 +201,13 @@ public class BDDCflowStack
         return ret;
     }
 
-    private <stmt> computeAlwaysValid() {
+    private <A_stmt> computeAlwaysValid() {
         if( bindsArgs ) {
             alwaysValid = 0B;
             return alwaysValid;
         }
         if( mustCflow == 1B ) mustCflow = mustCflow();
-        alwaysValid = mustCflow{stmt} >< isValids{stmt};
+        alwaysValid = mustCflow{A_stmt} >< isValids{A_stmt};
         return alwaysValid;
     }
 
@@ -221,7 +221,7 @@ public class BDDCflowStack
         return ret;
     }
 
-    <shadow> unnecessaryShadows = 0B;
+    <A_shadow> unnecessaryShadows = 0B;
 
     /** Returns the subset of shadows whose effect cannot be observed by
      * any of the isValid statements. Specifically, returns the shadows
@@ -230,13 +230,13 @@ public class BDDCflowStack
      */
     public Iterator/*Shadow*/ unnecessaryShadows() {
         debug("Computing unnecessaryShadows");
-        <stmt> interestingIsValids = isValids;
+        <A_stmt> interestingIsValids = isValids;
         interestingIsValids -= computeAlwaysValid();
         interestingIsValids -= computeNeverValid();
         if( mayCflow == 1B ) mayCflow = mayCflow();
-        <shadow> necessaryShadows = mayCflow{stmt} <> interestingIsValids{stmt};
+        <A_shadow> necessaryShadows = mayCflow{A_stmt} <> interestingIsValids{A_stmt};
         if( !bindsArgs ) {
-            necessaryShadows -= mustCflow{stmt} <> pushes{stmt};
+            necessaryShadows -= mustCflow{A_stmt} <> pushes{A_stmt};
         }
         unnecessaryShadows = (shadows - necessaryShadows);
         Iterator ret = unnecessaryShadows.iterator();

@@ -38,7 +38,7 @@ public final class Qvar_srcm_stmt_tgtmSet extends Qvar_srcm_stmt_tgtm {
             reader.add( in );
         }
     }
-    public void add( <var:V1, srcm:MS, stmt:ST, tgtm:MT> in ) {
+    public void add( <A_var:V1, A_srcm:MS, A_stmt:ST, A_tgtm:MT> in ) {
         throw new RuntimeException();
     }
     public Rvar_srcm_stmt_tgtm reader( String rname ) {

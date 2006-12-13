@@ -39,8 +39,8 @@ public class Qsrcc_srcm_stmt_kind_tgtc_tgtmTrad extends Qsrcc_srcm_stmt_kind_tgt
         q.add( _tgtm );
         invalidate();
     }
-    public void add( <srcc:C1, srcm:MS, stmt:ST, kind:KD, tgtc:C2, tgtm:MT> in ) {
-        Iterator it = in.iterator( new Attribute[] { srcc.v(), srcm.v(), stmt.v(), kind.v(), tgtc.v(), tgtm.v() } );
+    public void add( <A_srcc:C1, A_srcm:MS, A_stmt:ST, A_kind:KD, A_tgtc:C2, A_tgtm:MT> in ) {
+        Iterator it = in.iterator( new Attribute[] { A_srcc.v(), A_srcm.v(), A_stmt.v(), A_kind.v(), A_tgtc.v(), A_tgtm.v() } );
         while( it.hasNext() ) {
             Object[] tuple = (Object[]) it.next();
             for( int i = 0; i < 6; i++ ) {

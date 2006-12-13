@@ -42,10 +42,10 @@ public class RmethodIter extends Rmethod{
             public void remove() { throw new UnsupportedOperationException(); }
         };
     }
-    public <method:MS> get() {
-        <method:MS> ret = 0B;
+    public <A_method:MS> get() {
+        <A_method:MS> ret = 0B;
         while( r.hasNext() ) {
-            ret |= new { r.next()=>method };
+            ret |= new { r.next()=>A_method };
         }
         return ret;
     }

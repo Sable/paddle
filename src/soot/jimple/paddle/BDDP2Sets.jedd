@@ -36,14 +36,14 @@ public class BDDP2Sets extends AbsP2Sets
     }
 
     public PointsToSetReadOnly get( Context ctxt, VarNode v ) {
-        return new BDDPointsToSet( prop.pt{varc, var} 
-                     <> new{ctxt=>varc, v=>var}{varc, var} );
+        return new BDDPointsToSet( prop.pt{A_varc, A_var} 
+                     <> new{ctxt=>A_varc, v=>A_var}{A_varc, A_var} );
     }
     public PointsToSetReadOnly get( Context ctxt, AllocDotField adf ) {
-        return new BDDPointsToSet( (obj=>H1) ( (obj=>H2) (
-                prop.fieldPt{basec, base,fld} <>
-                new{ctxt=>basec, adf.base()=>base, adf.field()=>fld }
-                            {basec, base,fld} ) ) );
+        return new BDDPointsToSet( (A_obj=>H1) ( (A_obj=>H2) (
+                prop.fieldPt{A_basec, A_base,A_fld} <>
+                new{ctxt=>A_basec, adf.base()=>A_base, adf.field()=>A_fld }
+                            {A_basec, A_base,A_fld} ) ) );
     }
     public PointsToSetInternal make( Context c, VarNode v ) {
         throw new RuntimeException( "Not implemented" );
@@ -53,7 +53,7 @@ public class BDDP2Sets extends AbsP2Sets
     }
     public Rvarc_var_objc_obj getReader( VarNode vn ) {
         Rvarc_var_objc_objBDD ret = new Rvarc_var_objc_objBDD(
-            prop.pt{var} >< new{vn=>var}{var},
+            prop.pt{A_var} >< new{vn=>A_var}{A_var},
             "getReader", null);
         return ret;
     }

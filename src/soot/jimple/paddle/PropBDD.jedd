@@ -36,17 +36,17 @@ public class PropBDD extends AbsPropagator {
         super( simple, load, store, alloc, propout, pag );
     }
 
-    /*package*/ <varc, var, objc, obj> pt = 0B;
-    /*package*/ <basec, base, fld, objc, obj> fieldPt = 0B;
+    /*package*/ <A_varc, A_var, A_objc, A_obj> pt = 0B;
+    /*package*/ <A_basec, A_base, A_fld, A_objc, A_obj> fieldPt = 0B;
 
-    protected <varc, var, objc, obj> typeFilter() {
-        final <varc, objc> allContexts = 1B;
+    protected <A_varc, A_var, A_objc, A_obj> typeFilter() {
+        final <A_varc, A_objc> allContexts = 1B;
         return PaddleScene.v().tm.get(){} >< allContexts{};
     }
 
-    protected <varc, var, objc, obj> outputtedPt = 0B;
-    protected void outputPt( <varc, var, objc, obj> pt ) {
-        <varc, var, objc, obj> toOutput = pt - outputtedPt;
+    protected <A_varc, A_var, A_objc, A_obj> outputtedPt = 0B;
+    protected void outputPt( <A_varc, A_var, A_objc, A_obj> pt ) {
+        <A_varc, A_var, A_objc, A_obj> toOutput = pt - outputtedPt;
         if( toOutput == 0B ) return;
         ptout.add( toOutput );
         outputtedPt |= toOutput;
@@ -54,16 +54,16 @@ public class PropBDD extends AbsPropagator {
     }
 
     /** Propagate points-to relation pt over assignments simple. */
-    protected <varc:C1, var, objc:CH1, obj> propSimple(
-        <varc:C1, var, objc:CH1, obj> pt,
-        <srcc:C1, src, dstc:C2, dst> simple ) {
+    protected <A_varc:C1, A_var, A_objc:CH1, A_obj> propSimple(
+        <A_varc:C1, A_var, A_objc:CH1, A_obj> pt,
+        <A_srcc:C1, A_src, A_dstc:C2, A_dst> simple ) {
 
-        <varc, var, objc, obj> ret = 0B;
+        <A_varc, A_var, A_objc, A_obj> ret = 0B;
         while( true ) {
             pt = typeFilter() &
-                ((dstc=>varc, dst=>var) 
-                                       simple {srcc, src} 
-                                        <> pt {varc, var} );
+                ((A_dstc=>A_varc, A_dst=>A_var) 
+                                       simple {A_srcc, A_src} 
+                                        <> pt {A_varc, A_var} );
             pt -= ret;
             if(pt == 0B) break;
             ret |= pt;
@@ -72,35 +72,35 @@ public class PropBDD extends AbsPropagator {
     }
 
     /** Propagate points-to relation pt over stores stores pointing to storePt. */
-    protected <basec:CH1, base:H1, fld, objc:CH2, obj:H2> propStore(
-        <varc, var, objc, obj> pt,
-        <srcc, src, fld, dstc, dst> store,
-        <varc, var, objc, obj> storePt ) {
+    protected <A_basec:CH1, A_base:H1, A_fld, A_objc:CH2, A_obj:H2> propStore(
+        <A_varc, A_var, A_objc, A_obj> pt,
+        <A_srcc, A_src, A_fld, A_dstc, A_dst> store,
+        <A_varc, A_var, A_objc, A_obj> storePt ) {
 
-        <objc, obj, varc, var, fld> objectsBeingStored =
-            (dstc=>varc, dst=>var) store {srcc, src} 
-                                   <> pt {varc, var};
+        <A_objc, A_obj, A_varc, A_var, A_fld> objectsBeingStored =
+            (A_dstc=>A_varc, A_dst=>A_var) store {A_srcc, A_src} 
+                                   <> pt {A_varc, A_var};
                                         
-        return               objectsBeingStored {varc, var} 
-            <> (objc=>basec, obj=>base) storePt {varc, var};
+        return               objectsBeingStored {A_varc, A_var} 
+            <> (A_objc=>A_basec, A_obj=>A_base) storePt {A_varc, A_var};
     }
 
     /** Propagate points-to relation fpt over loads pointing to loadPt. */
-    protected <varc, var, objc, obj> propLoad(
-        <basec, base, fld, objc, obj> fpt,
-        <srcc, src, fld, dstc, dst> load,
-        <varc, var, objc, obj> loadPt ) {
+    protected <A_varc, A_var, A_objc, A_obj> propLoad(
+        <A_basec, A_base, A_fld, A_objc, A_obj> fpt,
+        <A_srcc, A_src, A_fld, A_dstc, A_dst> load,
+        <A_varc, A_var, A_objc, A_obj> loadPt ) {
 
-        <basec, base, fld, dstc, dst> loadsFromHeap;
-        loadsFromHeap =                   load{srcc, src} 
-            <> (objc=>basec, obj=>base) loadPt{varc, var};
+        <A_basec, A_base, A_fld, A_dstc, A_dst> loadsFromHeap;
+        loadsFromHeap =                   load{A_srcc, A_src} 
+            <> (A_objc=>A_basec, A_obj=>A_base) loadPt{A_varc, A_var};
 
-        return (dstc=>varc, dst=>var) loadsFromHeap {basec,base,fld} 
-                                             <> fpt {basec,base,fld};
+        return (A_dstc=>A_varc, A_dst=>A_var) loadsFromHeap {A_basec,A_base,A_fld} 
+                                             <> fpt {A_basec,A_base,A_fld};
     }
 
     public boolean fieldUpdate() {
-        <varc, var, objc, obj> oldPt = pt;
+        <A_varc, A_var, A_objc, A_obj> oldPt = pt;
 
         fieldPt |= propStore( pt, pag.allStore().get(), pt );
         pt |= propLoad( fieldPt, pag.allLoad().get(), pt ) & typeFilter();
@@ -110,7 +110,7 @@ public class PropBDD extends AbsPropagator {
     }
 
     public boolean update() {
-        <varc, var, objc, obj> oldPt = pt;
+        <A_varc, A_var, A_objc, A_obj> oldPt = pt;
 
         pt |= newAlloc.get() & typeFilter();
         pt |= propSimple( pt, pag.allSimple().get() ) & typeFilter();

@@ -2,5 +2,5 @@ package soot.jimple.paddle.bdddomains;
 import jedd.*;
 import soot.*;
 
-public class obj(ObjDomain) extends Attribute {
+public class A_tgtm(MethodDomain) extends Attribute {
 }

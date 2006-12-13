@@ -36,8 +36,8 @@ public class Qbasec_base_fld_objc_objDebug extends Qbasec_base_fld_objc_obj {
         bdd.add( _basec, _base, _fld, _objc, _obj );
         trad.add( _basec, _base, _fld, _objc, _obj );
     }
-    public void add( <basec:CH1, base:H1, fld:FD, objc:CH2, obj:H2> in ) {
-        Iterator it = in.iterator( new Attribute[] { basec.v(), base.v(), fld.v(), objc.v(), obj.v() } );
+    public void add( <A_basec:CH1, A_base:H1, A_fld:FD, A_objc:CH2, A_obj:H2> in ) {
+        Iterator it = in.iterator( new Attribute[] { A_basec.v(), A_base.v(), A_fld.v(), A_objc.v(), A_obj.v() } );
         while( it.hasNext() ) {
             Object[] tuple = (Object[]) it.next();
             for( int i = 0; i < 5; i++ ) {

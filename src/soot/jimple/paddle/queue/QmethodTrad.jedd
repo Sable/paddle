@@ -34,8 +34,8 @@ public class QmethodTrad extends Qmethod {
         q.add( _method );
         invalidate();
     }
-    public void add( <method:MS> in ) {
-        Iterator it = in.iterator( new Attribute[] { method.v() } );
+    public void add( <A_method:MS> in ) {
+        Iterator it = in.iterator( new Attribute[] { A_method.v() } );
         while( it.hasNext() ) {
             Object[] tuple = (Object[]) it.next();
             for( int i = 0; i < 1; i++ ) {

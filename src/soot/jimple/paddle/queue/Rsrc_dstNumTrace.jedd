@@ -52,7 +52,7 @@ public class Rsrc_dstNumTrace extends Rsrc_dst {
             public void remove() { throw new UnsupportedOperationException(); }
         };
     }
-    public <src:V1, dst:V2> get() {
+    public <A_src:V1, A_dst:V2> get() {
         throw new RuntimeException();
     }
     public boolean hasNext() { return !bdd.isEmpty(); }

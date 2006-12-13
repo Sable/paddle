@@ -32,9 +32,9 @@ public class BDDObjSensStaticContextManager extends AbsStaticContextManager
     }
     public boolean update() {
         // just reuse the old context
-        <srcc, srcm, stmt, kind, tgtm, tgtc> newIn = in.get();
-        <srcc, srcm, stmt, kind, tgtm, tgtc> newOut = 
-            (tgtc=>, srcc=>srcc, srcc=>tgtc) newIn;
+        <A_srcc, A_srcm, A_stmt, A_kind, A_tgtm, A_tgtc> newIn = in.get();
+        <A_srcc, A_srcm, A_stmt, A_kind, A_tgtm, A_tgtc> newOut = 
+            (A_tgtc=>, A_srcc=>A_srcc, A_srcc=>A_tgtc) newIn;
         out.add( newOut );
         return newOut != 0B;
     }

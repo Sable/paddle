@@ -32,24 +32,24 @@ public class ContextCountPrinter
 { 
     public static void printContextCounts() {
         G.v().out.println( "Begin method context counts" );
-        <ctxt, method> contextMethods = 
+        <A_ctxt, A_method> contextMethods = 
             Results.v().reachableMethods().contextMethods().get();
-        for( Iterator mIt = ((ctxt=>) contextMethods).iterator(); mIt.hasNext(); ) {
+        for( Iterator mIt = ((A_ctxt=>) contextMethods).iterator(); mIt.hasNext(); ) {
             final SootMethod m = (SootMethod) mIt.next();
-            <ctxt> contexts = new{m=>method}{method}<>contextMethods{method};
+            <A_ctxt> contexts = new{m=>A_method}{A_method}<>contextMethods{A_method};
             G.v().out.println( contexts.size()+": "+m);
         }
         G.v().out.println( "End method context counts" );
 
         G.v().out.println( "Begin edge context counts" );
         AbsCallGraph cg = Results.v().callGraph();
-        <srcc, srcm, stmt, kind, tgtc, tgtm> csEdges = cg.csEdges().get();
+        <A_srcc, A_srcm, A_stmt, A_kind, A_tgtc, A_tgtm> csEdges = cg.csEdges().get();
         for( Iterator tIt = cg.ciEdges().iterator(); tIt.hasNext(); ) {
             final Rsrcm_stmt_kind_tgtm.Tuple t = (Rsrcm_stmt_kind_tgtm.Tuple) tIt.next();
-            <srcc, tgtc> contexts = 
-                new{t.srcm()=>srcm, t.stmt()=>stmt,
-                    t.kind()=>kind, t.tgtm()=>tgtm}{srcm, stmt, kind, tgtm}<>
-                                            csEdges{srcm, stmt, kind, tgtm};
+            <A_srcc, A_tgtc> contexts = 
+                new{t.srcm()=>A_srcm, t.stmt()=>A_stmt,
+                    t.kind()=>A_kind, t.tgtm()=>A_tgtm}{A_srcm, A_stmt, A_kind, A_tgtm}<>
+                                            csEdges{A_srcm, A_stmt, A_kind, A_tgtm};
             G.v().out.println(
                 contexts.size()+
                 ": "+(new Edge(t.srcm(), t.stmt(), t.tgtm(), t.kind())) );
@@ -61,11 +61,11 @@ public class ContextCountPrinter
             G.v().out.println( "Begin variable context counts" );
             for( Iterator vnIt = PaddleNumberers.v().varNodeNumberer().iterator(); vnIt.hasNext(); ) {
                 final VarNode vn = (VarNode) vnIt.next();
-                <varc:MEASURE1, var:MEASURE2, objc:MEASURE4, obj:MEASURE3>
+                <A_varc:MEASURE1, A_var:MEASURE2, A_objc:MEASURE4, A_obj:MEASURE3>
                     p2set = p2sets.getReader(vn).get();
                 G.v().out.println(
-                    ((obj=>, objc=>)p2set).size()+":"+
-                    ((var=>, objc=>)p2set).width(MEASURE1.v())+":"+
+                    ((A_obj=>, A_objc=>)p2set).size()+":"+
+                    ((A_var=>, A_objc=>)p2set).width(MEASURE1.v())+":"+
                     vn);
             }
             G.v().out.println( "End variable context counts" );
@@ -76,20 +76,20 @@ public class ContextCountPrinter
         G.v().out.println( "Total number of methodcontexts reachable : "+rm.contextMethods().get().size() );
         AbsP2Sets p2sets = Results.v().p2sets();
         if(p2sets != null) {
-            <varc:MEASURE1, var:MEASURE2, objc:MEASURE4, obj:MEASURE3> 
+            <A_varc:MEASURE1, A_var:MEASURE2, A_objc:MEASURE4, A_obj:MEASURE3> 
                 p2relation = p2sets.getReader().get();
             G.v().out.println( "Total number of contexts in points-to relation: "+
-                ((var=>, objc=>, obj=>) p2relation).size() );
+                ((A_var=>, A_objc=>, A_obj=>) p2relation).size() );
             G.v().out.println( "Total equivalence classes of contexts in points-to relation: "+p2relation.width(MEASURE1.v()) );
             G.v().out.println( "Total distinct points-to sets: "+p2relation.width(MEASURE2.v()) );
             BDDNodeInfo ni = (BDDNodeInfo) PaddleScene.v().ni;
-            <varc:MEASURE1, method:MEASURE15, var:MEASURE2, objc:MEASURE4, obj:MEASURE3> 
-                p2relationWithMethod =             p2relation {var} ><
-                    (method=>MS, var=>V1)
+            <A_varc:MEASURE1, A_method:MEASURE15, A_var:MEASURE2, A_objc:MEASURE4, A_obj:MEASURE3> 
+                p2relationWithMethod =             p2relation {A_var} ><
+                    (A_method=>MS, A_var=>V1)
                     (ni.localMap() |
                         (  ni.globalSet(){} >< 
-                        new{null=>method}{}))                 {var};
-            <varc, method> methodContexts = (var=>, objc=>, obj=>) p2relationWithMethod;
+                        new{null=>A_method}{}))                 {A_var};
+            <A_varc, A_method> methodContexts = (A_var=>, A_objc=>, A_obj=>) p2relationWithMethod;
             G.v().out.println( "Total number of methodcontexts in points-to relation: "+
                 methodContexts.size() );
             G.v().out.println( "Total equivalence classes of methodcontexts in points-to relation: "+p2relationWithMethod.width(MEASURE15.v()) );
@@ -98,15 +98,15 @@ public class ContextCountPrinter
             if(PaddleScene.v().options().method_context_counts()) {
                 for( Iterator mIt = Results.v().reachableMethods().methodIterator(); mIt.hasNext(); ) {
                     final SootMethod m = (SootMethod) mIt.next();
-                    <varc:MEASURE1, var:MEASURE2, objc:MEASURE4, obj:MEASURE3> 
-                        p2formethod = p2relationWithMethod{method} 
-                                        <> new{m=>method}{method};
+                    <A_varc:MEASURE1, A_var:MEASURE2, A_objc:MEASURE4, A_obj:MEASURE3> 
+                        p2formethod = p2relationWithMethod{A_method} 
+                                        <> new{m=>A_method}{A_method};
                     System.out.println("MC: "+
-                        (methodContexts{method} <> new{m=>method}{method}).size()+" "+
+                        (methodContexts{A_method} <> new{m=>A_method}{A_method}).size()+" "+
                         p2formethod.width(MEASURE1.v())+" "+
                         m);
                     if(m.getName().equals("implies")) {
-                        System.out.println((methodContexts{method} <> new{m=>method}{method}).toString());
+                        System.out.println((methodContexts{A_method} <> new{m=>A_method}{A_method}).toString());
                     }
                 }
             }

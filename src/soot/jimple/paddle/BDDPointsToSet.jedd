@@ -27,8 +27,8 @@ import jedd.*;
  * @author Ondrej Lhotak
  */
 public class BDDPointsToSet extends PointsToSetReadOnly {
-    final private <objc, obj:H1> bdd;
-    public BDDPointsToSet( <objc, obj:H1> bdd ) {
+    final private <A_objc, A_obj:H1> bdd;
+    public BDDPointsToSet( <A_objc, A_obj:H1> bdd ) {
         super(null);
         this.bdd = bdd;
     }
@@ -41,7 +41,7 @@ public class BDDPointsToSet extends PointsToSetReadOnly {
     }
     /** Calls v's visit method on all nodes in this set. */
     public boolean forall(P2SetVisitor v) {
-        Iterator it = bdd.iterator( new Attribute[] { objc.v(), obj.v() } );
+        Iterator it = bdd.iterator( new Attribute[] { A_objc.v(), A_obj.v() } );
         while( it.hasNext() ) {
             Object[] item = (Object[]) it.next();
             v.visit(ContextAllocNode.make((Context) item[0], (AllocNode) item[1]));
@@ -51,10 +51,10 @@ public class BDDPointsToSet extends PointsToSetReadOnly {
 
     /** Returns true iff the set contains n. */
     public boolean contains( ContextAllocNode n ) {
-        return 0B != new{n=>obj}{obj} >< bdd{obj};
+        return 0B != new{n=>A_obj}{A_obj} >< bdd{A_obj};
     }
 
-    public <objc, obj> bdd() {
+    public <A_objc, A_obj> bdd() {
         return bdd;
     }
 

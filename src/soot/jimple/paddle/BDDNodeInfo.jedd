@@ -41,24 +41,24 @@ public class BDDNodeInfo extends AbsNodeInfo
 
     public boolean update() {
         boolean ret = false;
-        if( localMap != (localMap |= (type=>) locals.get()) ) ret = true;
-        if( globalSet != (globalSet |= (type=>) globals.get()) ) ret = true;
-        if( localallocMap != (localallocMap |= (type=>) localallocs.get()) )
+        if( localMap != (localMap |= (A_type=>) locals.get()) ) ret = true;
+        if( globalSet != (globalSet |= (A_type=>) globals.get()) ) ret = true;
+        if( localallocMap != (localallocMap |= (A_type=>) localallocs.get()) )
             ret = true;
-        if( globalallocSet != (globalallocSet |= (type=>) globalallocs.get()) )
+        if( globalallocSet != (globalallocSet |= (A_type=>) globalallocs.get()) )
             ret = true;
         return ret;
     }
 
-    private <var, method> localMap = 0B;
-    private <var> globalSet = 0B;
-    private <obj, method> localallocMap = 0B;
-    private <obj> globalallocSet = 0B;
+    private <A_var, A_method> localMap = 0B;
+    private <A_var> globalSet = 0B;
+    private <A_obj, A_method> localallocMap = 0B;
+    private <A_obj> globalallocSet = 0B;
 
-    public <var, method> localMap() { return localMap; }
-    public <var> globalSet() { return globalSet; }
-    public <obj, method> localallocMap() { return localallocMap; }
-    public <obj> globalallocSet() { return globalallocSet; }
+    public <A_var, A_method> localMap() { return localMap; }
+    public <A_var> globalSet() { return globalSet; }
+    public <A_obj, A_method> localallocMap() { return localallocMap; }
+    public <A_obj> globalallocSet() { return globalallocSet; }
 
 }
 

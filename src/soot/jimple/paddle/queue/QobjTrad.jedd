@@ -34,8 +34,8 @@ public class QobjTrad extends Qobj {
         q.add( _obj );
         invalidate();
     }
-    public void add( <obj:H1> in ) {
-        Iterator it = in.iterator( new Attribute[] { obj.v() } );
+    public void add( <A_obj:H1> in ) {
+        Iterator it = in.iterator( new Attribute[] { A_obj.v() } );
         while( it.hasNext() ) {
             Object[] tuple = (Object[]) it.next();
             for( int i = 0; i < 1; i++ ) {

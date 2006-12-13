@@ -38,7 +38,7 @@ public final class QmethodSet extends Qmethod {
             reader.add( in );
         }
     }
-    public void add( <method:MS> in ) {
+    public void add( <A_method:MS> in ) {
         throw new RuntimeException();
     }
     public Rmethod reader( String rname ) {

@@ -32,7 +32,7 @@ public abstract class Qmethod implements soot.jimple.paddle.PaddleQueue {
     protected String name;
     public final String toString() { return name; }
     public abstract void add( SootMethod _method );
-    public abstract void add( <method:MS> in );
+    public abstract void add( <A_method:MS> in );
     public abstract Rmethod reader( String rname );
     public Rmethod revreader( String rname ) { return reader( rname ); }
     public void add( Rmethod.Tuple in ) {

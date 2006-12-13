@@ -38,7 +38,7 @@ public abstract class Rctxt_method implements PaddleQueueReader {
     public PaddleQueue queue() { return q; }
     public final String toString() { return name; }
     public abstract Iterator iterator();
-    public abstract <ctxt:C1, method:MS> get();
+    public abstract <A_ctxt:C1, A_method:MS> get();
     public abstract boolean hasNext();
     public static class Tuple {
         private Context _ctxt;

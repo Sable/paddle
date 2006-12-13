@@ -28,10 +28,10 @@ import jedd.*;
 import java.util.*;
 
 public final class RmethodBDD extends Rmethod {
-    private <method:MS> bdd;
-    void add( <method:MS> tuple ) { bdd |= tuple; }
-    public RmethodBDD( <method:MS> bdd, String name, PaddleQueue q ) { this(name, q); add(bdd); }
-    public RmethodBDD( <method:MS> bdd ) { this("", null); add(bdd); }
+    private <A_method:MS> bdd;
+    void add( <A_method:MS> tuple ) { bdd |= tuple; }
+    public RmethodBDD( <A_method:MS> bdd, String name, PaddleQueue q ) { this(name, q); add(bdd); }
+    public RmethodBDD( <A_method:MS> bdd ) { this("", null); add(bdd); }
     RmethodBDD(String name, PaddleQueue q) { super(name, q); bdd = 0B; }
     public Iterator iterator() {;
         return new Iterator() {
@@ -43,7 +43,7 @@ public final class RmethodBDD extends Rmethod {
             }
             public Object next() {
                 if( it == null || !it.hasNext() ) {
-                    it = bdd.iterator( new Attribute[] { method.v() } );
+                    it = bdd.iterator( new Attribute[] { A_method.v() } );
                     bdd = 0B;
                 }
                 Object[] components = (Object[]) it.next();
@@ -52,8 +52,8 @@ public final class RmethodBDD extends Rmethod {
             public void remove() { throw new UnsupportedOperationException(); }
         };
     }
-    public <method:MS> get() {
-        <method:MS> ret = bdd;
+    public <A_method:MS> get() {
+        <A_method:MS> ret = bdd;
         bdd = 0B;
         return ret;
     }

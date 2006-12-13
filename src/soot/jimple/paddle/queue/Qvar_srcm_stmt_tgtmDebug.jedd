@@ -36,8 +36,8 @@ public class Qvar_srcm_stmt_tgtmDebug extends Qvar_srcm_stmt_tgtm {
         bdd.add( _var, _srcm, _stmt, _tgtm );
         trad.add( _var, _srcm, _stmt, _tgtm );
     }
-    public void add( <var:V1, srcm:MS, stmt:ST, tgtm:MT> in ) {
-        Iterator it = in.iterator( new Attribute[] { var.v(), srcm.v(), stmt.v(), tgtm.v() } );
+    public void add( <A_var:V1, A_srcm:MS, A_stmt:ST, A_tgtm:MT> in ) {
+        Iterator it = in.iterator( new Attribute[] { A_var.v(), A_srcm.v(), A_stmt.v(), A_tgtm.v() } );
         while( it.hasNext() ) {
             Object[] tuple = (Object[]) it.next();
             for( int i = 0; i < 4; i++ ) {

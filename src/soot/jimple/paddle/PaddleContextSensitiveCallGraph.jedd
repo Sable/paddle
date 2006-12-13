@@ -42,11 +42,11 @@ public class PaddleContextSensitiveCallGraph implements ContextSensitiveCallGrap
     AbsCallGraph acg;
 
     class EdgesWrapper {
-        <srcc, srcm, stmt, kind, tgtc, tgtm> edges = 1B;
+        <A_srcc, A_srcm, A_stmt, A_kind, A_tgtc, A_tgtm> edges = 1B;
     }
 
     private EdgesWrapper edgesWrapper;
-    private <srcc, srcm, stmt, kind, tgtc, tgtm> edges() {
+    private <A_srcc, A_srcm, A_stmt, A_kind, A_tgtc, A_tgtm> edges() {
         if(edgesWrapper == null) {
             edgesWrapper = new EdgesWrapper();
             edgesWrapper.edges = acg.csEdges().get();
@@ -57,7 +57,7 @@ public class PaddleContextSensitiveCallGraph implements ContextSensitiveCallGrap
     public Iterator edgeSources() {
         return new Iterator() {
             Iterator it = new Rctxt_methodBDD(
-                (srcc=>ctxt, srcm=>method, stmt=>, kind=>, tgtc=>, tgtm=>)edges()).iterator();
+                (A_srcc=>A_ctxt, A_srcm=>A_method, A_stmt=>, A_kind=>, A_tgtc=>, A_tgtm=>)edges()).iterator();
             public boolean hasNext() {
                 return it.hasNext();
             }
@@ -76,24 +76,24 @@ public class PaddleContextSensitiveCallGraph implements ContextSensitiveCallGrap
     }
 
     public Iterator edgesOutOf(Context srcCtxt, SootMethod src, Unit srcUnit) {
-        return edgeIterator(                     edges(){srcc, srcm, stmt} ><
-            new{srcCtxt=>srcc, src=>srcm, srcUnit=>stmt}{srcc, srcm, stmt});
+        return edgeIterator(                     edges(){A_srcc, A_srcm, A_stmt} ><
+            new{srcCtxt=>A_srcc, src=>A_srcm, srcUnit=>A_stmt}{A_srcc, A_srcm, A_stmt});
     }
 
     public Iterator edgesOutOf(Context srcCtxt, SootMethod src) {
-        return edgeIterator(                     edges(){srcc, srcm} ><
-                           new{srcCtxt=>srcc, src=>srcm}{srcc, srcm});
+        return edgeIterator(                     edges(){A_srcc, A_srcm} ><
+                           new{srcCtxt=>A_srcc, src=>A_srcm}{A_srcc, A_srcm});
     }
 
     public Iterator edgesInto(Context tgtCtxt, SootMethod tgt) {
-        return edgeIterator(                     edges(){tgtc, tgtm} ><
-                           new{tgtCtxt=>tgtc, tgt=>tgtm}{tgtc, tgtm});
+        return edgeIterator(                     edges(){A_tgtc, A_tgtm} ><
+                           new{tgtCtxt=>A_tgtc, tgt=>A_tgtm}{A_tgtc, A_tgtm});
     }
 
-    private static Iterator edgeIterator(final <srcc, srcm, stmt, kind, tgtc, tgtm> edges) {
+    private static Iterator edgeIterator(final <A_srcc, A_srcm, A_stmt, A_kind, A_tgtc, A_tgtm> edges) {
         return new Iterator() {
             Iterator it = new Rsrcc_srcm_stmt_kind_tgtc_tgtmBDD(
-                (srcc=>srcc, srcm=>srcm, stmt=>stmt, kind=>kind, tgtc=>tgtc, tgtm=>tgtm)edges).iterator();
+                (A_srcc=>A_srcc, A_srcm=>A_srcm, A_stmt=>A_stmt, A_kind=>A_kind, A_tgtc=>A_tgtc, A_tgtm=>A_tgtm)edges).iterator();
             public boolean hasNext() {
                 return it.hasNext();
             }

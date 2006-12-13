@@ -42,10 +42,10 @@ public class Rvar_srcm_stmt_dtp_signature_kindIter extends Rvar_srcm_stmt_dtp_si
             public void remove() { throw new UnsupportedOperationException(); }
         };
     }
-    public <var:V1, srcm:MS, stmt:ST, dtp:T1, signature:SG, kind:KD> get() {
-        <var:V1, srcm:MS, stmt:ST, dtp:T1, signature:SG, kind:KD> ret = 0B;
+    public <A_var:V1, A_srcm:MS, A_stmt:ST, A_dtp:T1, A_signature:SG, A_kind:KD> get() {
+        <A_var:V1, A_srcm:MS, A_stmt:ST, A_dtp:T1, A_signature:SG, A_kind:KD> ret = 0B;
         while( r.hasNext() ) {
-            ret |= new { r.next()=>var, r.next()=>srcm, r.next()=>stmt, r.next()=>dtp, r.next()=>signature, r.next()=>kind };
+            ret |= new { r.next()=>A_var, r.next()=>A_srcm, r.next()=>A_stmt, r.next()=>A_dtp, r.next()=>A_signature, r.next()=>A_kind };
         }
         return ret;
     }

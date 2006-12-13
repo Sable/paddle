@@ -36,8 +36,8 @@ public class QobjDebug extends Qobj {
         bdd.add( _obj );
         trad.add( _obj );
     }
-    public void add( <obj:H1> in ) {
-        Iterator it = in.iterator( new Attribute[] { obj.v() } );
+    public void add( <A_obj:H1> in ) {
+        Iterator it = in.iterator( new Attribute[] { A_obj.v() } );
         while( it.hasNext() ) {
             Object[] tuple = (Object[]) it.next();
             for( int i = 0; i < 1; i++ ) {

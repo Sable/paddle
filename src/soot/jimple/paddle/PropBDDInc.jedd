@@ -36,13 +36,13 @@ public final class PropBDDInc extends PropBDD {
         super( simple, load, store, alloc, propout, pag );
     }
 
-    private <varc, var, objc, obj> ptFromLoad = 0B;
+    private <A_varc, A_var, A_objc, A_obj> ptFromLoad = 0B;
 
     public final boolean fieldUpdate() {
-        <varc, var, objc, obj> oldPt = pt;
+        <A_varc, A_var, A_objc, A_obj> oldPt = pt;
 
         fieldPt = propStore( pt, pag.allStore().get(), pt );
-        <varc, var, objc, obj> ptFromThisLoad = propLoad( fieldPt, pag.allLoad().get(), pt ) & typeFilter();
+        <A_varc, A_var, A_objc, A_obj> ptFromThisLoad = propLoad( fieldPt, pag.allLoad().get(), pt ) & typeFilter();
         pt |= ptFromThisLoad;
         ptFromLoad |= ptFromThisLoad;
         outputPt( ptFromThisLoad );
@@ -51,19 +51,19 @@ public final class PropBDDInc extends PropBDD {
     }
     public final boolean update() {
 
-        <varc, var, objc, obj> oldPt = pt;
+        <A_varc, A_var, A_objc, A_obj> oldPt = pt;
 
-        <varc,var,objc,obj>
+        <A_varc,A_var,A_objc,A_obj>
             ptFromAlloc = newAlloc.get() & typeFilter();
-        <varc,var,objc,obj>
+        <A_varc,A_var,A_objc,A_obj>
             ptFromSimple1 = propSimple( pt, newSimple.get() ) & typeFilter();
-        <varc,var,objc,obj>
+        <A_varc,A_var,A_objc,A_obj>
             ptFromAllocAndSimple1 = ptFromAlloc|ptFromSimple1;
-        <varc,var,objc,obj>
+        <A_varc,A_var,A_objc,A_obj>
             ptFromSimple2 = propSimple( ptFromAllocAndSimple1|ptFromLoad,
                 pag.allSimple().get() ) & typeFilter();
         ptFromLoad = 0B;
-        <varc,var,objc,obj>
+        <A_varc,A_var,A_objc,A_obj>
             ptFromAllocAndSimple = ptFromAllocAndSimple1|ptFromSimple2;
         pt |= ptFromAllocAndSimple;
         outputPt( ptFromAllocAndSimple );

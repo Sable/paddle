@@ -27,56 +27,56 @@ import java.util.*;
 
 /** Finds methods that are potentially infinitely reursive. */
 public class BDDRecursiveAnalysis {
-    <srcc, srcm> recursive = 0B;
+    <A_srcc, A_srcm> recursive = 0B;
 
     /*
     public void analyze() {
-        <srcc, srcm, tgtc, tgtm> calls =
-            (kind=>, stmt=>) Results.v().callGraph().csEdges().get();
-        <srcc, srcm, tgtc, tgtm> newCalls;
+        <A_srcc, A_srcm, A_tgtc, A_tgtm> calls =
+            (A_kind=>, A_stmt=>) Results.v().callGraph().csEdges().get();
+        <A_srcc, A_srcm, A_tgtc, A_tgtm> newCalls;
         do {
-            newCalls = calls{tgtc,tgtm} <> (srcc=>C3, srcm=>M3) calls{srcc,srcm};
+            newCalls = calls{A_tgtc,A_tgtm} <> (A_srcc=>C3, A_srcm=>M3) calls{A_srcc,A_srcm};
         } while( calls != (calls |= newCalls) );
-        <srcc, srcm> source = (tgtc=>, tgtm=>) calls;
-        <srcc, srcm, tgtc, tgtm> id =
-            (srcc=>srcc, srcc=>tgtc, srcm=>srcm, srcm=>tgtm) source;
-        recursive = (tgtc=>, tgtm=>) (calls & id);
+        <A_srcc, A_srcm> source = (A_tgtc=>, A_tgtm=>) calls;
+        <A_srcc, A_srcm, A_tgtc, A_tgtm> id =
+            (A_srcc=>A_srcc, A_srcc=>A_tgtc, A_srcm=>A_srcm, A_srcm=>A_tgtm) source;
+        recursive = (A_tgtc=>, A_tgtm=>) (calls & id);
         //SootMethod recurse = Scene.v().getMethod("<Recurse: void recurse(Recurse)>");
-        //System.out.println( (calls{srcm} >< new{recurse=>srcm}{srcm}).toString() );
+        //System.out.println( (calls{A_srcm} >< new{recurse=>A_srcm}{A_srcm}).toString() );
     }
     */
 
     public void analyze() {
-        <kind> nonClinit = 1B - new{Kind.CLINIT=>kind};
-        <srcc:CM1, srcm:MC1, tgtc:CM2, tgtm:MC2> calls;
+        <A_kind> nonClinit = 1B - new{Kind.CLINIT=>A_kind};
+        <A_srcc:CM1, A_srcm:MC1, A_tgtc:CM2, A_tgtm:MC2> calls;
         if( contextInsensitive ) {
-            <srcm:MS, tgtm:MT> cicalls =
-                (stmt=>) Results.v().callGraph().ciEdges().get(){kind} <>
-                                                       nonClinit{kind};
-            calls = cicalls{} >< new{null=>srcc, null=>tgtc}{};
+            <A_srcm:MS, A_tgtm:MT> cicalls =
+                (A_stmt=>) Results.v().callGraph().ciEdges().get(){A_kind} <>
+                                                       nonClinit{A_kind};
+            calls = cicalls{} >< new{null=>A_srcc, null=>A_tgtc}{};
         } else {
-            <srcc:C1, srcm:MS, tgtc:C2, tgtm:MT> tmpCalls = 
-                (stmt=>) Results.v().callGraph().csEdges().get(){kind} <>
-                                                       nonClinit{kind};
+            <A_srcc:C1, A_srcm:MS, A_tgtc:C2, A_tgtm:MT> tmpCalls = 
+                (A_stmt=>) Results.v().callGraph().csEdges().get(){A_kind} <>
+                                                       nonClinit{A_kind};
             calls = tmpCalls;
         }
-        <srcc:CM1, srcm:MC1, tgtc:CM2, tgtm:MC2> transCalls = calls;
-        <srcc:CM2, srcm:MC2, tgtc:CM3, tgtm:MC3> newCalls = calls;
+        <A_srcc:CM1, A_srcm:MC1, A_tgtc:CM2, A_tgtm:MC2> transCalls = calls;
+        <A_srcc:CM2, A_srcm:MC2, A_tgtc:CM3, A_tgtm:MC3> newCalls = calls;
 
         do {
-            newCalls = calls{tgtc,tgtm} <> newCalls{srcc,srcm};
+            newCalls = calls{A_tgtc,A_tgtm} <> newCalls{A_srcc,A_srcm};
             newCalls -= transCalls;
             transCalls |= newCalls;
         } while( newCalls != 0B );
 
-        <srcc, srcm> source = (tgtc=>, tgtm=>) transCalls;
-        <srcc, srcm, tgtc, tgtm> id =
-            (srcc=>srcc, srcc=>tgtc, srcm=>srcm, srcm=>tgtm) source;
-        recursive = (tgtc=>, tgtm=>) (transCalls & id);
+        <A_srcc, A_srcm> source = (A_tgtc=>, A_tgtm=>) transCalls;
+        <A_srcc, A_srcm, A_tgtc, A_tgtm> id =
+            (A_srcc=>A_srcc, A_srcc=>A_tgtc, A_srcm=>A_srcm, A_srcm=>A_tgtm) source;
+        recursive = (A_tgtc=>, A_tgtm=>) (transCalls & id);
     }
 
     public Iterator recursiveMethods() {
-        return ((srcc=>)recursive).iterator();
+        return ((A_srcc=>)recursive).iterator();
     }
     private boolean contextInsensitive = false;
     public void setContextInsensitive() {

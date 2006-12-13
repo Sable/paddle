@@ -53,19 +53,19 @@ public class ZhuContext
         }
 
         if(VERBOSE) System.out.println( "Running AOTCG" );
-        <ctxt:C1, method:MS> methodContexts = 0B;
-        <srcc:C1, srcm:MS, stmt:ST, kind:KD, tgtc:C2, tgtm:MT> edges = 0B;
-        <srcc, tgtc> allContextEdges = 0B;
+        <A_ctxt:C1, A_method:MS> methodContexts = 0B;
+        <A_srcc:C1, A_srcm:MS, A_stmt:ST, A_kind:KD, A_tgtc:C2, A_tgtm:MT> edges = 0B;
+        <A_srcc, A_tgtc> allContextEdges = 0B;
 
-        <srcm, stmt, kind, tgtm> cicgEdges = cicg.ciEdges().get();
+        <A_srcm, A_stmt, A_kind, A_tgtm> cicgEdges = cicg.ciEdges().get();
 
-        <method> methods = (srcm=>method, stmt=>, kind=>, tgtm=>) cicgEdges 
-                         | (srcm=>, stmt=>, kind=>, tgtm=>method) cicgEdges;
+        <A_method> methods = (A_srcm=>A_method, A_stmt=>, A_kind=>, A_tgtm=>) cicgEdges 
+                         | (A_srcm=>, A_stmt=>, A_kind=>, A_tgtm=>A_method) cicgEdges;
 
         for( Iterator mIt = Scene.v().getEntryPoints().iterator(); mIt.hasNext(); ) {
 
             final SootMethod m = (SootMethod) mIt.next();
-            methods |= new{m=>method};
+            methods |= new{m=>A_method};
         }
 
         MutableDirectedGraph el = new HashMutableDirectedGraph();
@@ -87,7 +87,7 @@ public class ZhuContext
         for( Iterator mIt = Scene.v().getEntryPoints().iterator(); mIt.hasNext(); ) {
 
             final SootMethod m = (SootMethod) mIt.next();
-            methodContexts |= new{getKey(m)=>method, null=>ctxt};
+            methodContexts |= new{getKey(m)=>A_method, null=>A_ctxt};
         }
 
         DirectedGraph sccel = scc.getSuperGraph();
@@ -122,32 +122,32 @@ public class ZhuContext
             for( Iterator dstIt = component.iterator(); dstIt.hasNext(); ) {
                 final SootMethod dst = (SootMethod) dstIt.next();
                 if(VERBOSE) System.out.println("Processing destination method "+dst);
-                <srcm, stmt, kind, tgtm> callers = 
-                    cicgEdges{tgtm} >< new {dst=>tgtm}{tgtm};
+                <A_srcm, A_stmt, A_kind, A_tgtm> callers = 
+                    cicgEdges{A_tgtm} >< new {dst=>A_tgtm}{A_tgtm};
                 for( Iterator eIt = new Rsrcm_stmt_kind_tgtmBDD(callers).iterator(); eIt.hasNext(); ) {
                     final Rsrcm_stmt_kind_tgtm.Tuple e = (Rsrcm_stmt_kind_tgtm.Tuple) eIt.next();
                     SootMethod src = e.srcm();
                     if( getKey(src) == getKey(dst) ) continue;
-                    <srcc:C1> contexts = (ctxt=>srcc) methodContexts{method} <>
-                                            new{getKey(src)=>method}{method};
+                    <A_srcc:C1> contexts = (A_ctxt=>A_srcc) methodContexts{A_method} <>
+                                            new{getKey(src)=>A_method}{A_method};
                     long k = contexts.size();
                     if(k == 0) continue;
                     if(VERBOSE) System.out.println("k is "+k+"; c is "+c);
-                    <srcc:C1, tgtc:C2> contextEdge = (<srcc:C1, tgtc:C2>)
-                        contexts.add(srcc.v(), C1.v(), tgtc.v(), C2.v(), c);
+                    <A_srcc:C1, A_tgtc:C2> contextEdge = (<A_srcc:C1, A_tgtc:C2>)
+                        contexts.add(A_srcc.v(), C1.v(), A_tgtc.v(), C2.v(), c);
                     allContextEdges |= contextEdge;
                     if(VERBOSE) System.out.println("contextEdge.size is "+contextEdge.size());
                     if(VERBOSE) System.out.println("allContextEdges.size is "+allContextEdges.size());
-                    <srcc, srcm, stmt, kind, tgtc, tgtm> newEdges =
+                    <A_srcc, A_srcm, A_stmt, A_kind, A_tgtc, A_tgtm> newEdges =
                         contextEdge{} ><
-                        new{src=>srcm, dst=>tgtm, e.stmt()=>stmt, e.kind()=>kind}{};
+                        new{src=>A_srcm, dst=>A_tgtm, e.stmt()=>A_stmt, e.kind()=>A_kind}{};
                     if( (edges & newEdges) != 0B ) {
                         System.out.println( "ALREADY THERE: "+(edges&newEdges).toString() );
                     }
                     edges |= newEdges;
                     if(VERBOSE) System.out.println("edges: "+edges.size());
-                    methodContexts |= new{getKey(dst)=>method}{} ><
-                            (tgtc=>ctxt)(srcc=>) contextEdge{};
+                    methodContexts |= new{getKey(dst)=>A_method}{} ><
+                            (A_tgtc=>A_ctxt)(A_srcc=>) contextEdge{};
                     if(VERBOSE) System.out.println( methodContexts.size() );
                     c += k;
                 }
@@ -160,15 +160,15 @@ public class ZhuContext
             SootMethod dst = e.tgtm();
             if( getKey(src) != getKey(dst) ) continue;
             if(VERBOSE) System.out.println(""+src+" -> "+dst);
-            <ctxt> context = methodContexts{method} <>
-                new{getKey(src)=>method}{method};
-            edges |= (ctxt=>srcc, ctxt=>tgtc) context{} ><
-                new{src=>srcm, dst=>tgtm, e.stmt()=>stmt, e.kind()=>kind}{};
+            <A_ctxt> context = methodContexts{A_method} <>
+                new{getKey(src)=>A_method}{A_method};
+            edges |= (A_ctxt=>A_srcc, A_ctxt=>A_tgtc) context{} ><
+                new{src=>A_srcm, dst=>A_tgtm, e.stmt()=>A_stmt, e.kind()=>A_kind}{};
         }
         for( Iterator mIt = methods.iterator(); mIt.hasNext(); ) {
             final SootMethod m = (SootMethod) mIt.next();
-            methodContexts |= new{m=>method}{} >< (
-                new{getKey(m)=>method}{method} <> methodContexts{method} ){};
+            methodContexts |= new{m=>A_method}{} >< (
+                new{getKey(m)=>A_method}{A_method} <> methodContexts{A_method} ){};
         }
 
         //System.out.println(edges.toString());

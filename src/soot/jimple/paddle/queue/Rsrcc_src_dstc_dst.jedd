@@ -38,7 +38,7 @@ public abstract class Rsrcc_src_dstc_dst implements PaddleQueueReader {
     public PaddleQueue queue() { return q; }
     public final String toString() { return name; }
     public abstract Iterator iterator();
-    public abstract <srcc:C1, src:V1, dstc:C2, dst:V2> get();
+    public abstract <A_srcc:C1, A_src:V1, A_dstc:C2, A_dst:V2> get();
     public abstract boolean hasNext();
     public static class Tuple {
         private Context _srcc;

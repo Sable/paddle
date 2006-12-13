@@ -32,7 +32,7 @@ public abstract class Qvar_obj implements soot.jimple.paddle.PaddleQueue {
     protected String name;
     public final String toString() { return name; }
     public abstract void add( VarNode _var, AllocNode _obj );
-    public abstract void add( <var:V1, obj:H1> in );
+    public abstract void add( <A_var:V1, A_obj:H1> in );
     public abstract Rvar_obj reader( String rname );
     public Rvar_obj revreader( String rname ) { return reader( rname ); }
     public void add( Rvar_obj.Tuple in ) {

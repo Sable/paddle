@@ -35,8 +35,8 @@ public class Qobj_varTrad extends Qobj_var {
         q.add( _var );
         invalidate();
     }
-    public void add( <obj:H1, var:V1> in ) {
-        Iterator it = in.iterator( new Attribute[] { obj.v(), var.v() } );
+    public void add( <A_obj:H1, A_var:V1> in ) {
+        Iterator it = in.iterator( new Attribute[] { A_obj.v(), A_var.v() } );
         while( it.hasNext() ) {
             Object[] tuple = (Object[]) it.next();
             for( int i = 0; i < 2; i++ ) {

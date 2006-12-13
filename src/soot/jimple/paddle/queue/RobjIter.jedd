@@ -42,10 +42,10 @@ public class RobjIter extends Robj{
             public void remove() { throw new UnsupportedOperationException(); }
         };
     }
-    public <obj:H1> get() {
-        <obj:H1> ret = 0B;
+    public <A_obj:H1> get() {
+        <A_obj:H1> ret = 0B;
         while( r.hasNext() ) {
-            ret |= new { r.next()=>obj };
+            ret |= new { r.next()=>A_obj };
         }
         return ret;
     }

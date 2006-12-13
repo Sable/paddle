@@ -28,7 +28,7 @@ import jedd.*;
 import java.util.*;
 
 public final class Rbasec_base_fld_objc_objMerge extends Rbasec_base_fld_objc_obj {
-    void add( <basec:CH1, base:H1, fld:FD, objc:CH2, obj:H2> tuple ) { throw new RuntimeException(); }
+    void add( <A_basec:CH1, A_base:H1, A_fld:FD, A_objc:CH2, A_obj:H2> tuple ) { throw new RuntimeException(); }
     private Rbasec_base_fld_objc_obj in1;
     private Rbasec_base_fld_objc_obj in2;
     public Rbasec_base_fld_objc_objMerge( Rbasec_base_fld_objc_obj in1, Rbasec_base_fld_objc_obj in2 ) {
@@ -48,7 +48,7 @@ public final class Rbasec_base_fld_objc_objMerge extends Rbasec_base_fld_objc_ob
             public void remove() { throw new UnsupportedOperationException(); }
         };
     }
-    public <basec:CH1, base:H1, fld:FD, objc:CH2, obj:H2> get() {
+    public <A_basec:CH1, A_base:H1, A_fld:FD, A_objc:CH2, A_obj:H2> get() {
         return in1.get() | in2.get();
     }
     public boolean hasNext() { return in1.hasNext() || in2.hasNext(); }

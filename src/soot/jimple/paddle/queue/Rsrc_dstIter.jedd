@@ -42,10 +42,10 @@ public class Rsrc_dstIter extends Rsrc_dst{
             public void remove() { throw new UnsupportedOperationException(); }
         };
     }
-    public <src:V1, dst:V2> get() {
-        <src:V1, dst:V2> ret = 0B;
+    public <A_src:V1, A_dst:V2> get() {
+        <A_src:V1, A_dst:V2> ret = 0B;
         while( r.hasNext() ) {
-            ret |= new { r.next()=>src, r.next()=>dst };
+            ret |= new { r.next()=>A_src, r.next()=>A_dst };
         }
         return ret;
     }

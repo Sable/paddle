@@ -42,10 +42,10 @@ public class Robj_method_typeIter extends Robj_method_type{
             public void remove() { throw new UnsupportedOperationException(); }
         };
     }
-    public <obj:H1, method:MS, type:T1> get() {
-        <obj:H1, method:MS, type:T1> ret = 0B;
+    public <A_obj:H1, A_method:MS, A_type:T1> get() {
+        <A_obj:H1, A_method:MS, A_type:T1> ret = 0B;
         while( r.hasNext() ) {
-            ret |= new { r.next()=>obj, r.next()=>method, r.next()=>type };
+            ret |= new { r.next()=>A_obj, r.next()=>A_method, r.next()=>A_type };
         }
         return ret;
     }

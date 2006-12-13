@@ -51,7 +51,7 @@ public class Rsrcc_src_fld_dstc_dstSet extends Rsrcc_src_fld_dstc_dst {
             public void remove() { throw new UnsupportedOperationException(); }
         };
     }
-    public <srcc:C1, src:V1, fld:FD, dstc:C2, dst:V2> get() {
+    public <A_srcc:C1, A_src:V1, A_fld:FD, A_dstc:C2, A_dst:V2> get() {
         throw new RuntimeException();
     }
     public boolean hasNext() { return !bdd.isEmpty(); }

@@ -38,7 +38,7 @@ public final class Qvar_method_typeSet extends Qvar_method_type {
             reader.add( in );
         }
     }
-    public void add( <var:V1, method:MS, type:T1> in ) {
+    public void add( <A_var:V1, A_method:MS, A_type:T1> in ) {
         throw new RuntimeException();
     }
     public Rvar_method_type reader( String rname ) {

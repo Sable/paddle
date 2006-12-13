@@ -98,7 +98,7 @@ public class ExecutesManyAnalysis
     }
 
     public void analyze() {
-        <ctxt> allContexts = 1B;
+        <A_ctxt> allContexts = 1B;
         for( Iterator clIt = Scene.v().getApplicationClasses().iterator(); clIt.hasNext(); ) {
             final SootClass cl = (SootClass) clIt.next();
             for( Iterator mIt = cl.getMethods().iterator(); mIt.hasNext(); ) {
@@ -110,36 +110,36 @@ public class ExecutesManyAnalysis
                 for( Iterator sIt = m.getActiveBody().getUnits().iterator(); sIt.hasNext(); ) {
                     final Unit s = (Unit) sIt.next();
                     Scene.v().getUnitNumberer().add(s);
-                    stmtMethod |= new{s=>stmt, m=>method};
+                    stmtMethod |= new{s=>A_stmt, m=>A_method};
                     if( intra.mayExecuteTwice(s) ) {
-                        twiceUnit |= new{s=>stmt}{} >< allContexts{};
+                        twiceUnit |= new{s=>A_stmt}{} >< allContexts{};
                     }
                 }
             }
         }
-        callGraph = (kind=>) Results.v().callGraph().csEdges().get();
+        callGraph = (A_kind=>) Results.v().callGraph().csEdges().get();
 
         while(true) {
-            <ctxt, stmt> oldUnit = twiceUnit;
-            <ctxt, method> oldMethod = twiceMethod;
-            twiceMethod |=                         twiceUnit{stmt, ctxt} <> 
-                (srcm=>, tgtm=>method, tgtc=>ctxt) callGraph{stmt, srcc};
-            twiceMethod |=                       twiceMethod{method, ctxt} <>
-                (stmt=>, tgtm=>method, tgtc=>ctxt) callGraph{srcm, srcc};
-            twiceUnit |= twiceMethod{method} <> stmtMethod{method};
+            <A_ctxt, A_stmt> oldUnit = twiceUnit;
+            <A_ctxt, A_method> oldMethod = twiceMethod;
+            twiceMethod |=                         twiceUnit{A_stmt, A_ctxt} <> 
+                (A_srcm=>, A_tgtm=>A_method, A_tgtc=>A_ctxt) callGraph{A_stmt, A_srcc};
+            twiceMethod |=                       twiceMethod{A_method, A_ctxt} <>
+                (A_stmt=>, A_tgtm=>A_method, A_tgtc=>A_ctxt) callGraph{A_srcm, A_srcc};
+            twiceUnit |= twiceMethod{A_method} <> stmtMethod{A_method};
             if( oldUnit == twiceUnit && oldMethod == twiceMethod ) break;
         }
     }
 
     public boolean executesMany(Unit s) {
-        return (ctxt=>) twiceUnit{stmt} >< new{s=>stmt}{stmt} != 0B;
+        return (A_ctxt=>) twiceUnit{A_stmt} >< new{s=>A_stmt}{A_stmt} != 0B;
     }
     public boolean executesMany(SootMethod m) {
-        return (ctxt=>) twiceMethod{method} >< new{m=>method}{method} != 0B;
+        return (A_ctxt=>) twiceMethod{A_method} >< new{m=>A_method}{A_method} != 0B;
     }
-    protected <stmt, method> stmtMethod;
-    protected <ctxt, stmt> twiceUnit;
-    protected <ctxt, method> twiceMethod;
-    protected <srcc, srcm, stmt, tgtc, tgtm> callGraph;
+    protected <A_stmt, A_method> stmtMethod;
+    protected <A_ctxt, A_stmt> twiceUnit;
+    protected <A_ctxt, A_method> twiceMethod;
+    protected <A_srcc, A_srcm, A_stmt, A_tgtc, A_tgtm> callGraph;
 }
 

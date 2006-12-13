@@ -28,8 +28,8 @@ import java.util.*;
  */
 public class BDDReachableMethods extends AbsReachableMethods 
 { 
-    private <ctxt, method> reachableCM;
-    private <method> reachableM;
+    private <A_ctxt, A_method> reachableCM;
+    private <A_method> reachableM;
     private AbsCallGraph cg;
     private Rctxt_method newMethods;
     BDDReachableMethods( Rsrcc_srcm_stmt_kind_tgtc_tgtm edgesIn, Rctxt_method methodsIn, Qmethod mout, Qctxt_method cmout, AbsCallGraph cg ) {
@@ -41,19 +41,19 @@ public class BDDReachableMethods extends AbsReachableMethods
         boolean change = false;
 
         if( methodsIn != null ) {
-            <ctxt, method> newMethodsIn = methodsIn.get();
+            <A_ctxt, A_method> newMethodsIn = methodsIn.get();
             if(add(newMethodsIn)) change = true;
         }
 
         if( edgesIn != null ) {
-            <srcc, srcm, stmt, kind, tgtc, tgtm> newEdges =
-                edgesIn.get() {srcc, srcm} >< reachableCM {ctxt, method};
+            <A_srcc, A_srcm, A_stmt, A_kind, A_tgtc, A_tgtm> newEdges =
+                edgesIn.get() {A_srcc, A_srcm} >< reachableCM {A_ctxt, A_method};
 
             newEdges |= cg.edgesOutOf( newMethods ).get();
 
             while( newEdges != 0B ) {
-                <ctxt, method> newTargets =
-                    (srcc=>, srcm=>, stmt=>, kind=>, tgtc=>ctxt, tgtm=>method) newEdges;
+                <A_ctxt, A_method> newTargets =
+                    (A_srcc=>, A_srcm=>, A_stmt=>, A_kind=>, A_tgtc=>A_ctxt, A_tgtm=>A_method) newEdges;
                 if(add( newTargets )) change = true;
                 newEdges = cg.edgesOutOf( newMethods ).get();
             }
@@ -61,14 +61,14 @@ public class BDDReachableMethods extends AbsReachableMethods
         return change;
     }
     boolean add( Context c, SootMethod m ) {
-        return add( new{ c=>ctxt, m=>method } );
+        return add( new{ c=>A_ctxt, m=>A_method } );
     }
-    private boolean add(<ctxt, method> methodContexts) {
+    private boolean add(<A_ctxt, A_method> methodContexts) {
         boolean ret = false;
-        <ctxt, method> newCM = methodContexts - reachableCM;
+        <A_ctxt, A_method> newCM = methodContexts - reachableCM;
         reachableCM |= newCM;
         if(cmout != null) cmout.add(newCM);
-        <method> newM = (ctxt=>)methodContexts - reachableM;
+        <A_method> newM = (A_ctxt=>)methodContexts - reachableM;
         reachableM |= newM;
         if(mout != null) mout.add(newM);
         return (newCM != 0B) || (newM != 0B);
@@ -80,11 +80,11 @@ public class BDDReachableMethods extends AbsReachableMethods
         return (int) reachableCM.size();
     }
     public boolean contains( SootMethod m ) {
-        <method> newM = new{ m=>method };
+        <A_method> newM = new{ m=>A_method };
         return (reachableM & newM) != 0B;
     }
     public boolean contains( Context c, SootMethod m ) {
-        <ctxt, method> newM = new{ c=>ctxt, m=>method };
+        <A_ctxt, A_method> newM = new{ c=>A_ctxt, m=>A_method };
         return (reachableCM & newM) != 0B;
     }
     public Rmethod methods() {
@@ -97,7 +97,7 @@ public class BDDReachableMethods extends AbsReachableMethods
         return reachableM.iterator();
     }
     public long countContexts(SootMethod m) {
-        <ctxt> contexts = reachableCM{method} <> new{m=>method}{method};
+        <A_ctxt> contexts = reachableCM{A_method} <> new{m=>A_method}{A_method};
         return contexts.size();
     }
 }

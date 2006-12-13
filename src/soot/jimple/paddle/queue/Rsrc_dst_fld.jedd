@@ -38,7 +38,7 @@ public abstract class Rsrc_dst_fld implements PaddleQueueReader {
     public PaddleQueue queue() { return q; }
     public final String toString() { return name; }
     public abstract Iterator iterator();
-    public abstract <src:V1, dst:V2, fld:FD> get();
+    public abstract <A_src:V1, A_dst:V2, A_fld:FD> get();
     public abstract boolean hasNext();
     public static class Tuple {
         private VarNode _src;

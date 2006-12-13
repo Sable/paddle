@@ -27,39 +27,39 @@ import java.util.*;
 
 /** Generates escape information from points-to sets. */
 public class BDDEscapeAnalysis {
-    <objc, obj> escapesThread = 0B;
-    <objc, obj> escapesMethod = 0B;
+    <A_objc, A_obj> escapesThread = 0B;
+    <A_objc, A_obj> escapesMethod = 0B;
 
-    private <var> staticVars = 0B;
-    private <var> threadThis = 0B;
+    private <A_var> staticVars = 0B;
+    private <A_var> threadThis = 0B;
 
-    private <method, var> methodRoots = 0B;
+    private <A_method, A_var> methodRoots = 0B;
 
-    private <varc, var, objc, obj> pt = 0B;
-    private <basec, base, objc, obj> fieldPt = 0B;
+    private <A_varc, A_var, A_objc, A_obj> pt = 0B;
+    private <A_basec, A_base, A_objc, A_obj> fieldPt = 0B;
     
     private void setupRoots() {
         pt = Results.v().p2sets().getReader().get();
-        fieldPt = (fld=>)Results.v().p2sets().fieldPt().get();
+        fieldPt = (A_fld=>)Results.v().p2sets().fieldPt().get();
 
         NodeFactory gnf = Results.v().nodeFactory();
         Rmethod rmethods = Results.v().reachableMethods().methods();
-        <method> methods = rmethods.get();
+        <A_method> methods = rmethods.get();
         for( Iterator mIt = methods.iterator(); mIt.hasNext(); ) {
             final SootMethod m = (SootMethod) mIt.next();
             MethodNodeFactory mnf = new MethodNodeFactory(m, gnf);
             if( !m.isStatic() ) {
-                methodRoots |= new {m=>method, mnf.caseThis()=>var};
+                methodRoots |= new {m=>A_method, mnf.caseThis()=>A_var};
             }
             for( int i = 0; i < m.getParameterCount(); i++ ) {
                 if( !( m.getParameterType(i) instanceof RefLikeType ) ) continue;
-                methodRoots |= new {m=>method, mnf.caseParm(i)=>var};
+                methodRoots |= new {m=>A_method, mnf.caseParm(i)=>A_var};
             }
             if( m.getReturnType() instanceof RefLikeType ) {
-                methodRoots |= new {m=>method, mnf.caseRet()=>var};
+                methodRoots |= new {m=>A_method, mnf.caseRet()=>A_var};
             }
         }
-        methodRoots |= methods{} >< new {gnf.caseThrow()=>var}{};
+        methodRoots |= methods{} >< new {gnf.caseThrow()=>A_var}{};
 
         for( Iterator vnIt = PaddleNumberers.v().varNodeNumberer().iterator(); vnIt.hasNext(); ) {
 
@@ -67,7 +67,7 @@ public class BDDEscapeAnalysis {
             Object o = vn.getVariable();
             if( o instanceof SootField ) {
                 SootField sf = (SootField) o;
-                if( sf.isStatic() ) staticVars |= new{vn=>var};
+                if( sf.isStatic() ) staticVars |= new{vn=>A_var};
             }
         }
         FastHierarchy fh = Scene.v().getOrMakeFastHierarchy();
@@ -78,7 +78,7 @@ public class BDDEscapeAnalysis {
             queue.addAll( fh.getSubclassesOf(cl) );
             if( cl.declaresMethod(sigRun) ) {
                 SootMethod run = cl.getMethod(sigRun);
-                threadThis |= new {new MethodNodeFactory(run, gnf).caseThis()=>var};
+                threadThis |= new {new MethodNodeFactory(run, gnf).caseThis()=>A_var};
             }
         }
     }
@@ -87,36 +87,36 @@ public class BDDEscapeAnalysis {
         findOrAdd("void run()");
 
     private void propagate() {
-        escapesThread |= (varc=>) pt{var} <> (staticVars|threadThis){var};
+        escapesThread |= (A_varc=>) pt{A_var} <> (staticVars|threadThis){A_var};
         while(true) {
             if( escapesThread !=
-            (escapesThread |= escapesThread{objc,obj} <> fieldPt{basec,base}))
+            (escapesThread |= escapesThread{A_objc,A_obj} <> fieldPt{A_basec,A_base}))
                 break;
         }
-        <ctxt, method, objc, obj> methodReachable = 0B;
-        methodReachable |= (varc=>ctxt) pt{var} <> methodRoots{var};
+        <A_ctxt, A_method, A_objc, A_obj> methodReachable = 0B;
+        methodReachable |= (A_varc=>A_ctxt) pt{A_var} <> methodRoots{A_var};
         while(true) {
             if( methodReachable ==
-            (methodReachable |= methodReachable{objc,obj} <> fieldPt{basec,base}))
+            (methodReachable |= methodReachable{A_objc,A_obj} <> fieldPt{A_basec,A_base}))
                 break;
         }
 
-        <obj, method> localallocs = 
+        <A_obj, A_method> localallocs = 
             ((BDDNodeInfo) PaddleScene.v().ni).localallocMap();
         escapesMethod |= escapesThread;
-        <ctxt, method, objc, obj> methodMatches = 
-            methodReachable{method,obj} >< localallocs{method,obj};
-        <objc, method, obj> contextMatches;
+        <A_ctxt, A_method, A_objc, A_obj> methodMatches = 
+            methodReachable{A_method,A_obj} >< localallocs{A_method,A_obj};
+        <A_objc, A_method, A_obj> contextMatches;
         if(PaddleScene.v().options().context_heap()) {
             contextMatches =
-                (ctxt=>)methodMatches{objc,method,obj} ><
-                (objc=>)methodMatches{ctxt,method,obj};
+                (A_ctxt=>)methodMatches{A_objc,A_method,A_obj} ><
+                (A_objc=>)methodMatches{A_ctxt,A_method,A_obj};
         } else {
-            contextMatches = (ctxt=>) methodMatches;
+            contextMatches = (A_ctxt=>) methodMatches;
         }
-        escapesMethod |= (method=>) contextMatches;
+        escapesMethod |= (A_method=>) contextMatches;
         escapesMethod |= ((BDDNodeInfo) PaddleScene.v().ni).globalallocSet(){}
-                    >< new{null=>objc}{};
+                    >< new{null=>A_objc}{};
     }
 
     public void analyze() {
@@ -125,10 +125,10 @@ public class BDDEscapeAnalysis {
     }
 
     public Iterator escapesThread() {
-        return ((objc=>) escapesThread).iterator();
+        return ((A_objc=>) escapesThread).iterator();
     }
     public Iterator escapesMethod() {
-        return ((objc=>) escapesMethod).iterator();
+        return ((A_objc=>) escapesMethod).iterator();
     }
 }
 

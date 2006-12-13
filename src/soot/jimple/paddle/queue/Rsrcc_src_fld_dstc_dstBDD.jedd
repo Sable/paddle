@@ -28,10 +28,10 @@ import jedd.*;
 import java.util.*;
 
 public final class Rsrcc_src_fld_dstc_dstBDD extends Rsrcc_src_fld_dstc_dst {
-    private <srcc:C1, src:V1, fld:FD, dstc:C2, dst:V2> bdd;
-    void add( <srcc:C1, src:V1, fld:FD, dstc:C2, dst:V2> tuple ) { bdd |= tuple; }
-    public Rsrcc_src_fld_dstc_dstBDD( <srcc:C1, src:V1, fld:FD, dstc:C2, dst:V2> bdd, String name, PaddleQueue q ) { this(name, q); add(bdd); }
-    public Rsrcc_src_fld_dstc_dstBDD( <srcc:C1, src:V1, fld:FD, dstc:C2, dst:V2> bdd ) { this("", null); add(bdd); }
+    private <A_srcc:C1, A_src:V1, A_fld:FD, A_dstc:C2, A_dst:V2> bdd;
+    void add( <A_srcc:C1, A_src:V1, A_fld:FD, A_dstc:C2, A_dst:V2> tuple ) { bdd |= tuple; }
+    public Rsrcc_src_fld_dstc_dstBDD( <A_srcc:C1, A_src:V1, A_fld:FD, A_dstc:C2, A_dst:V2> bdd, String name, PaddleQueue q ) { this(name, q); add(bdd); }
+    public Rsrcc_src_fld_dstc_dstBDD( <A_srcc:C1, A_src:V1, A_fld:FD, A_dstc:C2, A_dst:V2> bdd ) { this("", null); add(bdd); }
     Rsrcc_src_fld_dstc_dstBDD(String name, PaddleQueue q) { super(name, q); bdd = 0B; }
     public Iterator iterator() {;
         return new Iterator() {
@@ -43,7 +43,7 @@ public final class Rsrcc_src_fld_dstc_dstBDD extends Rsrcc_src_fld_dstc_dst {
             }
             public Object next() {
                 if( it == null || !it.hasNext() ) {
-                    it = bdd.iterator( new Attribute[] { srcc.v(), src.v(), fld.v(), dstc.v(), dst.v() } );
+                    it = bdd.iterator( new Attribute[] { A_srcc.v(), A_src.v(), A_fld.v(), A_dstc.v(), A_dst.v() } );
                     bdd = 0B;
                 }
                 Object[] components = (Object[]) it.next();
@@ -52,8 +52,8 @@ public final class Rsrcc_src_fld_dstc_dstBDD extends Rsrcc_src_fld_dstc_dst {
             public void remove() { throw new UnsupportedOperationException(); }
         };
     }
-    public <srcc:C1, src:V1, fld:FD, dstc:C2, dst:V2> get() {
-        <srcc:C1, src:V1, fld:FD, dstc:C2, dst:V2> ret = bdd;
+    public <A_srcc:C1, A_src:V1, A_fld:FD, A_dstc:C2, A_dst:V2> get() {
+        <A_srcc:C1, A_src:V1, A_fld:FD, A_dstc:C2, A_dst:V2> ret = bdd;
         bdd = 0B;
         return ret;
     }

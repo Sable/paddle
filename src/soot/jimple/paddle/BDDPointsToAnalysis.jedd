@@ -34,27 +34,27 @@ public class BDDPointsToAnalysis extends AbsPointsToAnalysis
         this.fieldPt = p2sets.fieldPt().get();
     }
 
-    private <varc, var, objc, obj> pt;
-    private <basec, base, fld, objc, obj> fieldPt;
+    private <A_varc, A_var, A_objc, A_obj> pt;
+    private <A_basec, A_base, A_fld, A_objc, A_obj> fieldPt;
 
     public PointsToSet reachingObjects( Local l ) {
         if(local(l) == null) return new BDDPointsToSet(0B);
-        return new BDDPointsToSet( (varc=>) pt{var} <> new{local(l)=>var}{var} );
+        return new BDDPointsToSet( (A_varc=>) pt{A_var} <> new{local(l)=>A_var}{A_var} );
     }
     public PointsToSet reachingObjects( Context c, Local l ) {
         if(local(l) == null) return new BDDPointsToSet(0B);
-        return new BDDPointsToSet(      pt{var,varc} 
-            <> new{local(l)=>var, c=>varc}{var,varc} );
+        return new BDDPointsToSet(      pt{A_var,A_varc} 
+            <> new{local(l)=>A_var, c=>A_varc}{A_var,A_varc} );
     }
     public PointsToSet reachingObjects( SootField f ) {
         if(field(f) == null) return new BDDPointsToSet(0B);
-        return new BDDPointsToSet( (varc=>) pt{var} <> new{field(f)=>var}{var} );
+        return new BDDPointsToSet( (A_varc=>) pt{A_var} <> new{field(f)=>A_var}{A_var} );
     }
     public PointsToSet reachingObjects( PointsToSet s, SootField f ) {
         BDDPointsToSet bdds = (BDDPointsToSet) s;
         return new BDDPointsToSet(
-            bdds.bdd(){} >< new{f=>fld}{}{objc, obj, fld}
-                            <> fieldPt{basec,base,fld} );
+            bdds.bdd(){} >< new{f=>A_fld}{}{A_objc, A_obj, A_fld}
+                            <> fieldPt{A_basec,A_base,A_fld} );
     }
     public PointsToSet reachingObjects( Local l, SootField f ) {
         return reachingObjects( reachingObjects(l), f );
@@ -65,8 +65,8 @@ public class BDDPointsToAnalysis extends AbsPointsToAnalysis
     public PointsToSet reachingObjectsOfArrayElement( PointsToSet s ) {
         BDDPointsToSet bdds = (BDDPointsToSet) s;
         return new BDDPointsToSet(
-            bdds.bdd(){} >< new{ArrayElement.v()=>fld}{}{objc, obj, fld}
-                                           <> fieldPt{basec,base,fld} );
+            bdds.bdd(){} >< new{ArrayElement.v()=>A_fld}{}{A_objc, A_obj, A_fld}
+                                           <> fieldPt{A_basec,A_base,A_fld} );
     }
 }
 

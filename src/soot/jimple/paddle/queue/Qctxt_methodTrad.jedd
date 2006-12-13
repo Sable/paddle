@@ -35,8 +35,8 @@ public class Qctxt_methodTrad extends Qctxt_method {
         q.add( _method );
         invalidate();
     }
-    public void add( <ctxt:C1, method:MS> in ) {
-        Iterator it = in.iterator( new Attribute[] { ctxt.v(), method.v() } );
+    public void add( <A_ctxt:C1, A_method:MS> in ) {
+        Iterator it = in.iterator( new Attribute[] { A_ctxt.v(), A_method.v() } );
         while( it.hasNext() ) {
             Object[] tuple = (Object[]) it.next();
             for( int i = 0; i < 2; i++ ) {

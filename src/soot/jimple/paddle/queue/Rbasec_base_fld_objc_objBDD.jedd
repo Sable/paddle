@@ -28,10 +28,10 @@ import jedd.*;
 import java.util.*;
 
 public final class Rbasec_base_fld_objc_objBDD extends Rbasec_base_fld_objc_obj {
-    private <basec:CH1, base:H1, fld:FD, objc:CH2, obj:H2> bdd;
-    void add( <basec:CH1, base:H1, fld:FD, objc:CH2, obj:H2> tuple ) { bdd |= tuple; }
-    public Rbasec_base_fld_objc_objBDD( <basec:CH1, base:H1, fld:FD, objc:CH2, obj:H2> bdd, String name, PaddleQueue q ) { this(name, q); add(bdd); }
-    public Rbasec_base_fld_objc_objBDD( <basec:CH1, base:H1, fld:FD, objc:CH2, obj:H2> bdd ) { this("", null); add(bdd); }
+    private <A_basec:CH1, A_base:H1, A_fld:FD, A_objc:CH2, A_obj:H2> bdd;
+    void add( <A_basec:CH1, A_base:H1, A_fld:FD, A_objc:CH2, A_obj:H2> tuple ) { bdd |= tuple; }
+    public Rbasec_base_fld_objc_objBDD( <A_basec:CH1, A_base:H1, A_fld:FD, A_objc:CH2, A_obj:H2> bdd, String name, PaddleQueue q ) { this(name, q); add(bdd); }
+    public Rbasec_base_fld_objc_objBDD( <A_basec:CH1, A_base:H1, A_fld:FD, A_objc:CH2, A_obj:H2> bdd ) { this("", null); add(bdd); }
     Rbasec_base_fld_objc_objBDD(String name, PaddleQueue q) { super(name, q); bdd = 0B; }
     public Iterator iterator() {;
         return new Iterator() {
@@ -43,7 +43,7 @@ public final class Rbasec_base_fld_objc_objBDD extends Rbasec_base_fld_objc_obj 
             }
             public Object next() {
                 if( it == null || !it.hasNext() ) {
-                    it = bdd.iterator( new Attribute[] { basec.v(), base.v(), fld.v(), objc.v(), obj.v() } );
+                    it = bdd.iterator( new Attribute[] { A_basec.v(), A_base.v(), A_fld.v(), A_objc.v(), A_obj.v() } );
                     bdd = 0B;
                 }
                 Object[] components = (Object[]) it.next();
@@ -52,8 +52,8 @@ public final class Rbasec_base_fld_objc_objBDD extends Rbasec_base_fld_objc_obj 
             public void remove() { throw new UnsupportedOperationException(); }
         };
     }
-    public <basec:CH1, base:H1, fld:FD, objc:CH2, obj:H2> get() {
-        <basec:CH1, base:H1, fld:FD, objc:CH2, obj:H2> ret = bdd;
+    public <A_basec:CH1, A_base:H1, A_fld:FD, A_objc:CH2, A_obj:H2> get() {
+        <A_basec:CH1, A_base:H1, A_fld:FD, A_objc:CH2, A_obj:H2> ret = bdd;
         bdd = 0B;
         return ret;
     }

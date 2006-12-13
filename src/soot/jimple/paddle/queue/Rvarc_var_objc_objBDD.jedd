@@ -28,10 +28,10 @@ import jedd.*;
 import java.util.*;
 
 public final class Rvarc_var_objc_objBDD extends Rvarc_var_objc_obj {
-    private <varc:C1, var:V1, objc:CH1, obj:H1> bdd;
-    void add( <varc:C1, var:V1, objc:CH1, obj:H1> tuple ) { bdd |= tuple; }
-    public Rvarc_var_objc_objBDD( <varc:C1, var:V1, objc:CH1, obj:H1> bdd, String name, PaddleQueue q ) { this(name, q); add(bdd); }
-    public Rvarc_var_objc_objBDD( <varc:C1, var:V1, objc:CH1, obj:H1> bdd ) { this("", null); add(bdd); }
+    private <A_varc:C1, A_var:V1, A_objc:CH1, A_obj:H1> bdd;
+    void add( <A_varc:C1, A_var:V1, A_objc:CH1, A_obj:H1> tuple ) { bdd |= tuple; }
+    public Rvarc_var_objc_objBDD( <A_varc:C1, A_var:V1, A_objc:CH1, A_obj:H1> bdd, String name, PaddleQueue q ) { this(name, q); add(bdd); }
+    public Rvarc_var_objc_objBDD( <A_varc:C1, A_var:V1, A_objc:CH1, A_obj:H1> bdd ) { this("", null); add(bdd); }
     Rvarc_var_objc_objBDD(String name, PaddleQueue q) { super(name, q); bdd = 0B; }
     public Iterator iterator() {;
         return new Iterator() {
@@ -43,7 +43,7 @@ public final class Rvarc_var_objc_objBDD extends Rvarc_var_objc_obj {
             }
             public Object next() {
                 if( it == null || !it.hasNext() ) {
-                    it = bdd.iterator( new Attribute[] { varc.v(), var.v(), objc.v(), obj.v() } );
+                    it = bdd.iterator( new Attribute[] { A_varc.v(), A_var.v(), A_objc.v(), A_obj.v() } );
                     bdd = 0B;
                 }
                 Object[] components = (Object[]) it.next();
@@ -52,8 +52,8 @@ public final class Rvarc_var_objc_objBDD extends Rvarc_var_objc_obj {
             public void remove() { throw new UnsupportedOperationException(); }
         };
     }
-    public <varc:C1, var:V1, objc:CH1, obj:H1> get() {
-        <varc:C1, var:V1, objc:CH1, obj:H1> ret = bdd;
+    public <A_varc:C1, A_var:V1, A_objc:CH1, A_obj:H1> get() {
+        <A_varc:C1, A_var:V1, A_objc:CH1, A_obj:H1> ret = bdd;
         bdd = 0B;
         return ret;
     }

@@ -52,7 +52,7 @@ public class Rvarc_var_objc_objDebug extends Rvarc_var_objc_obj{
             public void remove() { throw new UnsupportedOperationException(); }
         };
     }
-    public <varc:C1, var:V1, objc:CH1, obj:H1> get() {
+    public <A_varc:C1, A_var:V1, A_objc:CH1, A_obj:H1> get() {
         throw new RuntimeException( "NYI" );
     }
     public boolean hasNext() { return trad.hasNext(); }

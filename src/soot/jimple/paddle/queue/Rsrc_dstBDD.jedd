@@ -28,10 +28,10 @@ import jedd.*;
 import java.util.*;
 
 public final class Rsrc_dstBDD extends Rsrc_dst {
-    private <src:V1, dst:V2> bdd;
-    void add( <src:V1, dst:V2> tuple ) { bdd |= tuple; }
-    public Rsrc_dstBDD( <src:V1, dst:V2> bdd, String name, PaddleQueue q ) { this(name, q); add(bdd); }
-    public Rsrc_dstBDD( <src:V1, dst:V2> bdd ) { this("", null); add(bdd); }
+    private <A_src:V1, A_dst:V2> bdd;
+    void add( <A_src:V1, A_dst:V2> tuple ) { bdd |= tuple; }
+    public Rsrc_dstBDD( <A_src:V1, A_dst:V2> bdd, String name, PaddleQueue q ) { this(name, q); add(bdd); }
+    public Rsrc_dstBDD( <A_src:V1, A_dst:V2> bdd ) { this("", null); add(bdd); }
     Rsrc_dstBDD(String name, PaddleQueue q) { super(name, q); bdd = 0B; }
     public Iterator iterator() {;
         return new Iterator() {
@@ -43,7 +43,7 @@ public final class Rsrc_dstBDD extends Rsrc_dst {
             }
             public Object next() {
                 if( it == null || !it.hasNext() ) {
-                    it = bdd.iterator( new Attribute[] { src.v(), dst.v() } );
+                    it = bdd.iterator( new Attribute[] { A_src.v(), A_dst.v() } );
                     bdd = 0B;
                 }
                 Object[] components = (Object[]) it.next();
@@ -52,8 +52,8 @@ public final class Rsrc_dstBDD extends Rsrc_dst {
             public void remove() { throw new UnsupportedOperationException(); }
         };
     }
-    public <src:V1, dst:V2> get() {
-        <src:V1, dst:V2> ret = bdd;
+    public <A_src:V1, A_dst:V2> get() {
+        <A_src:V1, A_dst:V2> ret = bdd;
         bdd = 0B;
         return ret;
     }

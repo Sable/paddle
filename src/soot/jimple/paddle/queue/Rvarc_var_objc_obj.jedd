@@ -38,7 +38,7 @@ public abstract class Rvarc_var_objc_obj implements PaddleQueueReader {
     public PaddleQueue queue() { return q; }
     public final String toString() { return name; }
     public abstract Iterator iterator();
-    public abstract <varc:C1, var:V1, objc:CH1, obj:H1> get();
+    public abstract <A_varc:C1, A_var:V1, A_objc:CH1, A_obj:H1> get();
     public abstract boolean hasNext();
     public static class Tuple {
         private Context _varc;

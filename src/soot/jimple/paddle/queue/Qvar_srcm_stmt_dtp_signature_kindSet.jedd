@@ -38,7 +38,7 @@ public final class Qvar_srcm_stmt_dtp_signature_kindSet extends Qvar_srcm_stmt_d
             reader.add( in );
         }
     }
-    public void add( <var:V1, srcm:MS, stmt:ST, dtp:T1, signature:SG, kind:KD> in ) {
+    public void add( <A_var:V1, A_srcm:MS, A_stmt:ST, A_dtp:T1, A_signature:SG, A_kind:KD> in ) {
         throw new RuntimeException();
     }
     public Rvar_srcm_stmt_dtp_signature_kind reader( String rname ) {

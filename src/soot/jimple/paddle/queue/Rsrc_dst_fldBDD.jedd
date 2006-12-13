@@ -28,10 +28,10 @@ import jedd.*;
 import java.util.*;
 
 public final class Rsrc_dst_fldBDD extends Rsrc_dst_fld {
-    private <src:V1, dst:V2, fld:FD> bdd;
-    void add( <src:V1, dst:V2, fld:FD> tuple ) { bdd |= tuple; }
-    public Rsrc_dst_fldBDD( <src:V1, dst:V2, fld:FD> bdd, String name, PaddleQueue q ) { this(name, q); add(bdd); }
-    public Rsrc_dst_fldBDD( <src:V1, dst:V2, fld:FD> bdd ) { this("", null); add(bdd); }
+    private <A_src:V1, A_dst:V2, A_fld:FD> bdd;
+    void add( <A_src:V1, A_dst:V2, A_fld:FD> tuple ) { bdd |= tuple; }
+    public Rsrc_dst_fldBDD( <A_src:V1, A_dst:V2, A_fld:FD> bdd, String name, PaddleQueue q ) { this(name, q); add(bdd); }
+    public Rsrc_dst_fldBDD( <A_src:V1, A_dst:V2, A_fld:FD> bdd ) { this("", null); add(bdd); }
     Rsrc_dst_fldBDD(String name, PaddleQueue q) { super(name, q); bdd = 0B; }
     public Iterator iterator() {;
         return new Iterator() {
@@ -43,7 +43,7 @@ public final class Rsrc_dst_fldBDD extends Rsrc_dst_fld {
             }
             public Object next() {
                 if( it == null || !it.hasNext() ) {
-                    it = bdd.iterator( new Attribute[] { src.v(), dst.v(), fld.v() } );
+                    it = bdd.iterator( new Attribute[] { A_src.v(), A_dst.v(), A_fld.v() } );
                     bdd = 0B;
                 }
                 Object[] components = (Object[]) it.next();
@@ -52,8 +52,8 @@ public final class Rsrc_dst_fldBDD extends Rsrc_dst_fld {
             public void remove() { throw new UnsupportedOperationException(); }
         };
     }
-    public <src:V1, dst:V2, fld:FD> get() {
-        <src:V1, dst:V2, fld:FD> ret = bdd;
+    public <A_src:V1, A_dst:V2, A_fld:FD> get() {
+        <A_src:V1, A_dst:V2, A_fld:FD> ret = bdd;
         bdd = 0B;
         return ret;
     }

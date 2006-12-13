@@ -40,7 +40,7 @@ public abstract class AbsTypeManager implements PaddleComponent
     }
     public abstract boolean update();
     public abstract BitVector get( Type type );
-    public abstract <var, obj> get();
+    public abstract <A_var, A_obj> get();
 
     public abstract boolean castNeverFails( Type from, Type to );
     public void queueDeps(DependencyManager depMan) {

@@ -32,16 +32,16 @@ public class BDDInsensitiveVirtualContextManager extends BDDVirtualContextManage
         super( in, out, thisOut, gnf );
     }
     public boolean update() {
-        <varc, var, objc, obj, srcm, stmt, kind, tgtm> newIn = in.get();
+        <A_varc, A_var, A_objc, A_obj, A_srcm, A_stmt, A_kind, A_tgtm> newIn = in.get();
 
-        out.add((varc=>, var=>, objc=>, obj=>) newIn{} ><
-            new {null=>srcc, null=>tgtc}{} );
+        out.add((A_varc=>, A_var=>, A_objc=>, A_obj=>) newIn{} ><
+            new {null=>A_srcc, null=>A_tgtc}{} );
 
         if( thisOut != null ) {
-            newMethods((varc=>, var=>, objc=>, obj=>, srcm=>, stmt=>, kind=>)
+            newMethods((A_varc=>, A_var=>, A_objc=>, A_obj=>, A_srcm=>, A_stmt=>, A_kind=>)
                 newIn);
-            thisOut.add((varc=>, var=>, srcm=>, stmt=>, kind=>) newIn{tgtm} <>
-                thisVar(){method} {} >< new {null=>varc}{} );
+            thisOut.add((A_varc=>, A_var=>, A_srcm=>, A_stmt=>, A_kind=>) newIn{A_tgtm} <>
+                thisVar(){A_method} {} >< new {null=>A_varc}{} );
         }
 
         return newIn != 0B;

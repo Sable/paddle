@@ -38,7 +38,7 @@ public final class Qsrcm_stmt_kind_tgtm_src_dstSet extends Qsrcm_stmt_kind_tgtm_
             reader.add( in );
         }
     }
-    public void add( <srcm:MS, stmt:ST, kind:KD, tgtm:MT, src:V1, dst:V2> in ) {
+    public void add( <A_srcm:MS, A_stmt:ST, A_kind:KD, A_tgtm:MT, A_src:V1, A_dst:V2> in ) {
         throw new RuntimeException();
     }
     public Rsrcm_stmt_kind_tgtm_src_dst reader( String rname ) {

@@ -32,8 +32,8 @@ public class BDD1CFAStaticContextManager extends AbsStaticContextManager
     }
     public boolean update() {
         // get rid of tgt context, then copy src unit to target context
-        <srcc, srcm, stmt, kind, tgtc, tgtm> newOut =
-            (stmt=>stmt, stmt=>tgtc) (tgtc=>) in.get();
+        <A_srcc, A_srcm, A_stmt, A_kind, A_tgtc, A_tgtm> newOut =
+            (A_stmt=>A_stmt, A_stmt=>A_tgtc) (A_tgtc=>) in.get();
         out.add( newOut );
         return newOut != 0B;
     }

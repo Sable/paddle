@@ -27,24 +27,24 @@ import java.util.*;
 public class SideEffectAnalysis {
     // non-transitive read/write sets: stmt in method reads/writes field fld of
     // object obj
-    <method, stmt, fld:FD, obj> ntread = 0B;
-    <method, stmt, fld:FD, obj> ntwrite = 0B;
+    <A_method, A_stmt, A_fld:FD, A_obj> ntread = 0B;
+    <A_method, A_stmt, A_fld:FD, A_obj> ntwrite = 0B;
 
     // transitive read/write sets: stmt in method, or some method that it
     // (possibly indirectly) calls, reads/writes field fld of object obj
-    <method, stmt, fld, obj> read = 0B;
-    <method, stmt, fld, obj> write = 0B;
+    <A_method, A_stmt, A_fld, A_obj> read = 0B;
+    <A_method, A_stmt, A_fld, A_obj> write = 0B;
 
     /** Create a read or write set specifying that stmt s of method m reads
      *  or writes the value v. */
-    private <method, stmt, fld, obj> addValue( Value v, SootMethod m, Stmt s ) {
+    private <A_method, A_stmt, A_fld, A_obj> addValue( Value v, SootMethod m, Stmt s ) {
 	if( v instanceof InstanceFieldRef ) {
             Scene.v().getUnitNumberer().add( s );
 	    InstanceFieldRef ifr = (InstanceFieldRef) v;
             SootField f = ifr.getField();
             Scene.v().getFieldNumberer().add(f);
-            return new { m=>method, s=>stmt, f=>fld } {} ><
-                (varc=>, var=>, objc=>)
+            return new { m=>A_method, s=>A_stmt, f=>A_fld } {} ><
+                (A_varc=>, A_var=>, A_objc=>)
                     p2sets().getReader(varNode(m, (Local)ifr.getBase())).get() {};
 	} else if( v instanceof StaticFieldRef ) {
             Scene.v().getUnitNumberer().add( s );
@@ -52,18 +52,18 @@ public class SideEffectAnalysis {
             SootField f = sfr.getField();
             Scene.v().getFieldNumberer().add(f);
             return new {
-                m=>method,
-                s=>stmt,
-                f=>fld,
-                null=>obj };
+                m=>A_method,
+                s=>A_stmt,
+                f=>A_fld,
+                null=>A_obj };
 	} else if( v instanceof ArrayRef ) {
             Scene.v().getUnitNumberer().add( s );
 	    ArrayRef ar = (ArrayRef) v;
             return new {
-                    m=>method,
-                    s=>stmt,
-                    ArrayElement.v()=>fld
-                } {} >< (varc=>, var=>, objc=>)
+                    m=>A_method,
+                    s=>A_stmt,
+                    ArrayElement.v()=>A_fld
+                } {} >< (A_varc=>, A_var=>, A_objc=>)
                     p2sets().getReader(varNode(m, (Local)ar.getBase())).get() {};
 	}
 	return 0B;
@@ -80,7 +80,7 @@ public class SideEffectAnalysis {
     }
 
     /** Compute the non-transitive read set for stmt s of method m. */
-    private <method, stmt, fld, obj> ntReadSet( SootMethod m, Stmt s ) {
+    private <A_method, A_stmt, A_fld, A_obj> ntReadSet( SootMethod m, Stmt s ) {
         Scene.v().getUnitNumberer().add( s );
 	if( s instanceof AssignStmt ) {
 	    AssignStmt a = (AssignStmt) s;
@@ -91,7 +91,7 @@ public class SideEffectAnalysis {
     }
 
     /** Compute the non-transitive write set for stmt s of method m. */
-    private <method, stmt, fld, obj> ntWriteSet( SootMethod m, Stmt s ) {
+    private <A_method, A_stmt, A_fld, A_obj> ntWriteSet( SootMethod m, Stmt s ) {
         Scene.v().getUnitNumberer().add( s );
         if( s instanceof AssignStmt ) {
 	    AssignStmt a = (AssignStmt) s;
@@ -126,19 +126,19 @@ public class SideEffectAnalysis {
         write |= ntwrite;
 
         // find the transitive closure of call graph edges
-        <srcm, stmt, tgtm> closecg = (kind=>) cg().ciEdges().get();
+        <A_srcm, A_stmt, A_tgtm> closecg = (A_kind=>) cg().ciEdges().get();
         while( closecg != ( closecg |=
-            closecg {tgtm} <> (srcm=>M3)(stmt=>) closecg {srcm} ) );
+            closecg {A_tgtm} <> (A_srcm=>M3)(A_stmt=>) closecg {A_srcm} ) );
 
         // close the read/write sets under the closure of call graph edges
-        read |= (srcm=>method) ( closecg {tgtm} <> (stmt=>) ntread {method} );
-        write |= (srcm=>method) ( closecg {tgtm} <> (stmt=>) ntwrite {method} );
+        read |= (A_srcm=>A_method) ( closecg {A_tgtm} <> (A_stmt=>) ntread {A_method} );
+        write |= (A_srcm=>A_method) ( closecg {A_tgtm} <> (A_stmt=>) ntwrite {A_method} );
     }
 
     public void analyze() {
         gnf = Results.v().nodeFactory();
 
-        for( Iterator mIt = ((srcm=>, stmt=>, kind=>) cg().ciEdges().get()).iterator(); mIt.hasNext(); ) {
+        for( Iterator mIt = ((A_srcm=>, A_stmt=>, A_kind=>) cg().ciEdges().get()).iterator(); mIt.hasNext(); ) {
 
             final SootMethod m = (SootMethod) mIt.next();
             if( m.isAbstract() ) continue;
@@ -150,15 +150,15 @@ public class SideEffectAnalysis {
 
     public Iterator readSet( SootMethod m, Stmt s ) {
         Scene.v().getUnitNumberer().add( s );
-        return ((obj=>) 
-            (read{method, stmt} <> new {m=>method, s=>stmt}{method, stmt}))
+        return ((A_obj=>) 
+            (read{A_method, A_stmt} <> new {m=>A_method, s=>A_stmt}{A_method, A_stmt}))
             .iterator();
     }
 
     public Iterator writeSet( SootMethod m, Stmt s ) {
         Scene.v().getUnitNumberer().add( s );
-        return ((obj=>) 
-            (write{method, stmt} <> new {m=>method, s=>stmt}{method, stmt}))
+        return ((A_obj=>) 
+            (write{A_method, A_stmt} <> new {m=>A_method, s=>A_stmt}{A_method, A_stmt}))
             .iterator();
     }
 }

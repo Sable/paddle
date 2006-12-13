@@ -36,8 +36,8 @@ public class Qvarc_var_objc_obj_srcm_stmt_kind_tgtmDebug extends Qvarc_var_objc_
         bdd.add( _varc, _var, _objc, _obj, _srcm, _stmt, _kind, _tgtm );
         trad.add( _varc, _var, _objc, _obj, _srcm, _stmt, _kind, _tgtm );
     }
-    public void add( <varc:C1, var:V1, objc:CH1, obj:H1, srcm:MS, stmt:ST, kind:KD, tgtm:MT> in ) {
-        Iterator it = in.iterator( new Attribute[] { varc.v(), var.v(), objc.v(), obj.v(), srcm.v(), stmt.v(), kind.v(), tgtm.v() } );
+    public void add( <A_varc:C1, A_var:V1, A_objc:CH1, A_obj:H1, A_srcm:MS, A_stmt:ST, A_kind:KD, A_tgtm:MT> in ) {
+        Iterator it = in.iterator( new Attribute[] { A_varc.v(), A_var.v(), A_objc.v(), A_obj.v(), A_srcm.v(), A_stmt.v(), A_kind.v(), A_tgtm.v() } );
         while( it.hasNext() ) {
             Object[] tuple = (Object[]) it.next();
             for( int i = 0; i < 8; i++ ) {

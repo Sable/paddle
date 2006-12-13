@@ -38,7 +38,7 @@ public abstract class Rvar_srcm_stmt_dtp_signature_kind implements PaddleQueueRe
     public PaddleQueue queue() { return q; }
     public final String toString() { return name; }
     public abstract Iterator iterator();
-    public abstract <var:V1, srcm:MS, stmt:ST, dtp:T1, signature:SG, kind:KD> get();
+    public abstract <A_var:V1, A_srcm:MS, A_stmt:ST, A_dtp:T1, A_signature:SG, A_kind:KD> get();
     public abstract boolean hasNext();
     public static class Tuple {
         private VarNode _var;

@@ -31,7 +31,7 @@ public class BDDInsensitiveStaticContextManager extends AbsStaticContextManager
         super( in, out );
     }
     public boolean update() {
-        <srcc, srcm, stmt, kind, tgtc, tgtm> newOut = in.get();
+        <A_srcc, A_srcm, A_stmt, A_kind, A_tgtc, A_tgtm> newOut = in.get();
         out.add( newOut );
         return newOut != 0B;
     }

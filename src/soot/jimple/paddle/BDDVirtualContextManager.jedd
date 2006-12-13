@@ -32,15 +32,15 @@ public abstract class BDDVirtualContextManager extends AbsVirtualContextManager
     BDDVirtualContextManager( Rvarc_var_objc_obj_srcm_stmt_kind_tgtm in, Qsrcc_srcm_stmt_kind_tgtc_tgtm out, Qobjc_obj_varc_var thisOut, NodeFactory gnf ) {
         super( in, out, thisOut, gnf );
     }
-    public void newMethods( <tgtm> methods ) {
+    public void newMethods( <A_tgtm> methods ) {
         for( Iterator mIt = methods.iterator(); mIt.hasNext(); ) {
             final SootMethod m = (SootMethod) mIt.next();
             VarNode thisNode = (VarNode) new MethodNodeFactory(m, gnf).caseThis();
-            thisVar |= new {m=>method, thisNode=>var};
+            thisVar |= new {m=>A_method, thisNode=>A_var};
         }
     }
-    private <method, var> thisVar = 0B;
-    public <method, var> thisVar() {
+    private <A_method, A_var> thisVar = 0B;
+    public <A_method, A_var> thisVar() {
         return thisVar;
     }
 }

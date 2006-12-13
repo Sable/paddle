@@ -32,7 +32,7 @@ public abstract class Qbasec_base_fld_objc_obj implements soot.jimple.paddle.Pad
     protected String name;
     public final String toString() { return name; }
     public abstract void add( Context _basec, AllocNode _base, PaddleField _fld, Context _objc, AllocNode _obj );
-    public abstract void add( <basec:CH1, base:H1, fld:FD, objc:CH2, obj:H2> in );
+    public abstract void add( <A_basec:CH1, A_base:H1, A_fld:FD, A_objc:CH2, A_obj:H2> in );
     public abstract Rbasec_base_fld_objc_obj reader( String rname );
     public Rbasec_base_fld_objc_obj revreader( String rname ) { return reader( rname ); }
     public void add( Rbasec_base_fld_objc_obj.Tuple in ) {

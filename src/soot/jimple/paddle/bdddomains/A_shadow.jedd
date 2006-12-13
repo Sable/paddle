@@ -2,5 +2,5 @@ package soot.jimple.paddle.bdddomains;
 import jedd.*;
 import soot.*;
 
-public class local(LocalDomain) extends Attribute {
+public class A_shadow(ShadowDomain) extends Attribute {
 }

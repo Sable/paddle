@@ -43,66 +43,66 @@ public class BDDPAG extends AbsPAG
     }
 
     public Iterator simpleSources() {
-        return new ContextVarNodeIterator((dstc=>, dst=>, srcc=>varc, src=>var) simpleBDD);
+        return new ContextVarNodeIterator((A_dstc=>, A_dst=>, A_srcc=>A_varc, A_src=>A_var) simpleBDD);
     }
     public Iterator loadSources() {
-        return new FieldRefIterator((dstc=>, dst=>, srcc=>varc, src=>var) loadBDD);
+        return new FieldRefIterator((A_dstc=>, A_dst=>, A_srcc=>A_varc, A_src=>A_var) loadBDD);
     }
     public Iterator storeSources() {
-        return new ContextVarNodeIterator((dstc=>, dst=>, fld=>, srcc=>varc, src=>var) storeBDD );
+        return new ContextVarNodeIterator((A_dstc=>, A_dst=>, A_fld=>, A_srcc=>A_varc, A_src=>A_var) storeBDD );
     }
     public Iterator allocSources() {
-        return new ContextAllocNodeIterator((varc=>, var=>) allocBDD);
+        return new ContextAllocNodeIterator((A_varc=>, A_var=>) allocBDD);
     }
     public Iterator simpleInvSources() {
-        return new ContextVarNodeIterator((srcc=>, src=>, dstc=>varc, dst=>var) simpleBDD);
+        return new ContextVarNodeIterator((A_srcc=>, A_src=>, A_dstc=>A_varc, A_dst=>A_var) simpleBDD);
     }
     public Iterator loadInvSources() {
-        return new ContextVarNodeIterator((srcc=>, src=>, fld=>, dstc=>varc, dst=>var) loadBDD);
+        return new ContextVarNodeIterator((A_srcc=>, A_src=>, A_fld=>, A_dstc=>A_varc, A_dst=>A_var) loadBDD);
     }
     public Iterator storeInvSources() {
-        return new FieldRefIterator((srcc=>, src=>, dstc=>varc, dst=>var) storeBDD);
+        return new FieldRefIterator((A_srcc=>, A_src=>, A_dstc=>A_varc, A_dst=>A_var) storeBDD);
     }
     public Iterator allocInvSources() {
-        return new ContextVarNodeIterator((objc=>, obj=>) allocBDD);
+        return new ContextVarNodeIterator((A_objc=>, A_obj=>) allocBDD);
     }
     
     public Iterator simpleLookup( Context ctxt, VarNode key ) {
         return new ContextVarNodeIterator(
-                    (dstc=>varc, dst=>var)simpleBDD{srcc, src} 
-                       <> new{ctxt=>srcc, key=>src}{srcc, src});
+                    (A_dstc=>A_varc, A_dst=>A_var)simpleBDD{A_srcc, A_src} 
+                       <> new{ctxt=>A_srcc, key=>A_src}{A_srcc, A_src});
     }
     public Iterator loadLookup( Context ctxt, FieldRefNode key ) {
-        return new ContextVarNodeIterator((dstc=>varc, dst=>var)
-                                                          loadBDD{srcc, src, fld}
-            <> new{ctxt=>srcc, key.base()=>src, key.field()=>fld}{srcc, src, fld});
+        return new ContextVarNodeIterator((A_dstc=>A_varc, A_dst=>A_var)
+                                                          loadBDD{A_srcc, A_src, A_fld}
+            <> new{ctxt=>A_srcc, key.base()=>A_src, key.field()=>A_fld}{A_srcc, A_src, A_fld});
     }
     public Iterator storeLookup( Context ctxt, VarNode key ) {
-        return new FieldRefIterator((dstc=>varc, dst=>var)
-            (storeBDD{srcc, src} <> new{ctxt=>srcc, key=>src}{srcc, src}));
+        return new FieldRefIterator((A_dstc=>A_varc, A_dst=>A_var)
+            (storeBDD{A_srcc, A_src} <> new{ctxt=>A_srcc, key=>A_src}{A_srcc, A_src}));
     }
     public Iterator allocLookup( Context ctxt, AllocNode key ) {
-        return new ContextVarNodeIterator(allocBDD{objc, obj} 
-                      <> new{ctxt=>objc, key=>obj}{objc, obj});
+        return new ContextVarNodeIterator(allocBDD{A_objc, A_obj} 
+                      <> new{ctxt=>A_objc, key=>A_obj}{A_objc, A_obj});
     }
     public Iterator simpleInvLookup( Context ctxt, VarNode key ) {
-        return new ContextVarNodeIterator((srcc=>varc, src=>var)
-                               simpleBDD{dstc, dst}
-            <> new{ctxt=>dstc, key=>dst}{dstc, dst});
+        return new ContextVarNodeIterator((A_srcc=>A_varc, A_src=>A_var)
+                               simpleBDD{A_dstc, A_dst}
+            <> new{ctxt=>A_dstc, key=>A_dst}{A_dstc, A_dst});
     }
     public Iterator loadInvLookup( Context ctxt, VarNode key ) {
-        return new FieldRefIterator((srcc=>varc, src=>var)
-            (loadBDD{dstc, dst} 
-            <> new{ctxt=>dstc, key=>dst}{dstc, dst}));
+        return new FieldRefIterator((A_srcc=>A_varc, A_src=>A_var)
+            (loadBDD{A_dstc, A_dst} 
+            <> new{ctxt=>A_dstc, key=>A_dst}{A_dstc, A_dst}));
     }
     public Iterator storeInvLookup( Context ctxt, FieldRefNode key ) {
-        return new ContextVarNodeIterator((srcc=>varc, src=>var)
-                                                         storeBDD{dstc, dst, fld} 
-            <> new{ctxt=>dstc, key.base()=>dst, key.field()=>fld}{dstc, dst, fld});
+        return new ContextVarNodeIterator((A_srcc=>A_varc, A_src=>A_var)
+                                                         storeBDD{A_dstc, A_dst, A_fld} 
+            <> new{ctxt=>A_dstc, key.base()=>A_dst, key.field()=>A_fld}{A_dstc, A_dst, A_fld});
     }
     public Iterator allocInvLookup( Context ctxt, VarNode key ) {
-        return new ContextAllocNodeIterator(allocBDD{varc, var} 
-                        <> new{ctxt=>varc, key=>var}{varc, var});
+        return new ContextAllocNodeIterator(allocBDD{A_varc, A_var} 
+                        <> new{ctxt=>A_varc, key=>A_var}{A_varc, A_var});
     }
 
     public Rsrcc_src_dstc_dst allSimple() { return new Rsrcc_src_dstc_dstBDD(simpleBDD, "allsimple", null); }
@@ -111,8 +111,8 @@ public class BDDPAG extends AbsPAG
     public Robjc_obj_varc_var allAlloc() { return new Robjc_obj_varc_varBDD(allocBDD, "allalloc", null); }
 
     private static class FieldRefIterator implements Iterator {
-        FieldRefIterator( <varc, var, fld> bdd ) {
-            this.it = bdd.iterator( new Attribute[] { varc.v(), var.v(), fld.v() } );
+        FieldRefIterator( <A_varc, A_var, A_fld> bdd ) {
+            this.it = bdd.iterator( new Attribute[] { A_varc.v(), A_var.v(), A_fld.v() } );
         }
         private Iterator it;
         public boolean hasNext() { return it.hasNext(); }
@@ -125,8 +125,8 @@ public class BDDPAG extends AbsPAG
     }
 
     private static class ContextVarNodeIterator implements Iterator {
-        ContextVarNodeIterator( <varc, var> bdd ) {
-            this.it = bdd.iterator( new Attribute[] { varc.v(), var.v() } );
+        ContextVarNodeIterator( <A_varc, A_var> bdd ) {
+            this.it = bdd.iterator( new Attribute[] { A_varc.v(), A_var.v() } );
         }
         private Iterator it;
         public boolean hasNext() { return it.hasNext(); }
@@ -138,8 +138,8 @@ public class BDDPAG extends AbsPAG
     }
 
     private static class ContextAllocNodeIterator implements Iterator {
-        ContextAllocNodeIterator( <objc, obj> bdd ) {
-            this.it = bdd.iterator( new Attribute[] { objc.v(), obj.v() } );
+        ContextAllocNodeIterator( <A_objc, A_obj> bdd ) {
+            this.it = bdd.iterator( new Attribute[] { A_objc.v(), A_obj.v() } );
         }
         private Iterator it;
         public boolean hasNext() { return it.hasNext(); }
@@ -150,9 +150,9 @@ public class BDDPAG extends AbsPAG
         public void remove() { throw new UnsupportedOperationException(); }
     }
 
-    private <srcc, src, dstc, dst> simpleBDD = 0B;
-    private <srcc, src, fld, dstc, dst> loadBDD = 0B;
-    private <srcc, src, fld, dstc, dst> storeBDD = 0B;
-    private <objc, obj, varc, var> allocBDD = 0B;
+    private <A_srcc, A_src, A_dstc, A_dst> simpleBDD = 0B;
+    private <A_srcc, A_src, A_fld, A_dstc, A_dst> loadBDD = 0B;
+    private <A_srcc, A_src, A_fld, A_dstc, A_dst> storeBDD = 0B;
+    private <A_objc, A_obj, A_varc, A_var> allocBDD = 0B;
 }
 

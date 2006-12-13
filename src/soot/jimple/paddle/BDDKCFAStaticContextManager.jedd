@@ -50,9 +50,9 @@ public class BDDKCFAStaticContextManager extends AbsStaticContextManager
             }
             shifter = Jedd.v().makeShifter( from, to );
         }
-        <srcc:C1, srcm, stmt, kind, tgtc:C2, tgtm> newEdges = 
-            (stmt=>stmt, stmt=>tgtc, tgtc=>) in.get();
-        newEdges = (<srcc, srcm, stmt, kind, tgtc, tgtm>)
+        <A_srcc:C1, A_srcm, A_stmt, A_kind, A_tgtc:C2, A_tgtm> newEdges = 
+            (A_stmt=>A_stmt, A_stmt=>A_tgtc, A_tgtc=>) in.get();
+        newEdges = (<A_srcc, A_srcm, A_stmt, A_kind, A_tgtc, A_tgtm>)
             newEdges.applyShifter(shifter);
         out.add( newEdges );
         return newEdges != 0B;

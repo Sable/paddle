@@ -27,46 +27,46 @@ import soot.jimple.paddle.bdddomains.*;
  */
 public class BDDCallGraph extends AbsCallGraph
 { 
-    private <srcc, srcm, stmt, kind, tgtc, tgtm> csEdges;
-    private <srcm, stmt, kind, tgtm> ciEdges;
+    private <A_srcc, A_srcm, A_stmt, A_kind, A_tgtc, A_tgtm> csEdges;
+    private <A_srcm, A_stmt, A_kind, A_tgtm> ciEdges;
     BDDCallGraph( Rsrcc_srcm_stmt_kind_tgtc_tgtm in, Qsrcm_stmt_kind_tgtm ciout, Qsrcc_srcm_stmt_kind_tgtc_tgtm csout ) {
         super(in, ciout, csout);
     }
     public boolean update() {
         if(in == null) return false;
-        <srcc, srcm, stmt, kind, tgtc, tgtm> newEdges = in.get();
+        <A_srcc, A_srcm, A_stmt, A_kind, A_tgtc, A_tgtm> newEdges = in.get();
         newEdges -= csEdges;
         csEdges |= newEdges;
         if(csout != null) csout.add( newEdges );
-        <srcm, stmt, kind, tgtm> newCiEdges = (srcc=>, tgtc=>) newEdges;
+        <A_srcm, A_stmt, A_kind, A_tgtm> newCiEdges = (A_srcc=>, A_tgtc=>) newEdges;
         newCiEdges -= ciEdges;
         ciEdges |= newCiEdges;
         if(ciout != null) ciout.add(newCiEdges);
         return newEdges != 0B;
     }
     public Rsrcc_srcm_stmt_kind_tgtc_tgtm edgesOutOf( Rctxt_method methods ) {
-        <ctxt, method> methodsBDD = methods.get();
-        <srcc, srcm, stmt, kind, tgtc, tgtm> result =
-                csEdges{srcm, srcc} >< methodsBDD{method, ctxt};
+        <A_ctxt, A_method> methodsBDD = methods.get();
+        <A_srcc, A_srcm, A_stmt, A_kind, A_tgtc, A_tgtm> result =
+                csEdges{A_srcm, A_srcc} >< methodsBDD{A_method, A_ctxt};
         return new Rsrcc_srcm_stmt_kind_tgtc_tgtmBDD( result,
                 "edgesOutOf", null);
     }
     public Rsrcm_stmt_kind_tgtm edgesOutOf( Rmethod methods ) {
         return new Rsrcm_stmt_kind_tgtmBDD(
-                ciEdges{srcm} >< methods.get(){method},
+                ciEdges{A_srcm} >< methods.get(){A_method},
                 "edgesOutOf", null);
     }
     public Rsrcc_srcm_stmt_kind_tgtc_tgtm edgesOutOf( Context c, SootMethod m ) {
         return new Rsrcc_srcm_stmt_kind_tgtc_tgtmBDD(
-            csEdges{srcm, srcc} ><
-            new{c=>ctxt, m=>method} {method, ctxt},
+            csEdges{A_srcm, A_srcc} ><
+            new{c=>A_ctxt, m=>A_method} {A_method, A_ctxt},
             "edgesOutOf", null
         );
     }
     public Rsrcm_stmt_kind_tgtm edgesOutOf( SootMethod m ) {
         return new Rsrcm_stmt_kind_tgtmBDD(
-            ciEdges{srcm} ><
-            new{m=>method} {method},
+            ciEdges{A_srcm} ><
+            new{m=>A_method} {A_method},
             "edgesOutOf", null
         );
     }

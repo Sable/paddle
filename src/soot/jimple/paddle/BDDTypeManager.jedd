@@ -34,34 +34,34 @@ public class BDDTypeManager extends AbsTypeManager
         super( locals, globals, localallocs, globalallocs );
         this.fh = PaddleScene.v().BDDHierarchy();
     }
-    <var, obj> result = 0B;
-    <var, type> allVars = 0B;
-    <obj, type> allObjs = 0B;
+    <A_var, A_obj> result = 0B;
+    <A_var, A_type> allVars = 0B;
+    <A_obj, A_type> allObjs = 0B;
     public boolean update() {
         if( fh == null ) {
             result = 1B;
             return true;
         }
 
-        <var, type> newVars;
-        newVars = (method=>) locals.get();
+        <A_var, A_type> newVars;
+        newVars = (A_method=>) locals.get();
         newVars |= globals.get();
         allVars |= newVars;
 
-        <obj, type> newObjs;
-        newObjs = (method=>) localallocs.get();
+        <A_obj, A_type> newObjs;
+        newObjs = (A_method=>) localallocs.get();
         newObjs |= globalallocs.get();
         allObjs |= newObjs;
 
-        <subt, supt> subtypeRelation = fh.subtypeRelation();
-        result |= (subtypeRelation{supt} <> newVars{type}){subt} <> allObjs{type};
-        result |= (subtypeRelation{supt} <> allVars{type}){subt} <> newObjs{type};
+        <A_subt, A_supt> subtypeRelation = fh.subtypeRelation();
+        result |= (subtypeRelation{A_supt} <> newVars{A_type}){A_subt} <> allObjs{A_type};
+        result |= (subtypeRelation{A_supt} <> allVars{A_type}){A_subt} <> newObjs{A_type};
         return true;
     }
     public BitVector get( Type type ) {
         throw new RuntimeException( "Not implemented" );
     }
-    public <var, obj> get() {
+    public <A_var, A_obj> get() {
         update();
         return result;
     }
@@ -75,7 +75,7 @@ public class BDDTypeManager extends AbsTypeManager
         //if( from instanceof AnySubType ) return true;
         //if( to instanceof NullType ) return false;
         if( to instanceof AnySubType ) throw new RuntimeException( "oops from="+from+" to="+to );
-        return 0B != (fh.subtypeRelation() & new{from=>subt, to=>supt});
+        return 0B != (fh.subtypeRelation() & new{from=>A_subt, to=>A_supt});
     }
 
     private BDDHierarchy fh;

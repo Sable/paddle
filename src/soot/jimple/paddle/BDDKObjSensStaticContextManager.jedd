@@ -34,8 +34,8 @@ public class BDDKObjSensStaticContextManager extends AbsStaticContextManager
     }
     public boolean update() {
         // just reuse the old context
-        <srcc, srcm, stmt, kind, tgtc, tgtm> newEdges = 
-            (tgtc=>, srcc=>srcc, srcc=>tgtc) in.get();
+        <A_srcc, A_srcm, A_stmt, A_kind, A_tgtc, A_tgtm> newEdges = 
+            (A_tgtc=>, A_srcc=>A_srcc, A_srcc=>A_tgtc) in.get();
         out.add(newEdges);
         return newEdges != 0B;
     }
