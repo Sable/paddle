@@ -1261,6 +1261,9 @@ public class PaddleScene
                 throw new RuntimeException( "Couldn't output Jedd profile "+e );
             }
         }
+        if( options.verbosegc() ) {
+	    Jedd.v().verboseGC();
+        }
         jeddAlreadySetup = true;
     }
     public void setup(PaddleOptions opts) {
