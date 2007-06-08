@@ -99,6 +99,8 @@ public class PaddleTransformer extends IPaddleTransformer
         PaddleScene.v().solve();
 
         Date endSolve = new Date();
+
+        if( opts.verbosegc() ) jedd.Jedd.v().gbc();
         
         if( opts.verbose() ) {
             reportTime( "Propagation", startSolve, endSolve );
