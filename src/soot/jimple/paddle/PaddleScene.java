@@ -74,22 +74,22 @@ public class PaddleScene
         switch( options.backend() ) {
             case PaddleOptions.backend_auto:
                 if(options.bdd()) {
-                    Jedd.v().setBackend("buddy"); 
+                    Jedd.v().setBackend("buddy", options.bdd_nodes()); 
                 } else {
                     noBackend = true;
                 }
                 break;
             case PaddleOptions.backend_buddy:
-                Jedd.v().setBackend("buddy"); 
+                Jedd.v().setBackend("buddy", options.bdd_nodes()); 
                 break;
             case PaddleOptions.backend_cudd:
-                Jedd.v().setBackend("cudd"); 
+                Jedd.v().setBackend("cudd", options.bdd_nodes()); 
                 break;
             case PaddleOptions.backend_sable:
-                Jedd.v().setBackend("sablejbdd"); 
+                Jedd.v().setBackend("sablejbdd", options.bdd_nodes()); 
                 break;
             case PaddleOptions.backend_javabdd:
-                Jedd.v().setBackend("javabdd"); 
+                Jedd.v().setBackend("javabdd", options.bdd_nodes()); 
                 break;
             case PaddleOptions.backend_none:
                 noBackend = true;
