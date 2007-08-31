@@ -51,7 +51,7 @@ public class ContextStringNumberer implements Numberer
             cs = new ContextString(k);
             for( int i = 0; i < k; i++) cs.push(null);
         }
-        int ret = 0;
+        long ret = 0;
         for( int i = k-1; i >= 0; i-- ) {
             long num = contextNumberer.get(cs.get(i));
             if( num >= maxItem ) throw new RuntimeException( "Need to increase shiftWidth" );
