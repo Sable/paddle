@@ -38,7 +38,7 @@ public abstract class AbsPointsToAnalysis implements PointsToAnalysis
         return PaddleScene.v().nodeManager().findLocalVarNode(l);
     }
     protected VarNode field( SootField f ) {
-        return PaddleScene.v().nodeManager().findLocalVarNode(f);
+      return PaddleScene.v().nodeManager().findGlobalVarNode(f);
     }
 }
 
