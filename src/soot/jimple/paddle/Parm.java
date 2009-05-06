@@ -56,4 +56,11 @@ public class Parm implements PaddleField {
     }
     private int number = 0;
 
+    public int getIndex() {
+        return index;
+    }
+
+    public SootMethod getMethod() {
+        return method;
+    }
 }
