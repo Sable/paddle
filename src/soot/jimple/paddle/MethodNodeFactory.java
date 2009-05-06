@@ -141,9 +141,17 @@ public class MethodNodeFactory extends AbstractJimpleValueSwitch {
     final public void caseNewArrayExpr( NewArrayExpr nae ) {
         setResult( makeAllocNode( nae, nae.getType(), method ) );
     }
+    private boolean isStringBuffer(Type t) {
+        if(!(t instanceof RefType)) return false;
+        RefType rt = (RefType) t;
+        String s = rt.toString();
+        if(s.equals("java.lang.StringBuffer")) return true;
+        if(s.equals("java.lang.StringBuilder")) return true;
+        return false;
+    }
     final public void caseNewExpr( NewExpr ne ) {
         if( PaddleScene.v().options().merge_stringbuffer() 
-        && ne.getType().equals( RefType.v("java.lang.StringBuffer" ) ) ) {
+        && isStringBuffer(ne.getType())) {
             setResult( nm.makeGlobalAllocNode( ne.getType(), ne.getType() ) );
         } else {
             setResult( makeAllocNode( ne, ne.getType(), method ) );
