@@ -203,16 +203,6 @@ public class TradStaticCallBuilder extends AbsStaticCallBuilder
                         }
                         cl = cl.getSuperclass();
                     }
-                } else if( rhs instanceof NewArrayExpr || rhs instanceof NewMultiArrayExpr ) {
-                    Type t = rhs.getType();
-                    if( t instanceof ArrayType ) t = ((ArrayType)t).baseType;
-                    if( t instanceof RefType ) {
-                        SootClass cl = ((RefType) t).getSootClass();
-                        for( Iterator clinitIt = EntryPoints.v().clinitsOf(cl).iterator(); clinitIt.hasNext(); ) {
-                            final SootMethod clinit = (SootMethod) clinitIt.next();
-                            addEdge( source, s, clinit, Kind.CLINIT );
-                        }
-                    }
                 }
             }
         }
