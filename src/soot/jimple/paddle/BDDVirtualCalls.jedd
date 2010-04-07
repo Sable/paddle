@@ -83,10 +83,11 @@ public class BDDVirtualCalls extends AbsVirtualCalls
             if( an instanceof StringConstantNode ) {
                 StringConstantNode scn = (StringConstantNode) an;
                 String constant = scn.getString();
-                if( constant.charAt(0) == '[' ) {
-                    if( constant.length() > 1 && constant.charAt(1) == 'L' 
-                        && constant.charAt(constant.length()-1) == ';' ) {
-                            constant = constant.substring(2,constant.length()-1);
+                int length = constant.length();
+                if( length > 0 && constant.charAt(0) == '[' ) {
+                    if( length > 1 && constant.charAt(1) == 'L' 
+                        && constant.charAt(length-1) == ';' ) {
+                            constant = constant.substring(2,length-1);
                     } else constant = null;
                 }
                 if( constant != null && Scene.v().containsClass(constant)) {
