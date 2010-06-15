@@ -51,7 +51,8 @@ public class BDDPointsToSet extends PointsToSetReadOnly {
 
     /** Returns true iff the set contains n. */
     public boolean contains( ContextAllocNode n ) {
-        return 0B != new{n=>A_obj}{A_obj} >< bdd{A_obj};
+        return 0B != new{n.obj()=>A_obj,n.ctxt()=>A_objc}{A_obj,A_objc} ><
+                                                      bdd{A_obj,A_objc};
     }
 
     public <A_objc, A_obj> bdd() {
