@@ -89,7 +89,7 @@ public class BDDEscapeAnalysis {
     private void propagate() {
         escapesThread |= (A_varc=>) pt{A_var} <> (staticVars|threadThis){A_var};
         while(true) {
-            if( escapesThread !=
+            if( escapesThread ==
             (escapesThread |= escapesThread{A_objc,A_obj} <> fieldPt{A_basec,A_base}))
                 break;
         }
