@@ -182,7 +182,7 @@ public class TradVirtualCalls extends AbsVirtualCalls
         } else {
             StringConstantNode scn = (StringConstantNode) ptpair.obj();
             String constant = scn.getString();
-            if( constant.charAt(0) == '[' ) {
+            if( constant.length() > 0 && constant.charAt(0) == '[' ) {
                 if( constant.length() > 1 && constant.charAt(1) == 'L' 
                     && constant.charAt(constant.length()-1) == ';' ) {
                         constant = constant.substring(2,constant.length()-1);
